@@ -3,17 +3,25 @@ package skyvssea.model;
 import java.util.List;
 
 abstract class Piece {
-    // TODO: Require constructor to enable these unassigned constant
-//    private final int DEFAULT_NUM_MOVE;
-//    private final int DEFAULT_ATTACK_RANGE;
-//    private final int SPECIAL_EFFECT_COOLDOWN;
-
-    private int hierarchyLev;
+    private Hierarchy level;
     private int numMove;
     private int attackRange;
     private int specialEffectCounter;
+    private SpecialEffect specialEffect;
     private List<SpecialEffect> appliedSpecialEffect;
-//    private SpecialEffect specialEffect
 
+    public Piece(Hierarchy level, int numMove, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
+    	this.level = level;
+    	this.numMove = numMove;
+    	this.attackRange = attackRange;
+    	this.specialEffectCounter = specialEffectCounter;
+    	this.specialEffect = specialEffect;
+    }
+    
     abstract protected void performSpeEff(Piece target);
+    //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target
+
+    protected SpecialEffect getSpecialEffect() {
+		return specialEffect;
+	}
 }

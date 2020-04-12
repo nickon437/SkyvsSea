@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import skyvssea.controller.Controller;
 import skyvssea.model.Player;
 
-public class Game extends Application {
+public class BoardGameApplication extends Application {
 
     private Player[] players = new Player[2];
     private Player currentPlayer;

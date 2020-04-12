@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Tile {
-    private Rectangle tileView;
+    private Rectangle tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
     private Piece piece;
     private boolean light;
 

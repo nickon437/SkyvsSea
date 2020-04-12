@@ -1,21 +1,19 @@
 package skyvssea.model;
 
+import skyvssea.view.BoardPane;
+
 import java.util.ArrayList;
 import java.util.Map;
 
-import skyvssea.controller.Controller;
-import skyvssea.view.TilePane;
+public class Board {
+	private Tile[][] tiles;
 
-class Board {
-	Tile[][] tiles;
-	
-	public Board() {
-		 //TODO: instantiate the tiles here
-		
+	public Board(BoardPane boardPane) {
+		tiles = boardPane.getTiles();
 	}
 
 	/**
-	 * Set pieces on their respective initial tile 
+	 * Set pieces on their respective initial tile
 	 * @param sharkPieces the intial lineup of shark pieces
 	 * @param eaglePieces the intial lineup of eagle pieces
 	 */
@@ -25,7 +23,7 @@ class Board {
 		tiles[0][4].setPiece(sharkPieces.get(Hierarchy.MEDIUM).get(0));
 		tiles[0][5].setPiece(sharkPieces.get(Hierarchy.BABY).get(0));
 		tiles[0][6].setPiece(sharkPieces.get(Hierarchy.SMALL).get(0));
-		
+
 		tiles[9][3].setPiece(eaglePieces.get(Hierarchy.SMALL).get(0));
 		tiles[9][4].setPiece(eaglePieces.get(Hierarchy.BABY).get(0));
 		tiles[9][5].setPiece(eaglePieces.get(Hierarchy.MEDIUM).get(0));

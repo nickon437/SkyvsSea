@@ -1,9 +1,12 @@
 package skyvssea;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
+import skyvssea.model.Board;
 import skyvssea.model.Player;
+import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
 
@@ -17,7 +20,24 @@ public class BoardGameApplication extends Application {
         setUpPlayers();
 
         Controller controller = new Controller();
-        controller.buildView(primaryStage);
+
+        buildView(primaryStage);
+    }
+
+    private void buildView(Stage stage) {
+        stage.setTitle("Sky vs. Sea");
+
+        BoardPane boardPane = new BoardPane();
+        Board board = new Board(boardPane);
+        ActionPane actionPane = new ActionPane();
+        MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
+
+        InfoPane infoPane = new InfoPane();
+        MainView root = new MainView(primaryPane, infoPane);
+
+        Scene scene = new Scene(root, 800, 600);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void setUpPlayers() {

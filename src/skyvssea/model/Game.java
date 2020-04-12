@@ -9,18 +9,17 @@ class Game {
 	private Map<Hierarchy, ArrayList<Piece>> sharkPieces;
 	private Map<Hierarchy, ArrayList<Piece>> eaglePieces;
 	private Board board;
-	
-	public Game() {
+
+	public Game(Board board) {
 		initializePieces();
-		board = new Board();
 		board.setPiecesOnTiles(sharkPieces, eaglePieces);
 	}
-	
+
 	/**
 	 * Create initial lineup of pieces for both sides
 	 */
 	public void initializePieces() {
-		//Using singleton pattern to create the factories (not sure if it's appropriate though) 
+		//Using singleton pattern to create the factories (not sure if it's appropriate though)
 		PieceFactory sharkFactory = SharkFactory.getInstance();
 		PieceFactory eagleFactory = EagleFactory.getInstance();
 		sharkPieces = sharkFactory.createInitialLineUp();

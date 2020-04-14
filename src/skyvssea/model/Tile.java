@@ -17,7 +17,7 @@ public class Tile {
         this.light = light;
         piece = null;
 
-        tilePane.setFill(light ? Color.valueOf("#fcf5ef") : Color.valueOf("#264F73")); // TODO: This should be in the view, maybe?
+        tilePane.getBase().setFill(light ? Color.valueOf("#fcf5ef") : Color.valueOf("#264F73")); // TODO: This should be in the view, maybe?
     }
 
     public boolean hasPiece() {

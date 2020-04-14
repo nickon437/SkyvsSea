@@ -4,7 +4,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 import skyvssea.model.Tile;
 
 public class BoardPane extends Pane {
@@ -55,7 +54,7 @@ public class BoardPane extends Pane {
     }
 
 
-    public void setTile(Rectangle tileView, int x, int y) {
+    public void setTile(TilePane tileView, int x, int y) {
         Tile tile = new Tile(tileView, (x + y) % 2 == 0);
         tiles[x][y] = tile;
     }

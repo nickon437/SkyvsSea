@@ -1,10 +1,10 @@
 package skyvssea.model;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import skyvssea.view.TilePane;
 
 public class Tile {
-    private Rectangle tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
+    private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
     private Piece piece;
     private boolean light;
 
@@ -12,7 +12,7 @@ public class Tile {
     private String RED = "#ff7350";
     private String DARK_BLUE = "#264F73";
 
-    public Tile(Rectangle tilePane, boolean light) {
+    public Tile(TilePane tilePane, boolean light) {
         this.tileView = tilePane;
         this.light = light;
         piece = null;

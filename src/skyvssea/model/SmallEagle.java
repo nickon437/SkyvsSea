@@ -4,6 +4,7 @@ public class SmallEagle extends Eagle implements SmallCharacter {
 	public SmallEagle() {
 		//TODO: create SpecialEffect object
 		super(SmallCharacter.DEFAULT_LEVEL, SmallCharacter.DEFAULT_NUM_MOVE, SmallCharacter.DEFAULT_ATTACK_RANGE, SmallCharacter.SPECIAL_EFFECT_COOLDOWN, null);
+        super.name = "Small Eagle";
 	}
 	
     @Override

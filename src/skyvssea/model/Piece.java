@@ -2,7 +2,8 @@ package skyvssea.model;
 
 import java.util.List;
 
-abstract class Piece {
+public abstract class Piece {
+    protected String name;
     private Hierarchy level;
     private int numMove;
     private int attackRange;
@@ -17,6 +18,8 @@ abstract class Piece {
     	this.specialEffectCounter = specialEffectCounter;
     	this.specialEffect = specialEffect;
     }
+
+    public String getName() { return name; }
     
     abstract protected void performSpeEff(Piece target);
     //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target

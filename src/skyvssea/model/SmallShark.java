@@ -4,6 +4,7 @@ public class SmallShark extends Shark implements SmallCharacter{
 	public SmallShark() {
 		//TODO: create SpecialEffect object
 		super(SmallCharacter.DEFAULT_LEVEL, SmallCharacter.DEFAULT_NUM_MOVE, SmallCharacter.DEFAULT_ATTACK_RANGE, SmallCharacter.SPECIAL_EFFECT_COOLDOWN, null);
+        super.name = "Small Shark";
 	}
 	
     @Override

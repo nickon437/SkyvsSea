@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import javafx.scene.paint.Color;
+import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 
 public class Tile {
@@ -28,7 +29,9 @@ public class Tile {
         return piece;
     }
 
-    public void setPiece(Piece piece) {
+    public boolean setPiece(Piece piece) {
         this.piece = piece;
+        PieceView pieceView = piece.getPieceView();
+        return tileView.getChildren().add(pieceView);
     }
 }

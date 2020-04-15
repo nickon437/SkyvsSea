@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
 import skyvssea.model.Board;
+import skyvssea.model.Game;
+import skyvssea.model.PieceManager;
 import skyvssea.model.Player;
 import skyvssea.view.*;
 
@@ -34,6 +36,9 @@ public class BoardGameApplication extends Application {
 
         InfoPane infoPane = new InfoPane();
         MainView root = new MainView(primaryPane, infoPane);
+
+//        Game game = new Game(board);
+        PieceManager pieceManager = new PieceManager(board);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);

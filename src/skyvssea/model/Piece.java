@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import skyvssea.view.PieceView;
+
 import java.util.List;
 
 public abstract class Piece {
@@ -10,13 +12,16 @@ public abstract class Piece {
     private int specialEffectCounter;
     private SpecialEffect specialEffect;
     private List<SpecialEffect> appliedSpecialEffect;
+    private PieceView pieceView;
 
-    public Piece(Hierarchy level, int numMove, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
-    	this.level = level;
+    protected Piece(String name, Hierarchy level, int numMove, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
+    	this.name = name;
+        this.level = level;
     	this.numMove = numMove;
     	this.attackRange = attackRange;
     	this.specialEffectCounter = specialEffectCounter;
     	this.specialEffect = specialEffect;
+    	this.pieceView = new PieceView();
     }
 
     public String getName() { return name; }
@@ -27,4 +32,8 @@ public abstract class Piece {
     protected SpecialEffect getSpecialEffect() {
 		return specialEffect;
 	}
+
+	public PieceView getPieceView() {
+        return pieceView;
+    }
 }

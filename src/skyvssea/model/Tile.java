@@ -36,6 +36,12 @@ public class Tile {
         return tileView.getChildren().add(pieceView);
     }
 
+    public void removePiece() {
+        piece = null;
+    }
+
+    public boolean isHighlighted() { return isHighlighted; }
+
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
         String baseColor;

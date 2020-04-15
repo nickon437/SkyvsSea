@@ -8,6 +8,7 @@ import java.util.Map;
 public class Board {
 	private Tile[][] tiles;
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
+	private Tile currentTile;
 
 	public Board(BoardPane boardPane) {
 		tiles = boardPane.getTiles();
@@ -46,6 +47,12 @@ public class Board {
 			tile.setHighlighted(false);
 		}
 		highlightedTiles.clear();
+	}
+
+	public Tile getCurrentTile() { return currentTile; }
+
+	public void setCurrentTile(Tile currentTile) {
+		this.currentTile = currentTile;
 	}
 
 }

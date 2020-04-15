@@ -13,15 +13,20 @@ public class Controller {
     private BoardPane boardPane;
 
     public void handleTileClicked(Tile tile) {
-        board.clearHighlightedTiles();
 
-        // Nick - TODO: Check whose the piece belongs to
-        if (tile.hasPiece()) {
+        if (tile.isHighlighted()) {
+            board.clearHighlightedTiles();
+            tile.setPiece(pieceManager.getCurrentPiece());
+            board.getCurrentTile().removePiece();
+        } else if (tile.hasPiece()) {
+            board.clearHighlightedTiles();
+            // Nick - TODO: Check whose the piece belongs to
             Piece piece = tile.getPiece();
+            pieceManager.setCurrentPiece(piece);
+
             int numMove = piece.getNumMove();
             int pieceX = tile.getTilePane().getX();
             int pieceY = tile.getTilePane().getY();
-
             Tile[][] tiles = board.getTiles();
 
             // Nick - TODO: Find a way to modularize the code
@@ -48,6 +53,8 @@ public class Controller {
                 }
             }
         }
+
+        board.setCurrentTile(tile);
     }
 
     public void setViewsAndModels(Board board, PieceManager pieceManager, BoardPane boardPane) {

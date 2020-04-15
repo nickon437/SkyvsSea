@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class PieceManager {
-    //Need review
+    // Need review
     // Reason for using a hashmap to store the pieces: easier to assign the pieces to initial tile locations
     private Map<Hierarchy, ArrayList<Piece>> sharkPieces;
     private Map<Hierarchy, ArrayList<Piece>> eaglePieces;
+    private Piece currentPiece;
 
     public PieceManager(Board board) {
         initializePieces();
@@ -44,5 +45,15 @@ public class PieceManager {
             allPieceViews.add(piece.getPieceView());
         }
         return allPieceViews;
+    }
+
+    public Piece getCurrentPiece() { return currentPiece; }
+
+    public void setCurrentPiece(Piece currentPiece) {
+        this.currentPiece = currentPiece;
+    }
+
+    public void clearCurrentPiece() {
+        currentPiece = null;
     }
 }

@@ -1,5 +1,6 @@
 package skyvssea.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -20,6 +21,7 @@ public class PieceView extends StackPane {
         Label label = new Label(name);
         label.setWrapText(true);
         label.setTextAlignment(TextAlignment.CENTER);
+        label.setAlignment(Pos.CENTER);
         return label;
     }
 

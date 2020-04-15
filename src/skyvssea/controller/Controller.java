@@ -13,17 +13,10 @@ public class Controller {
     private BoardPane boardPane;
 
     public void handleTileClicked(Tile tile) {
-
         if (tile.isHighlighted()) {
             board.clearHighlightedTiles();
             tile.setPiece(pieceManager.getCurrentPiece());
             board.getCurrentTile().removePiece();
-
-            System.out.println("Move " + pieceManager.getCurrentPiece().getName() + " from " +
-                    board.getCurrentTile().getTilePane().getX() + " " +
-                    board.getCurrentTile().getTilePane().getY() + " to " +
-                    tile.getTilePane().getX() + " " +
-                    tile.getTilePane().getY());
         } else {
             board.clearHighlightedTiles();
             if (tile.hasPiece()) {
@@ -61,7 +54,6 @@ public class Controller {
                 }
             }
         }
-
         board.setCurrentTile(tile);
     }
 

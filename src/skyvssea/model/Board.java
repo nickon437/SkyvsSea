@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class Board {
 	private Tile[][] tiles;
+	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 
 	public Board(BoardPane boardPane) {
 		tiles = boardPane.getTiles();
@@ -31,5 +32,7 @@ public class Board {
 	}
 
 	public Tile[][] getTiles() { return tiles; }
+
+	public ArrayList<Tile> getHighlightedTiles() { return highlightedTiles; }
 
 }

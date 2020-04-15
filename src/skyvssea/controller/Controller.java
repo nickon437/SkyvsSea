@@ -6,8 +6,6 @@ import skyvssea.model.PieceManager;
 import skyvssea.model.Tile;
 import skyvssea.view.BoardPane;
 
-import java.util.ArrayList;
-
 public class Controller {
 
     private Board board;
@@ -15,7 +13,7 @@ public class Controller {
     private BoardPane boardPane;
 
     public void handleTileClicked(Tile tile) {
-        unhighlightTiles(board.getHighlightedTiles());
+        board.clearHighlightedTiles();
 
         // Nick - TODO: Check whose the piece belongs to
         if (tile.hasPiece()) {
@@ -31,37 +29,24 @@ public class Controller {
             for (int count = 1; count <= numMove; count++) {
                 if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {
                     Tile rightTile = tiles[pieceX + count][pieceY];
-                    highlightEmptyTiles(rightTile);
+                    board.highlightUnoccupiedTiles(rightTile);
                 }
 
                 if ((pieceX - count) >= 0) {
                     Tile leftTile = tiles[pieceX - count][pieceY];
-                    highlightEmptyTiles(leftTile);
+                    board.highlightUnoccupiedTiles(leftTile);
                 }
 
                 if ((pieceY + count) < BoardPane.NUM_SIDE_CELL) {
                     Tile downTile = tiles[pieceX][pieceY + count];
-                    highlightEmptyTiles(downTile);
+                    board.highlightUnoccupiedTiles(downTile);
                 }
 
                 if ((pieceY - count) >= 0) {
                     Tile upTile = tiles[pieceX][pieceY - count];
-                    highlightEmptyTiles(upTile);
+                    board.highlightUnoccupiedTiles(upTile);
                 }
             }
-        }
-    }
-
-    private void highlightEmptyTiles(Tile tile) {
-        if (!tile.hasPiece()) {
-            tile.setHighlighted(true);
-            board.getHighlightedTiles().add(tile);
-        }
-    }
-
-    private void unhighlightTiles(ArrayList<Tile> tiles) {
-        for (Tile tile : tiles) {
-            tile.setHighlighted(false);
         }
     }
 

@@ -1,6 +1,5 @@
 package skyvssea.model;
 
-import javafx.scene.paint.Color;
 import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 

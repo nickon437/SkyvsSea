@@ -33,6 +33,19 @@ public class Board {
 
 	public Tile[][] getTiles() { return tiles; }
 
-	public ArrayList<Tile> getHighlightedTiles() { return highlightedTiles; }
+	// Nick - This method and clearHighlightedTiles() are originally in Controller class. Not sure if these methods should be there or here
+	public void highlightUnoccupiedTiles(Tile tile) {
+		if (!tile.hasPiece()) {
+			tile.setHighlighted(true);
+			highlightedTiles.add(tile);
+		}
+	}
+
+	public void clearHighlightedTiles() {
+		for (Tile tile : highlightedTiles) {
+			tile.setHighlighted(false);
+		}
+		highlightedTiles.clear();
+	}
 
 }

@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
 import skyvssea.model.Board;
-import skyvssea.model.Game;
 import skyvssea.model.PieceManager;
 import skyvssea.model.Player;
 import skyvssea.view.*;

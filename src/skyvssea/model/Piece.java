@@ -21,7 +21,7 @@ public abstract class Piece {
     	this.attackRange = attackRange;
     	this.specialEffectCounter = specialEffectCounter;
     	this.specialEffect = specialEffect;
-    	this.pieceView = new PieceView();
+    	this.pieceView = new PieceView(name);
     }
 
     public String getName() { return name; }

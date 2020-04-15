@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import skyvssea.view.PieceView;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,5 +25,24 @@ public class PieceManager {
         PieceFactory eagleFactory = EagleFactory.getInstance();
         sharkPieces = sharkFactory.createInitialLineUp();
         eaglePieces = eagleFactory.createInitialLineUp();
+    }
+
+    private ArrayList<Piece> getAllPieces() {
+        ArrayList<Piece> allPieces = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : sharkPieces.entrySet()) {
+            allPieces.addAll(entry.getValue());
+        }
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : eaglePieces.entrySet()) {
+            allPieces.addAll(entry.getValue());
+        }
+        return allPieces;
+    }
+
+    public ArrayList<PieceView> getAllPieceViews() {
+        ArrayList<PieceView> allPieceViews = new ArrayList<>();
+        for (Piece piece : getAllPieces()) {
+            allPieceViews.add(piece.getPieceView());
+        }
+        return allPieceViews;
     }
 }

@@ -6,10 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import skyvssea.model.Tile;
 
+import java.util.ArrayList;
+
 public class BoardPane extends Pane {
 
     private static final int NUM_SIDE_CELL = 10;
     private Group tileGroup = new Group();
+    private ArrayList<PieceView> pieceViewGroup;
     private double tileSize;
     private Tile[][] tiles;
 
@@ -37,13 +40,14 @@ public class BoardPane extends Pane {
             double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
             tileSize = boardSideSize / NUM_SIDE_CELL;
             updateTilesSize(tileSize, paneWidth, paneHeight); // TODO: Maybe let the boardPane handle tileSize calculation as well
+            updatePieceSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);
         heightProperty().addListener(paneSizeListener);
     }
 
-    public void updateTilesSize(double tileSize, double width, double height) {
+    private void updateTilesSize(double tileSize, double width, double height) {
         double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
 
@@ -53,6 +57,11 @@ public class BoardPane extends Pane {
         }
     }
 
+    private void updatePieceSize(double tileSize) {
+       for (PieceView pieceView : pieceViewGroup) {
+           pieceView.updatePieceViewSize(tileSize);
+       }
+    }
 
     public void setTile(TilePane tileView, int x, int y) {
         Tile tile = new Tile(tileView, (x + y) % 2 == 0);
@@ -61,6 +70,10 @@ public class BoardPane extends Pane {
 
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
+        this.pieceViewGroup = pieceViews;
     }
 
 }

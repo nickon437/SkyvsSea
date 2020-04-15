@@ -38,6 +38,7 @@ public class BoardGameApplication extends Application {
 
 //        Game game = new Game(board);
         PieceManager pieceManager = new PieceManager(board);
+        boardPane.setPieceGroup(pieceManager.getAllPieceViews());
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);

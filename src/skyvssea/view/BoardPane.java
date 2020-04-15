@@ -1,10 +1,8 @@
 package skyvssea.view;
 
 import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import skyvssea.controller.Controller;
@@ -47,7 +45,7 @@ public class BoardPane extends Pane {
             double paneHeight = getHeight();
             double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
             tileSize = boardSideSize / NUM_SIDE_CELL;
-            updateTilesSize(tileSize, paneWidth, paneHeight); // TODO: Maybe let the boardPane handle tileSize calculation as well
+            updateTilesSize(tileSize, paneWidth, paneHeight);
             updatePieceSize(tileSize);
         };
 
@@ -66,9 +64,9 @@ public class BoardPane extends Pane {
     }
 
     private void updatePieceSize(double tileSize) {
-       for (PieceView pieceView : pieceViewGroup) {
-           pieceView.updatePieceViewSize(tileSize);
-       }
+        for (PieceView pieceView : pieceViewGroup) {
+            pieceView.updatePieceViewSize(tileSize);
+        }
     }
 
     public Tile setTile(TilePane tileView, int x, int y) {

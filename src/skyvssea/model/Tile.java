@@ -9,10 +9,6 @@ public class Tile {
     private boolean light;
     private boolean isHighlighted;
 
-    // TODO: Remove this later
-    private String RED = "#ff7350";
-    private String DARK_BLUE = "#264F73";
-
     public Tile(TilePane tilePane, boolean light) {
         this.tileView = tilePane;
         this.light = light;

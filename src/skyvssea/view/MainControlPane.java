@@ -6,7 +6,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class MainControlPane extends VBox {
-    // TODO: Should the parameter of this constructor be more generic ie. Pane
     public MainControlPane(BoardPane boardPane, ActionPane actionPane) {
         this.getChildren().addAll(boardPane, actionPane);
         this.setAlignment(Pos.CENTER);

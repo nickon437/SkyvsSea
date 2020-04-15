@@ -1,28 +1,36 @@
 package skyvssea.view;
 
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import skyvssea.controller.Controller;
 import skyvssea.model.Tile;
 
 import java.util.ArrayList;
 
 public class BoardPane extends Pane {
 
-    private static final int NUM_SIDE_CELL = 10;
+    public static final int NUM_SIDE_CELL = 10;
     private Group tileGroup = new Group();
     private ArrayList<PieceView> pieceViewGroup;
     private double tileSize;
     private Tile[][] tiles;
 
-    public BoardPane() {
+    public BoardPane(Controller controller) {
         tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
 
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
                 TilePane tileView = new TilePane(x, y, tileSize);
-                setTile(tileView, x, y);
+                Tile tile = setTile(tileView, x, y);
+
+                tileView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                    controller.handleTileClicked(tile);
+                });
 
                 tileGroup.getChildren().add(tileView);
             }
@@ -63,11 +71,13 @@ public class BoardPane extends Pane {
        }
     }
 
-    public void setTile(TilePane tileView, int x, int y) {
+    public Tile setTile(TilePane tileView, int x, int y) {
         Tile tile = new Tile(tileView, (x + y) % 2 == 0);
         tiles[x][y] = tile;
+        return tile;
     }
 
+    // Nick - TODO: Need to modify this as this getTiles() method is only used by Board once when setting up and shouldn't be accessible in any other circumstances
     public Tile[][] getTiles() {
         return tiles;
     }

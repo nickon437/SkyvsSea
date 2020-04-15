@@ -20,15 +20,15 @@ public class BoardGameApplication extends Application {
     public void start(Stage primaryStage) throws Exception{
         setUpPlayers();
 
-        Controller controller = new Controller();
 
         buildView(primaryStage);
     }
 
     private void buildView(Stage stage) {
+        Controller controller = new Controller();
         stage.setTitle("Sky vs. Sea");
 
-        BoardPane boardPane = new BoardPane();
+        BoardPane boardPane = new BoardPane(controller);
         Board board = new Board(boardPane);
         ActionPane actionPane = new ActionPane();
         MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
@@ -39,6 +39,9 @@ public class BoardGameApplication extends Application {
 //        Game game = new Game(board);
         PieceManager pieceManager = new PieceManager(board);
         boardPane.setPieceGroup(pieceManager.getAllPieceViews());
+
+        // Nick - There should be a better way to the models and views for controller
+        controller.setViewsAndModels(board, pieceManager, boardPane);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);

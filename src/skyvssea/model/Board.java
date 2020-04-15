@@ -30,4 +30,6 @@ public class Board {
 		tiles[9][6].setPiece(eaglePieces.get(Hierarchy.BIG).get(0));
 	}
 
+	public Tile[][] getTiles() { return tiles; }
+
 }

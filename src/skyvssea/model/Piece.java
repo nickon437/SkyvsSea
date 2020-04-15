@@ -25,6 +25,8 @@ public abstract class Piece {
     }
 
     public String getName() { return name; }
+
+    public int getNumMove() { return numMove; }
     
     abstract protected void performSpeEff(Piece target);
     //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target

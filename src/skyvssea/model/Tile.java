@@ -8,6 +8,7 @@ public class Tile {
     private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
     private Piece piece;
     private boolean light;
+    private boolean isHighlighted;
 
     // TODO: Remove this later
     private String RED = "#ff7350";
@@ -17,9 +18,10 @@ public class Tile {
         this.tileView = tilePane;
         this.light = light;
         piece = null;
-
-        tilePane.getBase().setFill(light ? Color.valueOf("#fcf5ef") : Color.valueOf("#264F73")); // TODO: This should be in the view, maybe?
+        setHighlighted(false);
     }
+
+    public TilePane getTilePane() { return tileView; }
 
     public boolean hasPiece() {
         return piece != null;
@@ -33,5 +35,20 @@ public class Tile {
         this.piece = piece;
         PieceView pieceView = piece.getPieceView();
         return tileView.getChildren().add(pieceView);
+    }
+
+    public void setHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+        String baseColor;
+        if (isHighlighted) {
+            baseColor = TilePane.HIGHLIGHED_COLOR;
+        } else {
+            if (light) {
+                baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
+            } else {
+                baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
+            }
+        }
+        tileView.updateBaseColor(baseColor);
     }
 }

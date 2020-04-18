@@ -16,25 +16,30 @@ public class BoardPane extends Pane {
     private Group tileGroup = new Group();
     private ArrayList<PieceView> pieceViewGroup;
     private double tileSize;
-    private Tile[][] tiles;
+//    private Tile[][] tiles;
 
     public BoardPane(Controller controller) {
-        tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
+    	
+    	//TODO: Creation of Tile is not the responsibility of BOardPane, and BoardPane should not own Tile objects
+//        tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
 
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
                 TilePane tileView = new TilePane(x, y, tileSize);
-                Tile tile = setTile(tileView, x, y);
+//                Tile tile = setTile(tileView, x, y);
 
+                final int xCoord = x;
+                final int yCoord = y;
                 tileView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                    controller.handleTileClicked(tile);
+//                    controller.handleTileClicked(tile);
+                    controller.handleTileClicked(xCoord, yCoord);
                 });
 
-                tileGroup.getChildren().add(tileView);
+                getTileGroup().getChildren().add(tileView);
             }
         }
 
-        this.getChildren().add(tileGroup);
+        this.getChildren().add(getTileGroup());
 
         setDynamicTileSize();
     }
@@ -57,7 +62,7 @@ public class BoardPane extends Pane {
         double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
 
-        for (Node node : tileGroup.getChildren()) {
+        for (Node node : getTileGroup().getChildren()) {
             TilePane tilePane = (TilePane) node;
             tilePane.updateTileSize(tileSize, mostLeftX, mostTopY);
         }
@@ -69,19 +74,23 @@ public class BoardPane extends Pane {
         }
     }
 
-    public Tile setTile(TilePane tileView, int x, int y) {
-        Tile tile = new Tile(tileView, (x + y) % 2 == 0);
-        tiles[x][y] = tile;
-        return tile;
-    }
+//    public Tile setTile(TilePane tileView, int x, int y) {
+//        Tile tile = new Tile(tileView, (x + y) % 2 == 0);
+//        tiles[x][y] = tile;
+//        return tile;
+//    }
 
     // Nick - TODO: Need to modify this as this getTiles() method is only used by Board once when setting up and shouldn't be accessible in any other circumstances
-    public Tile[][] getTiles() {
-        return tiles;
-    }
+//    public Tile[][] getTiles() {
+//        return tiles;
+//    }
 
     public void setPieceGroup(ArrayList<PieceView> pieceViews) {
         this.pieceViewGroup = pieceViews;
     }
+
+	public Group getTileGroup() {
+		return tileGroup;
+	}
 
 }

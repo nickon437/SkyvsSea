@@ -29,7 +29,7 @@ public class BoardGameApplication extends Application {
         stage.setTitle("Sky vs. Sea");
 
         BoardPane boardPane = new BoardPane(controller);
-        Board board = new Board(boardPane);
+        Board board = new Board(boardPane.getTileGroup());
         ActionPane actionPane = new ActionPane();
         MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
 

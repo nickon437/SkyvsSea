@@ -12,7 +12,11 @@ public class Controller {
     private PieceManager pieceManager;
     private BoardPane boardPane;
 
-    public void handleTileClicked(Tile tile) {
+    public void handleTileClicked(int x, int y) {
+    	
+    	// TODO: use the tileView position to find the Tile object instead
+    	
+    	Tile tile = board.getTile(x, y);
         if (tile.isHighlighted()) {
             board.clearHighlightedTiles();
             tile.setPiece(pieceManager.getCurrentPiece());
@@ -30,6 +34,7 @@ public class Controller {
                 Tile[][] tiles = board.getTiles();
 
                 // Nick - TODO: Find a way to modularize the code
+                // Jiang - TODO: and customize available moves based on Piece type
                 // Highlight possible move tiles
                 for (int count = 1; count <= numMove; count++) {
                     if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {

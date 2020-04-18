@@ -29,7 +29,7 @@ public class Tile {
     public boolean setPiece(Piece piece) {
         this.piece = piece;
         PieceView pieceView = piece.getPieceView();
-        return tileView.getChildren().add(pieceView);
+        return tileView.getChildren().add(pieceView); //TODO: should be handled by observer pattern
     }
 
     public void removePiece() {
@@ -40,6 +40,7 @@ public class Tile {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
+        //TODO: the color changing should be handled by TilePane class and triggered by the observer pattern
         String baseColor;
         if (isHighlighted) {
             baseColor = TilePane.HIGHLIGHED_COLOR;

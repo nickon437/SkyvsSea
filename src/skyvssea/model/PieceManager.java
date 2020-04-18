@@ -39,6 +39,7 @@ public class PieceManager {
         return allPieces;
     }
 
+    //TODO: SHould change the return type to listener interface; might be removed
     public ArrayList<PieceView> getAllPieceViews() {
         ArrayList<PieceView> allPieceViews = new ArrayList<>();
         for (Piece piece : getAllPieces()) {

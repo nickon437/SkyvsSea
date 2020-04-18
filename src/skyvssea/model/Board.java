@@ -1,17 +1,31 @@
 package skyvssea.model;
 
 import skyvssea.view.BoardPane;
+import skyvssea.view.TilePane;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
+
 public class Board {
+	public static final int NUM_SIDE_CELL = 10;
 	private Tile[][] tiles;
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile currentTile;
 
-	public Board(BoardPane boardPane) {
-		tiles = boardPane.getTiles();
+	public Board(Group tileViews) {
+		//TODO: should create the Tile objects here instead of getting from boardPane
+//		tiles = boardPane.getTiles();
+		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
+        
+        for (Node node : tileViews.getChildren()) {
+        	TilePane tilePane = (TilePane) node;
+        	int x = tilePane.getX();
+        	int y = tilePane.getY();
+        	tiles[x][y] = new Tile(tilePane, (x + y) % 2 == 0);
+        }
 	}
 
 	/**
@@ -53,6 +67,10 @@ public class Board {
 
 	public void setCurrentTile(Tile currentTile) {
 		this.currentTile = currentTile;
+	}
+	
+	public Tile getTile(int x, int y) {
+		return tiles[x][y];
 	}
 
 }

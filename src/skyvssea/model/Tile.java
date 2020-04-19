@@ -1,22 +1,28 @@
 package skyvssea.model;
 
+import java.util.Observable;
+
 import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 
-public class Tile {
-    private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
+public class Tile  extends Observable {
+//    private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
+	private int x;
+	private int y;
     private Piece piece;
     private boolean light;
     private boolean isHighlighted;
 
-    public Tile(TilePane tilePane, boolean light) {
-        this.tileView = tilePane;
+	public Tile(int x, int y, /* TilePane tilePane, */boolean light) {
+//        this.tileView = tilePane;
+		this.x = x;
+		this.y = y;
         this.light = light;
         piece = null;
-        setHighlighted(false);
+//        setHighlighted(false);
     }
 
-    public TilePane getTilePane() { return tileView; }
+//    public TilePane getTilePane() { return tileView; }
 
     public boolean hasPiece() {
         return piece != null;
@@ -28,12 +34,17 @@ public class Tile {
 
     public boolean setPiece(Piece piece) {
         this.piece = piece;
-        PieceView pieceView = piece.getPieceView();
-        return tileView.getChildren().add(pieceView); //TODO: should be handled by observer pattern
+        setChanged();
+        notifyObservers(piece.getName());
+        return true;
+//        PieceView pieceView = piece.getPieceView();
+//        return tileView.getChildren().add(pieceView); //TODO: should be handled by observer pattern
     }
 
     public void removePiece() {
         piece = null;
+        setChanged();
+        notifyObservers("REMOVE_PIECEVIEW");
     }
 
     public boolean isHighlighted() { return isHighlighted; }
@@ -51,6 +62,16 @@ public class Tile {
                 baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
             }
         }
-        tileView.updateBaseColor(baseColor);
+//        tileView.updateBaseColor(baseColor);
+        setChanged();
+        notifyObservers(baseColor);
     }
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 }

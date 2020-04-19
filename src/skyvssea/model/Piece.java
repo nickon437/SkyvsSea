@@ -21,7 +21,7 @@ public abstract class Piece {
     	this.attackRange = attackRange;
     	this.specialEffectCounter = specialEffectCounter;
     	this.specialEffect = specialEffect;
-    	this.pieceView = new PieceView(name); //Should be created in BoardPane object instead
+//    	this.pieceView = new PieceView(name); //Should be created in BoardPane object instead
     }
 
     public String getName() { return name; }

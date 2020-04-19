@@ -14,7 +14,7 @@ public class BoardPane extends Pane {
 
     public static final int NUM_SIDE_CELL = 10;
     private Group tileGroup = new Group();
-    private ArrayList<PieceView> pieceViewGroup;
+    private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
     private double tileSize;
 //    private Tile[][] tiles;
 
@@ -25,7 +25,7 @@ public class BoardPane extends Pane {
 
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
-                TilePane tileView = new TilePane(x, y, tileSize);
+                TilePane tileView = new TilePane(x, y, tileSize, this);
 //                Tile tile = setTile(tileView, x, y);
 
                 final int xCoord = x;
@@ -44,14 +44,14 @@ public class BoardPane extends Pane {
         setDynamicTileSize();
     }
 
-    private void setDynamicTileSize() {
+    public void setDynamicTileSize() {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             double paneWidth = getWidth();
             double paneHeight = getHeight();
             double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
             tileSize = boardSideSize / NUM_SIDE_CELL;
             updateTilesSize(tileSize, paneWidth, paneHeight);
-            updatePieceSize(tileSize);
+            updateAllPiecesSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -68,10 +68,15 @@ public class BoardPane extends Pane {
         }
     }
 
-    private void updatePieceSize(double tileSize) {
+    private void updateAllPiecesSize(double tileSize) {
         for (PieceView pieceView : pieceViewGroup) {
             pieceView.updatePieceViewSize(tileSize);
         }
+        System.out.println(pieceViewGroup.size());
+    }
+    
+    public void updatePieceSize(PieceView pieceView) {
+    	pieceView.updatePieceViewSize(tileSize);
     }
 
 //    public Tile setTile(TilePane tileView, int x, int y) {
@@ -85,12 +90,37 @@ public class BoardPane extends Pane {
 //        return tiles;
 //    }
 
-    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
-        this.pieceViewGroup = pieceViews;
+//    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
+//        this.pieceViewGroup = pieceViews;
+//    }
+    
+    public void addPieceView(PieceView pieceView) {
+    	pieceViewGroup.add(pieceView);
     }
 
 	public Group getTileGroup() {
 		return tileGroup;
+	}
+
+//	public void createPieceViews(ArrayList<String> names) {
+//		ArrayList<PieceView> pieceViews = new ArrayList<>();
+//		for (String name : names) {
+//			pieceViews.add(new PieceView(name));
+//		}
+//		pieceViewGroup = pieceViews;
+//	}
+	
+	public ArrayList<PieceView> getPieceViews() {
+		return pieceViewGroup;
+	}
+
+	public void removePieceView(String name) {
+		for (int i = 0; i < pieceViewGroup.size(); i ++) {
+			if (pieceViewGroup.get(i).getName().equals(name)) {
+				pieceViewGroup.remove(i);
+				break;
+			}
+		}
 	}
 
 }

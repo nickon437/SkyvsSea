@@ -10,11 +10,13 @@ import javafx.scene.text.TextAlignment;
 public class PieceView extends StackPane {
     private Circle circle;
     private Text text;
+    private String name;
 
     public PieceView(String name) {
+    	this.name = name;
         this.circle = new Circle(5, Color.ORCHID);
         this.text = createText(name);
-        this.getChildren().addAll(circle, text);
+        this.getChildren().addAll(circle, getText());
     }
 
     private Text createText(String name) {
@@ -27,6 +29,15 @@ public class PieceView extends StackPane {
         final double CIRCLE_CONTENT_PERCENTAGE = 0.9;
         final double LABEL_CONTENT_PERCENTAGE = 0.9;
         circle.setRadius((tileSize * CIRCLE_CONTENT_PERCENTAGE) / 2);
-        text.setWrappingWidth(tileSize * CIRCLE_CONTENT_PERCENTAGE * LABEL_CONTENT_PERCENTAGE);
+        getText().setWrappingWidth(tileSize * CIRCLE_CONTENT_PERCENTAGE * LABEL_CONTENT_PERCENTAGE);
     }
+
+	public Text getText() {
+		return text;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 }

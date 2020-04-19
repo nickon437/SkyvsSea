@@ -1,10 +1,13 @@
 package skyvssea.view;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class TilePane extends StackPane {
+public class TilePane extends StackPane implements Observer {
 
     public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
     public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
@@ -13,10 +16,12 @@ public class TilePane extends StackPane {
     private Rectangle base;
     private int x;
     private int y;
+    private BoardPane boardPane;
 
-    public TilePane(int x, int y, double tileSize) {
+    public TilePane(int x, int y, double tileSize, BoardPane boardPane) {
         this.x = x;
         this.y = y;
+        this.boardPane = boardPane;
         this.base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
         base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
 
@@ -34,7 +39,25 @@ public class TilePane extends StackPane {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public void updateBaseColor(String color) {
+    private void updateBaseColor(String color) {
         base.setFill(Color.valueOf(color));
     }
+
+	@Override
+	public void update(Observable tile, Object stringInput) {
+		//Jiang: Obviously this is not the most ideal design but this is all i can think of now
+		if (((String) stringInput).charAt(0) == '#') {
+			updateBaseColor((String) stringInput);
+		} else if (((String) stringInput).equals("REMOVE_PIECEVIEW")) {
+			PieceView removedPieceView = (PieceView) getChildren().remove(1);
+			boardPane.removePieceView(removedPieceView.getName());
+		} else {
+			//piece is moving to a new Tile location, so piece notifies its pieceView by passing the new tileView
+			PieceView newPieceView = new PieceView((String) stringInput);
+			getChildren().add(newPieceView);		
+			boardPane.addPieceView(newPieceView);
+			boardPane.updatePieceSize(newPieceView);
+		}
+		
+	}
 }

@@ -8,16 +8,13 @@ public class TurnManager {
     public boolean isPlayerOneTurn = true;
 
     public void setUpPlayers() {
-        initPlayer();
-    }
-
-    public void initPlayer(){
-        players[0] = new Player("shark leader",Color.BLUE);
-        players[1] = new Player("eagle leader",Color.RED);
+        players[0] = new Player("Shark Leader",Color.BLUE);
+        players[1] = new Player("Eagle Leader",Color.RED);
         currentPlayer = players[0];
     }
 
-    private void nextTurn() {
+    public Player nextTurn() {
         currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
+        return currentPlayer;
     }
 }

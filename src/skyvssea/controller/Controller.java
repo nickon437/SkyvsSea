@@ -79,7 +79,7 @@ public class Controller {
         this.pieceManager = pieceManager;
         this.boardPane = boardPane;
     }
-
+// 2020.4.20 phil
     public void setAction(ActionPane actionPane) {
         this.actionPane = actionPane;
     }
@@ -100,39 +100,19 @@ public class Controller {
         actionPane.getPlayerText().setFill(currentPlayer.getColour());
 
         actionPane.getSkipBtn().setOnAction(actionEvent -> {
-            skipBtnChangePlayerTurn();
-        });
+            if(currentPlayer.getName() == players[0].getName()){
+                currentPlayer = players[1];
+                actionPane.getPlayerText().setText(currentPlayer.getName());
+                actionPane.getPlayerText().setFill(currentPlayer.getColour());
+            }
 
-        actionPane.getKillBtn().setOnAction(actionEvent -> {
-            this.actionPane.setKillStatus(true);
-            if(this.actionPane.isSpecialStatus() == true){
-                skipBtnChangePlayerTurn();
-                this.actionPane.setKillStatus(false);
-                this.actionPane.setSpecialStatus(false);
+            else if (currentPlayer.getName() == players[1].getName()){
+                currentPlayer = players[0];
+                actionPane.getPlayerText().setText(currentPlayer.getName());
+                actionPane.getPlayerText().setFill(currentPlayer.getColour());
             }
         });
 
-        this.actionPane.getSpecialEffectBtn().setOnAction(actionEvent -> {
-            this.actionPane.setSpecialStatus(true);
-            if(this.actionPane.isKillStatus() == true){
-                skipBtnChangePlayerTurn();
-                this.actionPane.setKillStatus(false);
-                this.actionPane.setSpecialStatus(false);
-            }
-        });
     }
 
-    private void skipBtnChangePlayerTurn(){
-        if(currentPlayer.getName() == players[0].getName()){
-            currentPlayer = players[1];
-            actionPane.getPlayerText().setText(currentPlayer.getName());
-            actionPane.getPlayerText().setFill(currentPlayer.getColour());
-        }
-
-        else if (currentPlayer.getName() == players[1].getName()){
-            currentPlayer = players[0];
-            actionPane.getPlayerText().setText(currentPlayer.getName());
-            actionPane.getPlayerText().setFill(currentPlayer.getColour());
-        }
-    }
 }

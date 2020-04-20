@@ -20,7 +20,7 @@ public class InfoPane extends VBox {
         this.setSpacing(20d);
     }
 
-    // TODO: This kinda belongs in the TextArea, review what lecturer talked about this situation (ActionPane also has sth similar)
+    // Nick - TODO: This kinda belongs in the TextArea, review what lecturer talked about this situation (ActionPane also has sth similar)
     private void setTextAreaDisabled(TextArea textArea, boolean isDisabled) {
         textArea.setEditable(!isDisabled);
         textArea.setFocusTraversable(!isDisabled);

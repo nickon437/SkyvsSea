@@ -1,25 +1,31 @@
 package skyvssea.model;
 
+
+import javafx.scene.paint.Color;
+
 public class Player {
-    public static final String BLUE_COLOUR = "#3498db";
-    public static final String RED_COLOUR = "#e74c3c";
     private String name;
-    private String colour;
+    private Color colour;
+    private boolean status = false;
 
-    public Player(String colour) {
-        this("skyvssea.model.Player", colour);
-    }
 
-    public Player(String name, String colour) {
+    public Player(String name, Color colour) {
         this.name = name;
         this.colour = colour;
+        this.status = false;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getColour() {
+    public Color getColour() {
         return colour;
+    }
+
+    public boolean isStatus() { return status; }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

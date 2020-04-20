@@ -1,11 +1,8 @@
 package skyvssea.model;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-abstract class PieceFactory {
-	protected static PieceFactory pieceFactory;
-
+public abstract class PieceFactory {
 	public abstract Map<Hierarchy, ArrayList<Piece>> createInitialLineUp();
 }

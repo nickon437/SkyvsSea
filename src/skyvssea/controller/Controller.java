@@ -17,9 +17,10 @@ public class Controller {
 
 
     public Controller() {
-        turnManager.initPlayer();
+        turnManager.setUpPlayers();
         players = turnManager.players;
         currentPlayer = players[0];
+
     }
 
     public void handleTileClicked(int x, int y) {
@@ -79,7 +80,7 @@ public class Controller {
         this.pieceManager = pieceManager;
         this.boardPane = boardPane;
     }
-// 2020.4.20 phil
+// 2020.4.20 phil TODO: click skip button, the player turn will be changed
     public void setAction(ActionPane actionPane) {
         this.actionPane = actionPane;
     }
@@ -87,13 +88,10 @@ public class Controller {
     public void setTurnManager(TurnManager turnManager) {
         this.turnManager = turnManager;
         this.players = turnManager.players;
-//        this.currentPlayer = turnManager.players[0];
     }
 
-    // when click skip button, the player turn will be changed
-
+    
     public void addActionHandler() {
-        turnManager.setUpPlayers();
         currentPlayer.setStatus(true);
         showCurrentPlayerName();
 

@@ -48,15 +48,28 @@ public class TilePane extends StackPane implements Observer {
 		//Jiang: Obviously this is not the most ideal design but this is all i can think of now
 		if (((String) stringInput).charAt(0) == '#') {
 			updateBaseColor((String) stringInput);
-		} else if (((String) stringInput).equals("REMOVE_PIECEVIEW")) {
-			PieceView removedPieceView = (PieceView) getChildren().remove(1);
-			boardPane.removePieceView(removedPieceView.getName());
-		} else {
-			//piece is moving to a new Tile location, so piece notifies its pieceView by passing the new tileView
-			PieceView newPieceView = new PieceView((String) stringInput);
-			getChildren().add(newPieceView);		
-			boardPane.addPieceView(newPieceView);
-			boardPane.updatePieceSize(newPieceView);
+		} 
+//		else if (((String) stringInput).equals("REMOVE_PIECEVIEW")) {
+//			PieceView removedPieceView = (PieceView) getChildren().remove(1);
+//			boardPane.removePieceView(removedPieceView.getName());
+//		} 
+		else {
+			PieceView pieceView = boardPane.getPieceView((String) stringInput);
+			
+			//this condition is only true when initializing Piece and PieceView objects
+			if (pieceView == null) {
+				pieceView = new PieceView((String) stringInput);
+				boardPane.addPieceView(pieceView);
+//				boardPane.updatePieceSize(pieceView);
+			}
+			
+			getChildren().add(pieceView);		
+			
+			
+//			PieceView newPieceView = new PieceView((String) stringInput);
+//			getChildren().add(newPieceView);		
+//			boardPane.addPieceView(newPieceView);
+//			boardPane.updatePieceSize(newPieceView);
 		}
 		
 	}

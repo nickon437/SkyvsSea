@@ -43,8 +43,8 @@ public class Tile  extends Observable {
 
     public void removePiece() {
         piece = null;
-        setChanged();
-        notifyObservers("REMOVE_PIECEVIEW");
+//        setChanged();
+//        notifyObservers("REMOVE_PIECEVIEW");
     }
 
     public boolean isHighlighted() { return isHighlighted; }

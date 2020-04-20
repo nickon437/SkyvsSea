@@ -35,7 +35,7 @@ public class BoardPane extends Pane {
                     controller.handleTileClicked(xCoord, yCoord);
                 });
 
-                getTileGroup().getChildren().add(tileView);
+                tileGroup.getChildren().add(tileView);
             }
         }
 
@@ -72,12 +72,11 @@ public class BoardPane extends Pane {
         for (PieceView pieceView : pieceViewGroup) {
             pieceView.updatePieceViewSize(tileSize);
         }
-        System.out.println(pieceViewGroup.size());
     }
     
-    public void updatePieceSize(PieceView pieceView) {
-    	pieceView.updatePieceViewSize(tileSize);
-    }
+//    public void updatePieceSize(PieceView pieceView) {
+//    	pieceView.updatePieceViewSize(tileSize);
+//    }
 
 //    public Tile setTile(TilePane tileView, int x, int y) {
 //        Tile tile = new Tile(tileView, (x + y) % 2 == 0);
@@ -121,6 +120,17 @@ public class BoardPane extends Pane {
 				break;
 			}
 		}
+	}
+
+	public PieceView getPieceView(String name) {
+		for (int i = 0; i < pieceViewGroup.size(); i ++) {
+			PieceView pieceView = pieceViewGroup.get(i);
+			if (pieceView.getName().equals(name)) {
+				return pieceView;
+			}
+		}
+		
+		return null;
 	}
 
 }

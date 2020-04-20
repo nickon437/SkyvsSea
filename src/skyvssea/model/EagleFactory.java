@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class EagleFactory extends PieceFactory {
+public class EagleFactory extends PieceFactory {
+
+	private static EagleFactory eagleFactory;
+
+	private EagleFactory() {}
 
 	@Override
 	public Map<Hierarchy, ArrayList<Piece>> createInitialLineUp() {
@@ -23,10 +27,10 @@ class EagleFactory extends PieceFactory {
 	}
 	
 	public static PieceFactory getInstance() {
-		if (pieceFactory == null) {
-			pieceFactory = new EagleFactory();
+		if (eagleFactory == null) {
+			eagleFactory = new EagleFactory();
 		}
-		return pieceFactory;
+		return eagleFactory;
 	}
 
 }

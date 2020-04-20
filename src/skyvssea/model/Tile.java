@@ -1,23 +1,23 @@
 package skyvssea.model;
 
-import javafx.scene.paint.Color;
+import java.util.Observable;
+
+import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 
-public class Tile {
-    private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
+public class Tile extends Observable {
+    private int x;
+	private int y;
     private Piece piece;
     private boolean light;
+    private boolean isHighlighted;
 
-    // TODO: Remove this later
-    private String RED = "#ff7350";
-    private String DARK_BLUE = "#264F73";
-
-    public Tile(TilePane tilePane, boolean light) {
-        this.tileView = tilePane;
+	public Tile(int x, int y, boolean light) {
+		this.x = x;
+		this.y = y;
         this.light = light;
         piece = null;
-
-        tilePane.setFill(light ? Color.valueOf("#fcf5ef") : Color.valueOf("#264F73")); // TODO: This should be in the view, maybe?
+        setHighlighted(false);
     }
 
     public boolean hasPiece() {
@@ -28,7 +28,41 @@ public class Tile {
         return piece;
     }
 
-    public void setPiece(Piece piece) {
+    public boolean setPiece(Piece piece, PieceView pieceView) {
         this.piece = piece;
+        setChanged();
+        notifyObservers(pieceView);
+        return true;
+	}
+
+    public void removePiece() {
+        piece = null;
     }
+
+    public boolean isHighlighted() { return isHighlighted; }
+
+    public void setHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+
+        String baseColor;
+        if (isHighlighted) {
+            baseColor = TilePane.HIGHLIGHTED_COLOR;
+        } else {
+            if (light) {
+                baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
+            } else {
+                baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
+            }
+        }
+        setChanged();
+        notifyObservers(baseColor);
+    }
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 }

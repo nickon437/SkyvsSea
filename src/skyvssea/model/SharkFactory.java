@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class SharkFactory extends PieceFactory {
-	
+public class SharkFactory extends PieceFactory {
+
+	private static SharkFactory sharkFactory;
+
+	private SharkFactory() {}
+
 	@Override
 	public Map<Hierarchy, ArrayList<Piece>> createInitialLineUp() {
 		Map<Hierarchy, ArrayList<Piece>> lineup = new HashMap<Hierarchy, ArrayList<Piece>>();
@@ -22,12 +26,11 @@ class SharkFactory extends PieceFactory {
 		return lineup;
 	}
 
-	
 	public static PieceFactory getInstance() {
-		if (pieceFactory == null) {
-			pieceFactory = new SharkFactory();
+		if (sharkFactory == null) {
+			sharkFactory = new SharkFactory();
 		}
-		return pieceFactory;
+		return sharkFactory;
 	}
 
 }

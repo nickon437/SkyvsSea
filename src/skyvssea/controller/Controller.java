@@ -95,23 +95,23 @@ public class Controller {
     public void addActionHandler() {
         turnManager.setUpPlayers();
         currentPlayer.setStatus(true);
-        showCurrentPlaterName();
+        showCurrentPlayerName();
 
         actionPane.getSkipBtn().setOnAction(actionEvent -> {
             if(currentPlayer.getName() == players[0].getName()){
-                currentPlayer = players[1];
-                showCurrentPlaterName();
+                currentPlayer = turnManager.nextTurn();
+                showCurrentPlayerName();
             }
 
             else if (currentPlayer.getName() == players[1].getName()){
-                currentPlayer = players[0];
-                showCurrentPlaterName();
+                currentPlayer = turnManager.nextTurn();
+                showCurrentPlayerName();
             }
         });
 
     }
 
-    public void showCurrentPlaterName(){
+    public void showCurrentPlayerName(){
         actionPane.getPlayerText().setText(currentPlayer.getName());
         actionPane.getPlayerText().setFill(currentPlayer.getColour());
 

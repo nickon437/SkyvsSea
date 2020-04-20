@@ -1,22 +1,24 @@
 package skyvssea.model;
 
+import java.util.Observable;
+
 import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 
-public class Tile {
-    private TilePane tileView; //Probably not appropriate to have a View object here in Model; should try using an interface instead such as Listener
+public class Tile extends Observable {
+    private int x;
+	private int y;
     private Piece piece;
     private boolean light;
     private boolean isHighlighted;
 
-    public Tile(TilePane tilePane, boolean light) {
-        this.tileView = tilePane;
+	public Tile(int x, int y, boolean light) {
+		this.x = x;
+		this.y = y;
         this.light = light;
         piece = null;
         setHighlighted(false);
     }
-
-    public TilePane getTilePane() { return tileView; }
 
     public boolean hasPiece() {
         return piece != null;
@@ -26,11 +28,12 @@ public class Tile {
         return piece;
     }
 
-    public boolean setPiece(Piece piece) {
+    public boolean setPiece(Piece piece, PieceView pieceView) {
         this.piece = piece;
-        PieceView pieceView = piece.getPieceView();
-        return tileView.getChildren().add(pieceView); //TODO: should be handled by observer pattern
-    }
+        setChanged();
+        notifyObservers(pieceView);
+        return true;
+	}
 
     public void removePiece() {
         piece = null;
@@ -40,10 +43,10 @@ public class Tile {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        //TODO: the color changing should be handled by TilePane class and triggered by the observer pattern
+
         String baseColor;
         if (isHighlighted) {
-            baseColor = TilePane.HIGHLIGHED_COLOR;
+            baseColor = TilePane.HIGHLIGHTED_COLOR;
         } else {
             if (light) {
                 baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
@@ -51,6 +54,15 @@ public class Tile {
                 baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
             }
         }
-        tileView.updateBaseColor(baseColor);
+        setChanged();
+        notifyObservers(baseColor);
     }
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 }

@@ -1,10 +1,14 @@
 package skyvssea.controller;
 
+import java.util.Observer;
+
+import javafx.scene.Group;
 import skyvssea.model.Board;
 import skyvssea.model.Piece;
 import skyvssea.model.PieceManager;
 import skyvssea.model.Tile;
 import skyvssea.view.BoardPane;
+import skyvssea.view.TilePane;
 
 public class Controller {
 
@@ -19,7 +23,9 @@ public class Controller {
     	Tile tile = board.getTile(x, y);
         if (tile.isHighlighted()) {
             board.clearHighlightedTiles();
-            tile.setPiece(pieceManager.getCurrentPiece());
+            Piece currentPiece = pieceManager.getCurrentPiece();
+            tile.setPiece(currentPiece, pieceManager.getPieceView(currentPiece));
+
             board.getCurrentTile().removePiece();
         } else {
             board.clearHighlightedTiles();
@@ -29,8 +35,8 @@ public class Controller {
                 pieceManager.setCurrentPiece(piece);
 
                 int numMove = piece.getNumMove();
-                int pieceX = tile.getTilePane().getX();
-                int pieceY = tile.getTilePane().getY();
+                int pieceX = tile.getX();
+                int pieceY = tile.getY();
                 Tile[][] tiles = board.getTiles();
 
                 // Nick - TODO: Find a way to modularize the code
@@ -62,9 +68,22 @@ public class Controller {
         board.setCurrentTile(tile);
     }
 
-    public void setViewsAndModels(Board board, PieceManager pieceManager, BoardPane boardPane) {
-        this.board = board;
-        this.pieceManager = pieceManager;
-        this.boardPane = boardPane;
+    public void setViewsAndModels(BoardPane boardPane) {
+    	this.boardPane = boardPane;
+    	this.board = new Board();
+    	
+    	Tile[][] tiles = board.getTiles();
+    	Group tileViews = this.boardPane.getTileGroup();
+    	tileViews.getChildren().forEach((tileView) -> {
+    		int x = ((TilePane) tileView).getX();
+    		int y = ((TilePane) tileView).getY();
+    		tiles[x][y].addObserver((Observer) tileView);
+    	});
+    	
+    	board.setBaseColours();
+    	
+    	pieceManager = new PieceManager();
+    	pieceManager.setPiecesOnBoard(board);
+    	boardPane.setPieceGroup(pieceManager.getAllPieceViews());
     }
 }

@@ -14,44 +14,36 @@ public class BoardPane extends Pane {
 
     public static final int NUM_SIDE_CELL = 10;
     private Group tileGroup = new Group();
-    private ArrayList<PieceView> pieceViewGroup;
+    private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
     private double tileSize;
-//    private Tile[][] tiles;
 
     public BoardPane(Controller controller) {
-    	
-    	//TODO: Creation of Tile is not the responsibility of BOardPane, and BoardPane should not own Tile objects
-//        tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
-
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
-                TilePane tileView = new TilePane(x, y, tileSize);
-//                Tile tile = setTile(tileView, x, y);
+                TilePane tileView = new TilePane(x, y, tileSize, this);
 
                 final int xCoord = x;
                 final int yCoord = y;
                 tileView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-//                    controller.handleTileClicked(tile);
                     controller.handleTileClicked(xCoord, yCoord);
                 });
 
-                getTileGroup().getChildren().add(tileView);
+                tileGroup.getChildren().add(tileView);
             }
         }
-
         this.getChildren().add(getTileGroup());
 
         setDynamicTileSize();
     }
 
-    private void setDynamicTileSize() {
+    public void setDynamicTileSize() {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             double paneWidth = getWidth();
             double paneHeight = getHeight();
             double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
             tileSize = boardSideSize / NUM_SIDE_CELL;
             updateTilesSize(tileSize, paneWidth, paneHeight);
-            updatePieceSize(tileSize);
+            updatePiecesSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -68,7 +60,7 @@ public class BoardPane extends Pane {
         }
     }
 
-    private void updatePieceSize(double tileSize) {
+    private void updatePiecesSize(double tileSize) {
         for (PieceView pieceView : pieceViewGroup) {
             pieceView.updatePieceViewSize(tileSize);
         }
@@ -89,8 +81,33 @@ public class BoardPane extends Pane {
         this.pieceViewGroup = pieceViews;
     }
 
+//    public void addPieceView(PieceView pieceView) {
+//    	pieceViewGroup.add(pieceView);
+//    }
+
 	public Group getTileGroup() {
 		return tileGroup;
 	}
+
+//	public void createPieceViews(ArrayList<String> names) {
+//		ArrayList<PieceView> pieceViews = new ArrayList<>();
+//		for (String name : names) {
+//			pieceViews.add(new PieceView(name));
+//		}
+//		pieceViewGroup = pieceViews;
+//	}
+	
+//	public ArrayList<PieceView> getPieceViews() {
+//		return pieceViewGroup;
+//	}
+
+//	public void removePieceView(String name) {
+//		for (int i = 0; i < pieceViewGroup.size(); i ++) {
+//			if (pieceViewGroup.get(i).getName().equals(name)) {
+//				pieceViewGroup.remove(i);
+//				break;
+//			}
+//		}
+//	}
 
 }

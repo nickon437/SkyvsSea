@@ -91,27 +91,29 @@ public class Controller {
     }
 
     // when click skip button, the player turn will be changed
-    //when click kill and special button, the player turn will be changed
 
     public void addActionHandler() {
         turnManager.setUpPlayers();
         currentPlayer.setStatus(true);
-        actionPane.getPlayerText().setText(currentPlayer.getName());
-        actionPane.getPlayerText().setFill(currentPlayer.getColour());
+        showCurrentPlaterName();
 
         actionPane.getSkipBtn().setOnAction(actionEvent -> {
             if(currentPlayer.getName() == players[0].getName()){
                 currentPlayer = players[1];
-                actionPane.getPlayerText().setText(currentPlayer.getName());
-                actionPane.getPlayerText().setFill(currentPlayer.getColour());
+                showCurrentPlaterName();
             }
 
             else if (currentPlayer.getName() == players[1].getName()){
                 currentPlayer = players[0];
-                actionPane.getPlayerText().setText(currentPlayer.getName());
-                actionPane.getPlayerText().setFill(currentPlayer.getColour());
+                showCurrentPlaterName();
             }
         });
+
+    }
+
+    public void showCurrentPlaterName(){
+        actionPane.getPlayerText().setText(currentPlayer.getName());
+        actionPane.getPlayerText().setFill(currentPlayer.getColour());
 
     }
 

@@ -5,18 +5,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
 import skyvssea.model.Player;
-import skyvssea.view.*;
 import skyvssea.model.TurnManager;
+import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
 
+
     //new phil TODO: add turnManager
     TurnManager turnManager = new TurnManager();
+    private Player[] players = new Player[2];
+    private Player currentPlayer;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         turnManager.setUpPlayers();
-
         buildView(primaryStage);
     }
 

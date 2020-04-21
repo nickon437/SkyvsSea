@@ -1,9 +1,9 @@
 package skyvssea.model;
 
-import java.util.Observable;
-
-import skyvssea.view.PieceView;
+import com.google.java.contract.Requires;
 import skyvssea.view.TilePane;
+
+import java.util.Observable;
 
 public class Tile extends Observable {
     private int x;
@@ -12,12 +12,12 @@ public class Tile extends Observable {
     private boolean light;
     private boolean isHighlighted;
 
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
 	public Tile(int x, int y, boolean light) {
 		this.x = x;
 		this.y = y;
         this.light = light;
-        piece = null;
-        setHighlighted(false);
+        this.piece = null;
     }
 
     public boolean hasPiece() {
@@ -28,15 +28,12 @@ public class Tile extends Observable {
         return piece;
     }
 
-    public boolean setPiece(Piece piece, PieceView pieceView) {
-        this.piece = piece;
-        setChanged();
-        notifyObservers(pieceView);
-        return true;
-	}
+    public void setPiece(Piece piece) {
+	    this.piece = piece;
+    }
 
     public void removePiece() {
-        piece = null;
+	    this.piece = null;
     }
 
     public boolean isHighlighted() { return isHighlighted; }

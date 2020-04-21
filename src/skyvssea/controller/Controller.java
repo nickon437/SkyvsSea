@@ -1,12 +1,15 @@
 package skyvssea.controller;
 
-import java.util.Observer;
-
+import com.google.java.contract.Requires;
 import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.view.ActionPane;
 import skyvssea.view.BoardPane;
+import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
+
+import java.util.ArrayList;
+import java.util.Observer;
 
 public class Controller {
 
@@ -27,27 +30,33 @@ public class Controller {
 
     }
 
-    public void handleTileClicked(int x, int y) {
-    	
-    	// TODO: use the tileView position to find the Tile object instead
-    	
-    	Tile tile = board.getTile(x, y);
-        if (tile.isHighlighted()) {
+    @Requires("tileView != null")
+    public void handleTileClicked(TilePane tileView) {
+
+    	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
+        if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
+
+            // Model
             Piece currentPiece = pieceManager.getCurrentPiece();
-            tile.setPiece(currentPiece, pieceManager.getPieceView(currentPiece));
+            selectedTile.setPiece(currentPiece);
+
+            // View
+            Tile prevTile = board.getCurrentTile();
+            PieceView pieceView = boardPane.getTileView(prevTile.getX(), prevTile.getY()).getPieceView();
+            boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
 
             board.getCurrentTile().removePiece();
         } else {
             board.clearHighlightedTiles();
-            if (tile.hasPiece()) {
+            if (selectedTile.hasPiece()) {
                 // Nick - TODO: Check whose the piece belongs to
-                Piece piece = tile.getPiece();
+                Piece piece = selectedTile.getPiece();
                 pieceManager.setCurrentPiece(piece);
 
                 int numMove = piece.getNumMove();
-                int pieceX = tile.getX();
-                int pieceY = tile.getY();
+                int pieceX = selectedTile.getX();
+                int pieceY = selectedTile.getY();
                 Tile[][] tiles = board.getTiles();
 
                 // Nick - TODO: Find a way to modularize the code
@@ -76,9 +85,10 @@ public class Controller {
                 }
             }
         }
-        board.setCurrentTile(tile);
+        board.setCurrentTile(selectedTile);
     }
 
+    @Requires("boardPane != null")
     public void setViewsAndModels(BoardPane boardPane) {
     	this.boardPane = boardPane;
     	this.board = new Board();
@@ -94,10 +104,16 @@ public class Controller {
     	board.setBaseColours();
     	
     	pieceManager = new PieceManager();
-    	pieceManager.setPiecesOnBoard(board);
-    	boardPane.setPieceGroup(pieceManager.getAllPieceViews());
-    }
+        ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
 
+        //Initialize PieceView objects and assign to the corresponding TilePane objects
+        startingPositions.forEach(tile -> {
+            Piece piece = tile.getPiece();
+            PieceView pieceView = new PieceView(piece.getName());
+            this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
+            this.boardPane.addPieceView(pieceView);
+        });
+    }
 
     //  Phil TODO: click skip button, the player turn will be changed
     public void setAction(ActionPane actionPane) {
@@ -131,6 +147,5 @@ public class Controller {
     public void showCurrentPlayerName(){
         actionPane.getPlayerText().setText(currentPlayer.getName());
         actionPane.getPlayerText().setFill(currentPlayer.getColour());
-
     }
 }

@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import com.google.java.contract.Requires;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -8,18 +10,9 @@ public class Board {
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile currentTile;
 
-	public Board(/* Group tileViews */) {
-		//TODO: should create the Tile objects here instead of getting from boardPane
-//		tiles = boardPane.getTiles();
+	public Board() {
 		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
-        
-//        for (Node node : tileViews.getChildren()) {
-//        	TilePane tilePane = (TilePane) node;
-//        	int x = tilePane.getX();
-//        	int y = tilePane.getY();
-//        	tiles[x][y] = new Tile(tilePane, (x + y) % 2 == 0);
-//        }
-        
+
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
 				tiles[x][y] = new Tile(x, y, (x + y) % 2 == 0);
@@ -29,7 +22,7 @@ public class Board {
 
 	public Tile[][] getTiles() { return tiles; }
 
-	// Nick - This method and clearHighlightedTiles() are originally in Controller class. Not sure if these methods should be there or here
+	@Requires("tile != null")
 	public void highlightUnoccupiedTiles(Tile tile) {
 		if (!tile.hasPiece()) {
 			tile.setHighlighted(true);
@@ -46,10 +39,13 @@ public class Board {
 
 	public Tile getCurrentTile() { return currentTile; }
 
+	@Requires("currentTile != null")
 	public void setCurrentTile(Tile currentTile) {
 		this.currentTile = currentTile;
 	}
-	
+
+	// Nick - TODO: Modify precondition when provide flexible board size later
+	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public Tile getTile(int x, int y) {
 		return tiles[x][y];
 	}
@@ -60,7 +56,7 @@ public class Board {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
-		
 	}
+
 
 }

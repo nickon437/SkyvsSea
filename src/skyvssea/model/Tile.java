@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import javafx.scene.paint.Color;
 import skyvssea.view.TilePane;
 
 import java.util.Observable;
@@ -41,14 +42,14 @@ public class Tile extends Observable {
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
 
-        String baseColor;
+        Color baseColor;
         if (isHighlighted) {
-            baseColor = TilePane.HIGHLIGHTED_COLOR;
+            baseColor = Color.valueOf(TilePane.HIGHLIGHTED_COLOR);
         } else {
             if (light) {
-                baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
+                baseColor = Color.valueOf(TilePane.DEFAULT_LIGHT_BASE_COLOR);
             } else {
-                baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
+                baseColor = Color.valueOf(TilePane.DEFAULT_DARK_BASE_COLOR);
             }
         }
         setChanged();

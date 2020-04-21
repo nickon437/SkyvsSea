@@ -1,8 +1,5 @@
 package skyvssea.view;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import com.google.java.contract.Requires;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -10,6 +7,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
+
+import java.util.Observable;
+import java.util.Observer;
 
 public class TilePane extends StackPane implements Observer {
 
@@ -51,20 +51,16 @@ public class TilePane extends StackPane implements Observer {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    @Requires("hexColor.charAt(0) == '#' && hexColor.length() <= 7 && hexColor.length() >= 4")
-    private void updateBaseColor(String hexColor) {
-        base.setFill(Color.valueOf(hexColor));
+    @Requires("color != null")
+    private void updateBaseColor(Color color) {
+        base.setFill(color);
     }
 
-    @Requires("arg != null && arg instanceof String")
+    @Requires("arg != null && arg instanceof Color")
 	@Override
 	public void update(Observable tile, Object arg) {
-		if (arg instanceof String) {
-            if (((String) arg).charAt(0) == '#') {
-                updateBaseColor((String) arg);
-            }
-        }
-	}
+        updateBaseColor((Color) arg);
+    }
 
 	public PieceView getPieceView() {
         for (Node node : getChildren()) {

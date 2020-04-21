@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.google.java.contract.Requires;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -15,7 +16,6 @@ public class TilePane extends StackPane implements Observer {
     public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
     public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
     public static final String HIGHLIGHTED_COLOR = "#FF5733";
-    public static final int PIECEVIEW_INDEX = 1;
 
     private Rectangle base;
     private int x;
@@ -63,7 +63,12 @@ public class TilePane extends StackPane implements Observer {
 	}
 
 	public PieceView getPieceView() {
-		return (PieceView) getChildren().get(PIECEVIEW_INDEX);
+        for (Node node : getChildren()) {
+            if (node instanceof PieceView) {
+                return (PieceView) node;
+            }
+        }
+		return null;
 	}
 
 	public void setPieceView(PieceView pieceView) {

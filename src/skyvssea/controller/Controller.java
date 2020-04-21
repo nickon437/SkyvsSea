@@ -97,7 +97,9 @@ public class Controller {
     	this.board = new Board();
         this.pieceManager = new PieceManager();
         this.playerManager = new PlayerManager(pieceManager.getEaglePiecesList(), pieceManager.getSharkPiecesList());
-    	
+
+        infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
+
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
     	tileViews.getChildren().forEach((tileView) -> {

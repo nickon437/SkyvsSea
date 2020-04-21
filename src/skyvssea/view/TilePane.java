@@ -4,9 +4,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.google.java.contract.Requires;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import skyvssea.controller.Controller;
 
 public class TilePane extends StackPane implements Observer {
 
@@ -18,14 +20,22 @@ public class TilePane extends StackPane implements Observer {
     private Rectangle base;
     private int x;
     private int y;
-    
-    public TilePane(int x, int y, double tileSize, BoardPane boardPane) {
+
+    public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
-        this.base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
-        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
-
+        this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
+
+        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            controller.handleTileClicked(this);
+        });
+    }
+
+    private Rectangle createBase(int x, int y, double tileSize) {
+        Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
+        return base;
     }
 
     public void updateTileSize(double newTileSize, double mostLeftX, double mostTopY) {
@@ -35,7 +45,6 @@ public class TilePane extends StackPane implements Observer {
         setTranslateY(mostTopY + y * newTileSize);
     }
 
-    public Rectangle getBase() { return base; }
     public int getX() { return x; }
     public int getY() { return y; }
 
@@ -43,16 +52,14 @@ public class TilePane extends StackPane implements Observer {
         base.setFill(Color.valueOf(color));
     }
 
-    @Requires("arg != null && (arg instanceof String || arg instanceof PieceView)")
+    @Requires("arg != null && arg instanceof String")
 	@Override
 	public void update(Observable tile, Object arg) {
 		if (arg instanceof String) {
             if (((String) arg).charAt(0) == '#') {
                 updateBaseColor((String) arg);
             }
-        } else if (arg instanceof PieceView){
-            this.getChildren().add((PieceView) arg);
-		}
+        }
 	}
 
 	public PieceView getPieceView() {

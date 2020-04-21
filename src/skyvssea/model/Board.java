@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import com.google.java.contract.Requires;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -20,7 +22,6 @@ public class Board {
 
 	public Tile[][] getTiles() { return tiles; }
 
-	// Nick - This method and clearHighlightedTiles() are originally in Controller class. Not sure if these methods should be there or here
 	public void highlightUnoccupiedTiles(Tile tile) {
 		if (!tile.hasPiece()) {
 			tile.setHighlighted(true);
@@ -40,7 +41,9 @@ public class Board {
 	public void setCurrentTile(Tile currentTile) {
 		this.currentTile = currentTile;
 	}
-	
+
+	// Nick - TODO: Modify precondition when provide flexible board size later
+	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public Tile getTile(int x, int y) {
 		return tiles[x][y];
 	}
@@ -51,7 +54,7 @@ public class Board {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
-		
 	}
+
 
 }

@@ -1,8 +1,5 @@
 package skyvssea.controller;
 
-import java.util.ArrayList;
-import java.util.Observer;
-
 import javafx.scene.Group;
 import skyvssea.model.Board;
 import skyvssea.model.Piece;
@@ -12,6 +9,9 @@ import skyvssea.view.BoardPane;
 import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
 
+import java.util.ArrayList;
+import java.util.Observer;
+
 public class Controller {
 
     private Board board;
@@ -19,16 +19,20 @@ public class Controller {
     private BoardPane boardPane;
 
     public void handleTileClicked(TilePane tileView) {
-    	
+
     	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
         if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
+
+            // Model
             Piece currentPiece = pieceManager.getCurrentPiece();
             selectedTile.setPiece(currentPiece);
+
+            // View
             Tile prevTile = board.getCurrentTile();
             PieceView pieceView = boardPane.getTileView(prevTile.getX(), prevTile.getY()).getPieceView();
             boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
-            
+
             board.getCurrentTile().removePiece();
         } else {
             board.clearHighlightedTiles();

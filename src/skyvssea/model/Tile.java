@@ -1,9 +1,8 @@
 package skyvssea.model;
 
-import java.util.Observable;
-
-import skyvssea.view.PieceView;
 import skyvssea.view.TilePane;
+
+import java.util.Observable;
 
 public class Tile extends Observable {
     private int x;
@@ -16,8 +15,7 @@ public class Tile extends Observable {
 		this.x = x;
 		this.y = y;
         this.light = light;
-        piece = null;
-        setHighlighted(false);
+        this.piece = null;
     }
 
     public boolean hasPiece() {
@@ -29,11 +27,11 @@ public class Tile extends Observable {
     }
 
     public void setPiece(Piece piece) {
-        this.piece = piece;
-	}
+	    this.piece = piece;
+    }
 
     public void removePiece() {
-        piece = null;
+	    this.piece = null;
     }
 
     public boolean isHighlighted() { return isHighlighted; }

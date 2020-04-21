@@ -15,8 +15,6 @@ public class ActionPane extends HBox {
         this.getChildren().addAll(moveBtn, killBtn, specialEffectBtn,skipBtn);
         this.setSpacing(20d);
 
-        //this.setStyle("-fx-background-color: #ffb578;"); // TODO: Remove this later
-
         maximizeControlSize(moveBtn);
         maximizeControlSize(killBtn);
         maximizeControlSize(specialEffectBtn);

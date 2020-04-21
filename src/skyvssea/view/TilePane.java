@@ -1,25 +1,82 @@
 package skyvssea.view;
 
+import java.util.Observable;
+import java.util.Observer;
+
+import com.google.java.contract.Requires;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import skyvssea.controller.Controller;
 
-public class TilePane extends Rectangle {
+public class TilePane extends StackPane implements Observer {
 
+    public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
+    public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
+    public static final String HIGHLIGHTED_COLOR = "#FF5733";
+
+    private Rectangle base;
     private int x;
     private int y;
 
-    public TilePane(int x, int y, double tileSize) {
-        super(x * tileSize, y * tileSize, tileSize, tileSize);
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL &&" +
+            "tileSize >= 0 && controller != null")
+    public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
+        this.base = createBase(x, y, tileSize);
+        this.getChildren().add(base);
 
-        this.setStroke(Color.valueOf("#264F73"));
+        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            controller.handleTileClicked(this);
+        });
     }
 
+    private Rectangle createBase(int x, int y, double tileSize) {
+        Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
+        return base;
+    }
+
+    @Requires("newTileSize >= 0 && mostLeftX >= 0 && mostTopY >= 0")
     public void updateTileSize(double newTileSize, double mostLeftX, double mostTopY) {
-        setX(mostLeftX + x * newTileSize);
-        setY(mostTopY + y * newTileSize);
-        setWidth(newTileSize);
-        setHeight(newTileSize);
+        base.setWidth(newTileSize);
+        base.setHeight(newTileSize);
+        setTranslateX(mostLeftX + x * newTileSize);
+        setTranslateY(mostTopY + y * newTileSize);
     }
+
+    public int getX() { return x; }
+    public int getY() { return y; }
+
+    @Requires("hexColor.charAt(0) == '#' && hexColor.length() <= 7 && hexColor.length() >= 4")
+    private void updateBaseColor(String hexColor) {
+        base.setFill(Color.valueOf(hexColor));
+    }
+
+    @Requires("arg != null && arg instanceof String")
+	@Override
+	public void update(Observable tile, Object arg) {
+		if (arg instanceof String) {
+            if (((String) arg).charAt(0) == '#') {
+                updateBaseColor((String) arg);
+            }
+        }
+	}
+
+	public PieceView getPieceView() {
+        for (Node node : getChildren()) {
+            if (node instanceof PieceView) {
+                return (PieceView) node;
+            }
+        }
+		return null;
+	}
+
+	@Requires("pieceView != null")
+	public void setPieceView(PieceView pieceView) {
+		getChildren().add(pieceView);
+	}
 }

@@ -21,11 +21,8 @@ public class BoardPane extends Pane {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
                 TilePane tileView = new TilePane(x, y, tileSize, this);
-
-                final int xCoord = x;
-                final int yCoord = y;
                 tileView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                    controller.handleTileClicked(xCoord, yCoord);
+                    controller.handleTileClicked(tileView);
                 });
 
                 tileGroup.getChildren().add(tileView);
@@ -81,12 +78,21 @@ public class BoardPane extends Pane {
         this.pieceViewGroup = pieceViews;
     }
 
-//    public void addPieceView(PieceView pieceView) {
-//    	pieceViewGroup.add(pieceView);
-//    }
+    public void addPieceView(PieceView pieceView) {
+    	pieceViewGroup.add(pieceView);
+    }
 
 	public Group getTileGroup() {
 		return tileGroup;
+	}
+
+	public TilePane getTileView(int x, int y) {
+		for (Node node : tileGroup.getChildren()) {
+			if (((TilePane) node).getX() == x && ((TilePane) node).getY() == y) {
+				return (TilePane) node;
+			}
+		}
+		return null;
 	}
 
 //	public void createPieceViews(ArrayList<String> names) {

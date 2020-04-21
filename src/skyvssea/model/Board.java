@@ -8,18 +8,9 @@ public class Board {
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile currentTile;
 
-	public Board(/* Group tileViews */) {
-		//TODO: should create the Tile objects here instead of getting from boardPane
-//		tiles = boardPane.getTiles();
+	public Board() {
 		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
-        
-//        for (Node node : tileViews.getChildren()) {
-//        	TilePane tilePane = (TilePane) node;
-//        	int x = tilePane.getX();
-//        	int y = tilePane.getY();
-//        	tiles[x][y] = new Tile(tilePane, (x + y) % 2 == 0);
-//        }
-        
+
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
 				tiles[x][y] = new Tile(x, y, (x + y) % 2 == 0);

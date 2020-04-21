@@ -13,16 +13,15 @@ public class TilePane extends StackPane implements Observer {
     public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
     public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
     public static final String HIGHLIGHTED_COLOR = "#FF5733";
+    public static final int PIECEVIEW_INDEX = 1;
 
     private Rectangle base;
     private int x;
     private int y;
-    private BoardPane boardPane;
-
+    
     public TilePane(int x, int y, double tileSize, BoardPane boardPane) {
         this.x = x;
         this.y = y;
-        this.boardPane = boardPane;
         this.base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
         base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
 
@@ -54,5 +53,13 @@ public class TilePane extends StackPane implements Observer {
         } else if (arg instanceof PieceView){
             this.getChildren().add((PieceView) arg);
 		}
+	}
+
+	public PieceView getPieceView() {
+		return (PieceView) getChildren().get(PIECEVIEW_INDEX);
+	}
+
+	public void setPieceView(PieceView pieceView) {
+		getChildren().add(pieceView);
 	}
 }

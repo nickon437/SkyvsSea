@@ -28,11 +28,8 @@ public class Tile extends Observable {
         return piece;
     }
 
-    public boolean setPiece(Piece piece, PieceView pieceView) {
+    public void setPiece(Piece piece) {
         this.piece = piece;
-        setChanged();
-        notifyObservers(pieceView);
-        return true;
 	}
 
     public void removePiece() {

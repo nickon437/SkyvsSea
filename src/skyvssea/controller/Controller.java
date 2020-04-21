@@ -40,40 +40,43 @@ public class Controller {
                 Piece piece = selectedTile.getPiece();
                 if (playerManager.checkSide(piece).equals(playerManager.getCurrentPlayer())) {
                     pieceManager.setCurrentPiece(piece);
-
-                    int numMove = piece.getNumMove();
-                    int pieceX = selectedTile.getX();
-                    int pieceY = selectedTile.getY();
-                    Tile[][] tiles = board.getTiles();
-
-                    // Nick - TODO: Find a way to modularize the code
-                    // Jiang - TODO: and customize available moves based on Piece type
-                    // Highlight possible move tiles
-                    for (int count = 1; count <= numMove; count++) {
-                        if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {
-                            Tile rightTile = tiles[pieceX + count][pieceY];
-                            board.highlightUnoccupiedTiles(rightTile);
-                        }
-
-                        if ((pieceX - count) >= 0) {
-                            Tile leftTile = tiles[pieceX - count][pieceY];
-                            board.highlightUnoccupiedTiles(leftTile);
-                        }
-
-                        if ((pieceY + count) < BoardPane.NUM_SIDE_CELL) {
-                            Tile downTile = tiles[pieceX][pieceY + count];
-                            board.highlightUnoccupiedTiles(downTile);
-                        }
-
-                        if ((pieceY - count) >= 0) {
-                            Tile upTile = tiles[pieceX][pieceY - count];
-                            board.highlightUnoccupiedTiles(upTile);
-                        }
-                    }
+                    highlightPossibleMoveTiles(piece, selectedTile);
                 }
             }
         }
         board.setCurrentTile(selectedTile);
+    }
+
+    private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
+        int numMove = piece.getNumMove();
+        int pieceX = selectedTile.getX();
+        int pieceY = selectedTile.getY();
+        Tile[][] tiles = board.getTiles();
+
+        // Nick - TODO: Find a way to modularize the code
+        // Jiang - TODO: and customize available moves based on Piece type
+        // Highlight possible move tiles
+        for (int count = 1; count <= numMove; count++) {
+            if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {
+                Tile rightTile = tiles[pieceX + count][pieceY];
+                board.highlightUnoccupiedTiles(rightTile);
+            }
+
+            if ((pieceX - count) >= 0) {
+                Tile leftTile = tiles[pieceX - count][pieceY];
+                board.highlightUnoccupiedTiles(leftTile);
+            }
+
+            if ((pieceY + count) < BoardPane.NUM_SIDE_CELL) {
+                Tile downTile = tiles[pieceX][pieceY + count];
+                board.highlightUnoccupiedTiles(downTile);
+            }
+
+            if ((pieceY - count) >= 0) {
+                Tile upTile = tiles[pieceX][pieceY - count];
+                board.highlightUnoccupiedTiles(upTile);
+            }
+        }
     }
 
     public void handleSkipButton() {

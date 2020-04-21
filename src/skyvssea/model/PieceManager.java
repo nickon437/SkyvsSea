@@ -46,6 +46,22 @@ public class PieceManager {
         return eaglePieces;
     }
 
+    public ArrayList<Piece> getSharkPiecesList() {
+        ArrayList<Piece> sharkPiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : sharkPieces.entrySet()) {
+            sharkPiecesList.addAll(entry.getValue());
+        }
+        return sharkPiecesList;
+    }
+
+    public ArrayList<Piece> getEaglePiecesList() {
+        ArrayList<Piece> eaglePiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : eaglePieces.entrySet()) {
+            eaglePiecesList.addAll(entry.getValue());
+        }
+        return eaglePiecesList;
+    }
+
     @Requires("board != null")
     public ArrayList<Tile> setPiecesOnBoard(Board board) {
         ArrayList<Tile> startingPositions = new ArrayList<>();

@@ -12,7 +12,7 @@ public class Controller {
 
     private Board board;
     private PieceManager pieceManager;
-    private TurnManager turnManager;
+    private PlayerManager playerManager;
     private BoardPane boardPane;
     private ActionPane actionPane;
     private InfoPane infoPane;
@@ -80,7 +80,7 @@ public class Controller {
     }
 
     private void changeTurn() {
-        Player player = turnManager.changeTurn();
+        Player player = playerManager.changeTurn();
         infoPane.setPlayerName(player.getName());
     }
 
@@ -92,7 +92,7 @@ public class Controller {
 
     	this.board = new Board();
         this.pieceManager = new PieceManager();
-        this.turnManager = new TurnManager();
+        this.playerManager = new PlayerManager(pieceManager.getEaglePiecesList(), pieceManager.getSharkPiecesList());
     	
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
@@ -110,6 +110,9 @@ public class Controller {
             PieceView pieceView = new PieceView(piece.getName());
             this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
             this.boardPane.addPieceView(pieceView);
+
+            Player player = playerManager.checkSide(piece);
+            pieceView.paint(player.getColor());
         });
     }
 }

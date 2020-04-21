@@ -35,6 +35,10 @@ public class PlayerManager {
         return null;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public Player changeTurn() {
         currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
         return currentPlayer;

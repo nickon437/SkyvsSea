@@ -4,21 +4,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
-import skyvssea.model.Player;
-import skyvssea.model.TurnManager;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
 
-
-    //new phil TODO: add turnManager
-    TurnManager turnManager = new TurnManager();
-    private Player[] players = new Player[2];
-    private Player currentPlayer;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-        turnManager.setUpPlayers();
         buildView(primaryStage);
     }
 
@@ -27,30 +18,19 @@ public class BoardGameApplication extends Application {
         stage.setTitle("Sky vs. Sea");
 
         BoardPane boardPane = new BoardPane(controller);
-//        Board board = new Board();//(boardPane.getTileGroup());
-        ActionPane actionPane = new ActionPane();
+        ActionPane actionPane = new ActionPane(controller);
         MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
 
         InfoPane infoPane = new InfoPane();
         MainView root = new MainView(primaryPane, infoPane);
 
-//        Game game = new Game(board);
-//        PieceManager pieceManager = new PieceManager();
-//        boardPane.setPieceGroup(pieceManager.getAllPieceViews());
-
         // Nick - There should be a better way to the models and views for controller
-        controller.setViewsAndModels(boardPane);
-
-        //Phil - to add actionpane with change player
-        controller.setAction(actionPane);
-        controller.setTurnManager(turnManager);
-        controller.addActionHandler();
+        controller.setViewsAndModels(boardPane, actionPane, infoPane);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         stage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);

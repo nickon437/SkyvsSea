@@ -3,10 +3,7 @@ package skyvssea.controller;
 import com.google.java.contract.Requires;
 import javafx.scene.Group;
 import skyvssea.model.*;
-import skyvssea.view.ActionPane;
-import skyvssea.view.BoardPane;
-import skyvssea.view.PieceView;
-import skyvssea.view.TilePane;
+import skyvssea.view.*;
 
 import java.util.ArrayList;
 import java.util.Observer;
@@ -15,20 +12,10 @@ public class Controller {
 
     private Board board;
     private PieceManager pieceManager;
+    private TurnManager turnManager;
     private BoardPane boardPane;
-
-    // Phil: construct the controller
     private ActionPane actionPane;
-    TurnManager turnManager = new TurnManager();
-    Player[] players;
-    Player currentPlayer;
-
-    public Controller() {
-        turnManager.setUpPlayers();
-        players = turnManager.players;
-        currentPlayer = players[0];
-
-    }
+    private InfoPane infoPane;
 
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
@@ -88,10 +75,24 @@ public class Controller {
         board.setCurrentTile(selectedTile);
     }
 
+    public void handleSkipButton() {
+        changeTurn();
+    }
+
+    private void changeTurn() {
+        Player player = turnManager.changeTurn();
+        infoPane.setPlayerName(player.getName());
+    }
+
     @Requires("boardPane != null")
-    public void setViewsAndModels(BoardPane boardPane) {
+    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
     	this.boardPane = boardPane;
+    	this.actionPane = actionPane;
+    	this.infoPane = infoPane;
+
     	this.board = new Board();
+        this.pieceManager = new PieceManager();
+        this.turnManager = new TurnManager();
     	
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
@@ -100,52 +101,15 @@ public class Controller {
     		int y = ((TilePane) tileView).getY();
     		tiles[x][y].addObserver((Observer) tileView);
     	});
-    	
     	board.setBaseColours();
-    	
-    	pieceManager = new PieceManager();
-        ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
 
         //Initialize PieceView objects and assign to the corresponding TilePane objects
+        ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         startingPositions.forEach(tile -> {
             Piece piece = tile.getPiece();
             PieceView pieceView = new PieceView(piece.getName());
             this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
             this.boardPane.addPieceView(pieceView);
         });
-    }
-
-    //  Phil TODO: click skip button, the player turn will be changed
-    public void setAction(ActionPane actionPane) {
-        this.actionPane = actionPane;
-    }
-
-    public void setTurnManager(TurnManager turnManager) {
-        this.turnManager = turnManager;
-        this.players = turnManager.players;
-    }
-
-
-    public void addActionHandler() {
-        currentPlayer.setStatus(true);
-        showCurrentPlayerName();
-
-        actionPane.getSkipBtn().setOnAction(actionEvent -> {
-            if(currentPlayer.getName() == players[0].getName()){
-                currentPlayer = turnManager.nextTurn();
-                showCurrentPlayerName();
-            }
-
-            else if (currentPlayer.getName() == players[1].getName()){
-                currentPlayer = turnManager.nextTurn();
-                showCurrentPlayerName();
-            }
-        });
-
-    }
-
-    public void showCurrentPlayerName(){
-        actionPane.getPlayerText().setText(currentPlayer.getName());
-        actionPane.getPlayerText().setFill(currentPlayer.getColour());
     }
 }

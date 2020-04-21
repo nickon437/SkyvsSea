@@ -22,6 +22,7 @@ public class Board {
 
 	public Tile[][] getTiles() { return tiles; }
 
+	@Requires("tile != null")
 	public void highlightUnoccupiedTiles(Tile tile) {
 		if (!tile.hasPiece()) {
 			tile.setHighlighted(true);
@@ -38,6 +39,7 @@ public class Board {
 
 	public Tile getCurrentTile() { return currentTile; }
 
+	@Requires("currentTile != null")
 	public void setCurrentTile(Tile currentTile) {
 		this.currentTile = currentTile;
 	}

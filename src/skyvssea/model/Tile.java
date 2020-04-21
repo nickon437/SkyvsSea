@@ -1,5 +1,6 @@
 package skyvssea.model;
 
+import com.google.java.contract.Requires;
 import skyvssea.view.TilePane;
 
 import java.util.Observable;
@@ -11,6 +12,7 @@ public class Tile extends Observable {
     private boolean light;
     private boolean isHighlighted;
 
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
 	public Tile(int x, int y, boolean light) {
 		this.x = x;
 		this.y = y;

@@ -1,5 +1,6 @@
 package skyvssea.view;
 
+import com.google.java.contract.Requires;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,6 +16,7 @@ public class BoardPane extends Pane {
     private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
     private double tileSize;
 
+    @Requires("controller != null")
     public BoardPane(Controller controller) {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
@@ -41,6 +43,7 @@ public class BoardPane extends Pane {
         heightProperty().addListener(paneSizeListener);
     }
 
+    @Requires("tileSize >= 0 && width >= tileSize && height >= tileSize")
     private void updateTilesSize(double tileSize, double width, double height) {
         double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
@@ -51,6 +54,7 @@ public class BoardPane extends Pane {
         }
     }
 
+    @Requires("tileSize >= 0")
     private void updatePiecesSize(double tileSize) {
         for (PieceView pieceView : pieceViewGroup) {
             pieceView.updatePieceViewSize(tileSize);
@@ -61,6 +65,7 @@ public class BoardPane extends Pane {
         this.pieceViewGroup = pieceViews;
     }
 
+    @Requires("pieceView != null")
     public void addPieceView(PieceView pieceView) {
     	pieceViewGroup.add(pieceView);
     }
@@ -69,6 +74,7 @@ public class BoardPane extends Pane {
 		return tileGroup;
 	}
 
+	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public TilePane getTileView(int x, int y) {
 		for (Node node : tileGroup.getChildren()) {
 			if (((TilePane) node).getX() == x && ((TilePane) node).getY() == y) {

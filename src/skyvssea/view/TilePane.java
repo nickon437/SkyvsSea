@@ -21,6 +21,8 @@ public class TilePane extends StackPane implements Observer {
     private int x;
     private int y;
 
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL &&" +
+            "tileSize >= 0 && controller != null")
     public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
@@ -38,6 +40,7 @@ public class TilePane extends StackPane implements Observer {
         return base;
     }
 
+    @Requires("newTileSize >= 0 && mostLeftX >= 0 && mostTopY >= 0")
     public void updateTileSize(double newTileSize, double mostLeftX, double mostTopY) {
         base.setWidth(newTileSize);
         base.setHeight(newTileSize);
@@ -48,8 +51,9 @@ public class TilePane extends StackPane implements Observer {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    private void updateBaseColor(String color) {
-        base.setFill(Color.valueOf(color));
+    @Requires("hexColor.charAt(0) == '#' && hexColor.length() <= 7 && hexColor.length() >= 4")
+    private void updateBaseColor(String hexColor) {
+        base.setFill(Color.valueOf(hexColor));
     }
 
     @Requires("arg != null && arg instanceof String")
@@ -71,6 +75,7 @@ public class TilePane extends StackPane implements Observer {
 		return null;
 	}
 
+	@Requires("pieceView != null")
 	public void setPieceView(PieceView pieceView) {
 		getChildren().add(pieceView);
 	}

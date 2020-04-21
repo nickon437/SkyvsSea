@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import com.google.java.contract.Requires;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class PieceManager {
     
     public Piece getCurrentPiece() { return currentPiece; }
 
+    @Requires("currentPiece != null")
     public void setCurrentPiece(Piece currentPiece) {
         this.currentPiece = currentPiece;
     }
@@ -41,6 +44,7 @@ public class PieceManager {
 		return eaglePieces;
 	}
 
+	@Requires("board != null")
 	public ArrayList<Tile> setPiecesOnBoard(Board board) {
         ArrayList<Tile> startingPositions = new ArrayList<>();
 		int midPoint = Board.NUM_SIDE_CELL / 2;

@@ -1,5 +1,6 @@
 package skyvssea.controller;
 
+import com.google.java.contract.Requires;
 import javafx.scene.Group;
 import skyvssea.model.Board;
 import skyvssea.model.Piece;
@@ -18,6 +19,7 @@ public class Controller {
     private PieceManager pieceManager;
     private BoardPane boardPane;
 
+    @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
 
     	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
@@ -75,6 +77,7 @@ public class Controller {
         board.setCurrentTile(selectedTile);
     }
 
+    @Requires("boardPane != null")
     public void setViewsAndModels(BoardPane boardPane) {
     	this.boardPane = boardPane;
     	this.board = new Board();

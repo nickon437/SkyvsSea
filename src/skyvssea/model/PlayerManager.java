@@ -15,8 +15,8 @@ public class PlayerManager {
     public PlayerManager(ArrayList<Piece> eaglePiecesList, ArrayList<Piece> sharkPiecesList) {
         initializePlayers();
 
-        playerPieces.put(players[0], eaglePiecesList);
-        playerPieces.put(players[1], sharkPiecesList);
+        playerPieces.put(players[0], sharkPiecesList);
+        playerPieces.put(players[1], eaglePiecesList);
     }
 
     private void initializePlayers() {

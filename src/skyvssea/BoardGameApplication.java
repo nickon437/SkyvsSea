@@ -4,17 +4,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.Controller;
-import skyvssea.model.Player;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
 
-    private Player[] players = new Player[2];
-    private Player currentPlayer;
-
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        setUpPlayers();
+    public void start(Stage primaryStage) throws Exception {
         buildView(primaryStage);
     }
 
@@ -23,33 +18,18 @@ public class BoardGameApplication extends Application {
         stage.setTitle("Sky vs. Sea");
 
         BoardPane boardPane = new BoardPane(controller);
-//        Board board = new Board();//(boardPane.getTileGroup());
-        ActionPane actionPane = new ActionPane();
+        ActionPane actionPane = new ActionPane(controller);
         MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
 
         InfoPane infoPane = new InfoPane();
         MainView root = new MainView(primaryPane, infoPane);
 
-//        Game game = new Game(board);
-//        PieceManager pieceManager = new PieceManager();
-//        boardPane.setPieceGroup(pieceManager.getAllPieceViews());
-
         // Nick - There should be a better way to the models and views for controller
-        controller.setViewsAndModels(boardPane);
+        controller.setViewsAndModels(boardPane, actionPane, infoPane);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         stage.show();
-    }
-
-    private void setUpPlayers() {
-        players[0] = new Player(Player.BLUE_COLOUR);
-        players[1] = new Player(Player.RED_COLOUR);
-        currentPlayer = players[0];
-    }
-
-    private void nextTurn() {
-        currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
     }
 
     public static void main(String[] args) {

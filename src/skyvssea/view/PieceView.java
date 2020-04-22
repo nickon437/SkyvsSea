@@ -12,10 +12,11 @@ public class PieceView extends StackPane {
     private Circle circle;
     private Text text;
 
-    public PieceView(String name) {
+    public PieceView(String name, Color color) {
         this.circle = new Circle(5, Color.ORCHID);
         this.text = createText(name);
         this.getChildren().addAll(circle, text);
+        paint(color);
     }
 
     private Text createText(String name) {
@@ -24,7 +25,7 @@ public class PieceView extends StackPane {
         return text;
     }
 
-    public void paint(Color color) {
+    private void paint(Color color) {
         circle.setFill(color);
     }
 

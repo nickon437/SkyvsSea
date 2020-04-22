@@ -8,31 +8,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerManager {
-    private Player[] players = new Player[2];
+    private Player player1;
+    private Player player2;
     private Player currentPlayer;
-    private HashMap<Player, ArrayList<Piece>> playerPieces = new HashMap<>();
+//    private HashMap<Player, ArrayList<Piece>> playerPieces = new HashMap<>();
 
-    public PlayerManager(ArrayList<Piece> eaglePiecesList, ArrayList<Piece> sharkPiecesList) {
+	public PlayerManager(/* ArrayList<Piece> eaglePiecesList, ArrayList<Piece> sharkPiecesList */) {
         initializePlayers();
 
-        playerPieces.put(players[0], sharkPiecesList);
-        playerPieces.put(players[1], eaglePiecesList);
+//        playerPieces.put(players[0], sharkPiecesList);
+//        playerPieces.put(players[1], eaglePiecesList);
     }
 
     private void initializePlayers() {
-        players[0] = new Player("Shark's turn", Color.LIGHTCORAL);
-        players[1] = new Player("Eagle's turn", Color.CORNFLOWERBLUE);
-        currentPlayer = players[0];
+        player1 = new Player("Shark's turn", Color.LIGHTCORAL, Team.SHARK);
+        player2 = new Player("Eagle's turn", Color.CORNFLOWERBLUE, Team.EAGLE);
+        currentPlayer = player1;
     }
 
     @Requires("piece != null")
     public Player checkSide(Piece piece) {
-        for (Map.Entry<Player, ArrayList<Piece>> entry : playerPieces.entrySet()) {
-            if (entry.getValue().contains(piece)) {
-                return entry.getKey();
-            }
-        }
-        return null;
+    	if (piece.getTeam() == Team.SHARK) {
+    		return player1;
+    	} else {
+    		return player2;
+    	}
+    	
+//        for (Map.Entry<Player, ArrayList<Piece>> entry : playerPieces.entrySet()) {
+//            if (entry.getValue().contains(piece)) {
+//                return entry.getKey();
+//            }
+//        }
+//        return null;
     }
 
     public Player getCurrentPlayer() {
@@ -40,7 +47,7 @@ public class PlayerManager {
     }
 
     public Player changeTurn() {
-        currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
+        currentPlayer = currentPlayer.equals(player1) ? player2 : player1;
         return currentPlayer;
     }
 }

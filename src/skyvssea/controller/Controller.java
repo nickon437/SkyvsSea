@@ -96,7 +96,7 @@ public class Controller {
 
     	this.board = new Board();
         this.pieceManager = new PieceManager();
-        this.playerManager = new PlayerManager(pieceManager.getEaglePiecesList(), pieceManager.getSharkPiecesList());
+        this.playerManager = new PlayerManager();
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
 
@@ -113,12 +113,15 @@ public class Controller {
         ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         startingPositions.forEach(tile -> {
             Piece piece = tile.getPiece();
-            PieceView pieceView = new PieceView(piece.getName());
-            this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
-            this.boardPane.addPieceView(pieceView);
-
             Player player = playerManager.checkSide(piece);
-            pieceView.paint(player.getColor());
+            this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
+            
+//            PieceView pieceView = new PieceView(piece.getName());
+//            this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
+//            this.boardPane.addPieceView(pieceView);
+//
+//            Player player = playerManager.checkSide(piece);
+//            pieceView.paint(player.getColor());
         });
     }
 }

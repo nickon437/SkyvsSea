@@ -5,7 +5,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
+import skyvssea.model.Player;
 
 import java.util.ArrayList;
 
@@ -82,6 +84,12 @@ public class BoardPane extends Pane {
 			}
 		}
 		return null;
+	}
+
+	public void initializePieceView(int x, int y, String name, Color color) {
+		PieceView pieceView = new PieceView(name, color);
+        getTileView(x, y).setPieceView(pieceView);
+        addPieceView(pieceView);
 	}
 
 

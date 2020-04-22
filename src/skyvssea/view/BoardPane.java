@@ -1,12 +1,13 @@
 package skyvssea.view;
 
+import com.google.java.contract.Requires;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
-import skyvssea.model.Tile;
+import skyvssea.model.Player;
 
 import java.util.ArrayList;
 
@@ -16,29 +17,15 @@ public class BoardPane extends Pane {
     private Group tileGroup = new Group();
     private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
     private double tileSize;
-//    private Tile[][] tiles;
 
+    @Requires("controller != null")
     public BoardPane(Controller controller) {
-    	
-    	//TODO: Creation of Tile is not the responsibility of BOardPane, and BoardPane should not own Tile objects
-//        tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
-
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
-                TilePane tileView = new TilePane(x, y, tileSize, this);
-//                Tile tile = setTile(tileView, x, y);
-
-                final int xCoord = x;
-                final int yCoord = y;
-                tileView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-//                    controller.handleTileClicked(tile);
-                    controller.handleTileClicked(xCoord, yCoord);
-                });
-
+                TilePane tileView = new TilePane(x, y, tileSize, controller);
                 tileGroup.getChildren().add(tileView);
             }
         }
-
         this.getChildren().add(getTileGroup());
 
         setDynamicTileSize();
@@ -51,13 +38,14 @@ public class BoardPane extends Pane {
             double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
             tileSize = boardSideSize / NUM_SIDE_CELL;
             updateTilesSize(tileSize, paneWidth, paneHeight);
-            updateAllPiecesSize(tileSize);
+            updatePiecesSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);
         heightProperty().addListener(paneSizeListener);
     }
 
+    @Requires("tileSize >= 0 && width >= tileSize && height >= tileSize")
     private void updateTilesSize(double tileSize, double width, double height) {
         double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
@@ -68,31 +56,18 @@ public class BoardPane extends Pane {
         }
     }
 
-    private void updateAllPiecesSize(double tileSize) {
+    @Requires("tileSize >= 0")
+    private void updatePiecesSize(double tileSize) {
         for (PieceView pieceView : pieceViewGroup) {
             pieceView.updatePieceViewSize(tileSize);
         }
     }
-    
-//    public void updatePieceSize(PieceView pieceView) {
-//    	pieceView.updatePieceViewSize(tileSize);
-//    }
 
-//    public Tile setTile(TilePane tileView, int x, int y) {
-//        Tile tile = new Tile(tileView, (x + y) % 2 == 0);
-//        tiles[x][y] = tile;
-//        return tile;
-//    }
+    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
+        this.pieceViewGroup = pieceViews;
+    }
 
-    // Nick - TODO: Need to modify this as this getTiles() method is only used by Board once when setting up and shouldn't be accessible in any other circumstances
-//    public Tile[][] getTiles() {
-//        return tiles;
-//    }
-
-//    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
-//        this.pieceViewGroup = pieceViews;
-//    }
-    
+    @Requires("pieceView != null")
     public void addPieceView(PieceView pieceView) {
     	pieceViewGroup.add(pieceView);
     }
@@ -101,36 +76,21 @@ public class BoardPane extends Pane {
 		return tileGroup;
 	}
 
-//	public void createPieceViews(ArrayList<String> names) {
-//		ArrayList<PieceView> pieceViews = new ArrayList<>();
-//		for (String name : names) {
-//			pieceViews.add(new PieceView(name));
-//		}
-//		pieceViewGroup = pieceViews;
-//	}
-	
-	public ArrayList<PieceView> getPieceViews() {
-		return pieceViewGroup;
-	}
-
-	public void removePieceView(String name) {
-		for (int i = 0; i < pieceViewGroup.size(); i ++) {
-			if (pieceViewGroup.get(i).getName().equals(name)) {
-				pieceViewGroup.remove(i);
-				break;
+	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
+	public TilePane getTileView(int x, int y) {
+		for (Node node : tileGroup.getChildren()) {
+			if (((TilePane) node).getX() == x && ((TilePane) node).getY() == y) {
+				return (TilePane) node;
 			}
 		}
-	}
-
-	public PieceView getPieceView(String name) {
-		for (int i = 0; i < pieceViewGroup.size(); i ++) {
-			PieceView pieceView = pieceViewGroup.get(i);
-			if (pieceView.getName().equals(name)) {
-				return pieceView;
-			}
-		}
-		
 		return null;
 	}
+
+	public void initializePieceView(int x, int y, String name, Color color) {
+		PieceView pieceView = new PieceView(name, color);
+        getTileView(x, y).setPieceView(pieceView);
+        addPieceView(pieceView);
+	}
+
 
 }

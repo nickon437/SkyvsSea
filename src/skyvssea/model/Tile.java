@@ -1,24 +1,23 @@
 package skyvssea.model;
 
-import java.util.Observable;
-
-import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
-
 import skyvssea.view.TilePane;
 
-public class Tile  extends Observable {
-	private int x;
+import java.util.Observable;
+
+public class Tile extends Observable {
+    private int x;
 	private int y;
     private Piece piece;
     private boolean light;
     private boolean isHighlighted;
 
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
 	public Tile(int x, int y, boolean light) {
 		this.x = x;
 		this.y = y;
         this.light = light;
-        piece = null;
+        this.piece = null;
     }
 
     public boolean hasPiece() {
@@ -30,23 +29,21 @@ public class Tile  extends Observable {
     }
 
     public void setPiece(Piece piece) {
-        this.piece = piece;
-        setChanged();
-        notifyObservers(piece.getName());
+	    this.piece = piece;
     }
 
-    @Ensures("piece == null")
     public void removePiece() {
-        piece = null;
+	    this.piece = null;
     }
 
     public boolean isHighlighted() { return isHighlighted; }
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
+
         String baseColor;
         if (isHighlighted) {
-            baseColor = TilePane.HIGHLIGHED_COLOR;
+            baseColor = TilePane.HIGHLIGHTED_COLOR;
         } else {
             if (light) {
                 baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
@@ -54,7 +51,6 @@ public class Tile  extends Observable {
                 baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
             }
         }
-
         setChanged();
         notifyObservers(baseColor);
     }

@@ -3,31 +3,44 @@ package skyvssea.view;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.java.contract.Requires;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import skyvssea.controller.Controller;
 
 public class TilePane extends StackPane implements Observer {
 
     public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
     public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
-    public static final String HIGHLIGHED_COLOR = "#FF5733";
+    public static final String HIGHLIGHTED_COLOR = "#FF5733";
 
     private Rectangle base;
     private int x;
     private int y;
-    private BoardPane boardPane;
 
-    public TilePane(int x, int y, double tileSize, BoardPane boardPane) {
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL &&" +
+            "tileSize >= 0 && controller != null")
+    public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
-        this.boardPane = boardPane;
-        this.base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
-        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
-
+        this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
+
+        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            controller.handleTileClicked(this);
+        });
     }
 
+    private Rectangle createBase(int x, int y, double tileSize) {
+        Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
+        return base;
+    }
+
+    @Requires("newTileSize >= 0")
     public void updateTileSize(double newTileSize, double mostLeftX, double mostTopY) {
         base.setWidth(newTileSize);
         base.setHeight(newTileSize);
@@ -35,42 +48,35 @@ public class TilePane extends StackPane implements Observer {
         setTranslateY(mostTopY + y * newTileSize);
     }
 
-    public Rectangle getBase() { return base; }
     public int getX() { return x; }
     public int getY() { return y; }
 
-    private void updateBaseColor(String color) {
-        base.setFill(Color.valueOf(color));
+    @Requires("hexColor.charAt(0) == '#' && hexColor.length() <= 7 && hexColor.length() >= 4")
+    private void updateBaseColor(String hexColor) {
+        base.setFill(Color.valueOf(hexColor));
     }
 
+    @Requires("arg != null && arg instanceof String")
 	@Override
-	public void update(Observable tile, Object stringInput) {
-		//Jiang: Obviously this is not the most ideal design but this is all i can think of now
-		if (((String) stringInput).charAt(0) == '#') {
-			updateBaseColor((String) stringInput);
-		} 
-//		else if (((String) stringInput).equals("REMOVE_PIECEVIEW")) {
-//			PieceView removedPieceView = (PieceView) getChildren().remove(1);
-//			boardPane.removePieceView(removedPieceView.getName());
-//		} 
-		else {
-			PieceView pieceView = boardPane.getPieceView((String) stringInput);
-			
-			//this condition is only true when initializing Piece and PieceView objects
-			if (pieceView == null) {
-				pieceView = new PieceView((String) stringInput);
-				boardPane.addPieceView(pieceView);
-//				boardPane.updatePieceSize(pieceView);
-			}
-			
-			getChildren().add(pieceView);		
-			
-			
-//			PieceView newPieceView = new PieceView((String) stringInput);
-//			getChildren().add(newPieceView);		
-//			boardPane.addPieceView(newPieceView);
-//			boardPane.updatePieceSize(newPieceView);
-		}
-		
+	public void update(Observable tile, Object arg) {
+		if (arg instanceof String) {
+            if (((String) arg).charAt(0) == '#') {
+                updateBaseColor((String) arg);
+            }
+        }
+	}
+
+	public PieceView getPieceView() {
+        for (Node node : getChildren()) {
+            if (node instanceof PieceView) {
+                return (PieceView) node;
+            }
+        }
+		return null;
+	}
+
+	@Requires("pieceView != null")
+	public void setPieceView(PieceView pieceView) {
+		getChildren().add(pieceView);
 	}
 }

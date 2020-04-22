@@ -86,6 +86,10 @@ public class Controller {
     private void changeTurn() {
         Player player = playerManager.changeTurn();
         infoPane.setPlayerName(player.getName());
+
+        board.clearHighlightedTiles();
+        board.clearCurrentTile();
+        pieceManager.clearCurrentPiece();
     }
 
     @Requires("boardPane != null")

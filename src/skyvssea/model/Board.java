@@ -44,6 +44,10 @@ public class Board {
 		this.currentTile = currentTile;
 	}
 
+	public void clearCurrentTile() {
+		this.currentTile = null;
+	}
+
 	// Nick - TODO: Modify precondition when provide flexible board size later
 	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public Tile getTile(int x, int y) {

@@ -6,6 +6,8 @@ import skyvssea.model.*;
 import skyvssea.view.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Observer;
 
 public class Controller {
@@ -49,33 +51,24 @@ public class Controller {
 
     private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
         int numMove = piece.getNumMove();
-        int pieceX = selectedTile.getX();
-        int pieceY = selectedTile.getY();
-        Tile[][] tiles = board.getTiles();
 
-        // Nick - TODO: Find a way to modularize the code
-        // Jiang - TODO: and customize available moves based on Piece type
-        // Highlight possible move tiles
+        List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
         for (int count = 1; count <= numMove; count++) {
-            if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {
-                Tile rightTile = tiles[pieceX + count][pieceY];
-                board.highlightUnoccupiedTiles(rightTile);
-            }
+            ArrayList<Direction> blockedDirections = new ArrayList<>();
+            for (Direction direction : tempDirections) {
+                Tile tile = board.getTile(selectedTile, direction, count);
 
-            if ((pieceX - count) >= 0) {
-                Tile leftTile = tiles[pieceX - count][pieceY];
-                board.highlightUnoccupiedTiles(leftTile);
+                if (tile != null) {
+                    if (tile.hasPiece()) {
+                        if (!tempDirections.contains(Direction.JUMPOVER)) {
+                            blockedDirections.add(direction);
+                        }
+                    } else {
+                        board.highlightUnoccupiedTile(tile);
+                    }
+                }
             }
-
-            if ((pieceY + count) < BoardPane.NUM_SIDE_CELL) {
-                Tile downTile = tiles[pieceX][pieceY + count];
-                board.highlightUnoccupiedTiles(downTile);
-            }
-
-            if ((pieceY - count) >= 0) {
-                Tile upTile = tiles[pieceX][pieceY - count];
-                board.highlightUnoccupiedTiles(upTile);
-            }
+            tempDirections.removeAll(blockedDirections);
         }
     }
 

@@ -1,25 +1,25 @@
 package skyvssea.model;
 
+import com.google.java.contract.Requires;
+import javafx.scene.paint.Color;
+
 public class Player {
-    public static final String BLUE_COLOUR = "#3498db";
-    public static final String RED_COLOUR = "#e74c3c";
     private String name;
-    private String colour;
+    private Color color;
+    private Team team;
 
-    public Player(String colour) {
-        this("skyvssea.model.Player", colour);
-    }
-
-    public Player(String name, String colour) {
+    @Requires("name !=  null && color != null")
+    public Player(String name, Color color, Team team) {
         this.name = name;
-        this.colour = colour;
+        this.color = color;
+        this.team = team;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getColour() {
-        return colour;
+    public Color getColor() {
+        return color;
     }
 }

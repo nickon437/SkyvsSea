@@ -40,7 +40,7 @@ public class TilePane extends StackPane implements Observer {
         return base;
     }
 
-    @Requires("newTileSize >= 0 && mostLeftX >= 0 && mostTopY >= 0")
+    @Requires("newTileSize >= 0")
     public void updateTileSize(double newTileSize, double mostLeftX, double mostTopY) {
         base.setWidth(newTileSize);
         base.setHeight(newTileSize);

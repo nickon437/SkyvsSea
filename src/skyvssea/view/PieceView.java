@@ -1,5 +1,6 @@
 package skyvssea.view;
 
+import com.google.java.contract.Requires;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -11,16 +12,21 @@ public class PieceView extends StackPane {
     private Circle circle;
     private Text text;
 
-    public PieceView(String name) {
+    public PieceView(String name, Color color) {
         this.circle = new Circle(5, Color.ORCHID);
         this.text = createText(name);
         this.getChildren().addAll(circle, text);
+        paint(color);
     }
 
     private Text createText(String name) {
         Text text = new Text(name);
         text.setTextAlignment(TextAlignment.CENTER);
         return text;
+    }
+
+    private void paint(Color color) {
+        circle.setFill(color);
     }
 
     public void updatePieceViewSize(double tileSize) {

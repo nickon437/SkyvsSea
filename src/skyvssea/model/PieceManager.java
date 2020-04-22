@@ -10,7 +10,7 @@ public class PieceManager {
     private Map<Hierarchy, ArrayList<Piece>> eaglePieces;
     private Piece currentPiece;
 
-	public PieceManager() {
+    public PieceManager() {
         initializePieces();
     }
 
@@ -24,8 +24,10 @@ public class PieceManager {
         sharkPieces = sharkFactory.createInitialLineUp();
         eaglePieces = eagleFactory.createInitialLineUp();
     }
-    
-    public Piece getCurrentPiece() { return currentPiece; }
+
+    public Piece getCurrentPiece() {
+        return currentPiece;
+    }
 
     @Requires("currentPiece != null")
     public void setCurrentPiece(Piece currentPiece) {
@@ -36,26 +38,42 @@ public class PieceManager {
         currentPiece = null;
     }
 
-	public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() {
-		return sharkPieces;
-	}
+    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() {
+        return sharkPieces;
+    }
 
-	public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() {
-		return eaglePieces;
-	}
+    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() {
+        return eaglePieces;
+    }
 
-	@Requires("board != null")
-	public ArrayList<Tile> setPiecesOnBoard(Board board) {
+    public ArrayList<Piece> getSharkPiecesList() {
+        ArrayList<Piece> sharkPiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : sharkPieces.entrySet()) {
+            sharkPiecesList.addAll(entry.getValue());
+        }
+        return sharkPiecesList;
+    }
+
+    public ArrayList<Piece> getEaglePiecesList() {
+        ArrayList<Piece> eaglePiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : eaglePieces.entrySet()) {
+            eaglePiecesList.addAll(entry.getValue());
+        }
+        return eaglePiecesList;
+    }
+
+    @Requires("board != null")
+    public ArrayList<Tile> setPiecesOnBoard(Board board) {
         ArrayList<Tile> startingPositions = new ArrayList<>();
-		int midPoint = Board.NUM_SIDE_CELL / 2;
+        int midPoint = Board.NUM_SIDE_CELL / 2;
 
-		// Use ArrayList to reduce code duplication when traverse through HashMap
-		ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = new ArrayList<>();
+        // Use ArrayList to reduce code duplication when traverse through HashMap
+        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = new ArrayList<>();
         piecesList.add(sharkPieces);
         piecesList.add(eaglePieces);
 
-		for (Map<Hierarchy, ArrayList<Piece>> pieces : piecesList) {
-		    int pieceXCoord = 0;
+        for (Map<Hierarchy, ArrayList<Piece>> pieces : piecesList) {
+            int pieceXCoord = 0;
             int pieceYCoord = midPoint;
             int pieceIndex = 0;
             int flip = 1;
@@ -78,6 +96,6 @@ public class PieceManager {
             }
         }
 
-		return startingPositions;
-	}
+        return startingPositions;
+    }
 }

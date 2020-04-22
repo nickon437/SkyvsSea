@@ -6,6 +6,7 @@ import skyvssea.model.*;
 import skyvssea.view.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Observer;
 
 public class Controller {
@@ -89,13 +90,13 @@ public class Controller {
     }
 
     @Requires("boardPane != null")
-    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Map<Hierarchy, Integer> lineup) {
     	this.boardPane = boardPane;
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
     	this.board = new Board();
-        this.pieceManager = new PieceManager();
+        this.pieceManager = new PieceManager(lineup);
         this.playerManager = new PlayerManager();
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());

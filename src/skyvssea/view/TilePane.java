@@ -24,15 +24,19 @@ public class TilePane extends StackPane implements Observer {
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0 && controller != null")
-    public TilePane(int x, int y, boolean light, double tileSize, Controller controller) {
+    public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
-        this.light = light;
+        this.light = setDefaultBaseColor(x, y);
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> controller.handleTileClicked(this));
     }
+
+	private boolean setDefaultBaseColor(int x, int y) {
+		return (x + y) % 2 == 0;
+	}
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0")

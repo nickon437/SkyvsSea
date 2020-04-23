@@ -22,7 +22,7 @@ public class BoardPane extends Pane {
     public BoardPane(Controller controller) {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
-                TilePane tileView = new TilePane(x, y,  (x + y) % 2 == 0, tileSize, controller);
+                TilePane tileView = new TilePane(x, y, tileSize, controller);
                 tileGroup.getChildren().add(tileView);
             }
         }

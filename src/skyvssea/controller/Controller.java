@@ -14,6 +14,7 @@ import java.util.Observer;
 
 public class Controller {
 
+    private Game game;
     private Board board;
     private PieceManager pieceManager;
     private PlayerManager playerManager;
@@ -38,6 +39,9 @@ public class Controller {
             boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
 
             board.getCurrentTile().removePiece();
+
+            // TODO: Remove this later when implementing attacking
+            changeTurn();
         } else {
             board.clearHighlightedTiles();
             if (selectedTile.hasPiece()) {
@@ -93,6 +97,7 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
+    	this.game = new Game();
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());

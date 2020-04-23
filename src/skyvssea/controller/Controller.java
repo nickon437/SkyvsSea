@@ -8,6 +8,8 @@ import skyvssea.view.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observer;
 
 public class Controller {
@@ -92,7 +94,7 @@ public class Controller {
     	this.infoPane = infoPane;
 
     	this.board = new Board();
-        this.pieceManager = new PieceManager();
+		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
@@ -114,4 +116,13 @@ public class Controller {
             this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
         });
     }
+    
+	private Map<Hierarchy, Integer> createInitialLineUp() {
+		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		lineup.put(Hierarchy.BIG, 1);
+		lineup.put(Hierarchy.MEDIUM, 1);
+		lineup.put(Hierarchy.SMALL, 1);
+		lineup.put(Hierarchy.BABY, 1);
+		return lineup;
+	}
 }

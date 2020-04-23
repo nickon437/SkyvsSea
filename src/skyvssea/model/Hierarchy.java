@@ -1,6 +1,6 @@
 package skyvssea.model;
 
-enum Hierarchy {
+public enum Hierarchy {
 	BABY,
     SMALL,
     MEDIUM,

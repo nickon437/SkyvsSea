@@ -7,16 +7,14 @@ import javafx.scene.layout.Priority;
 import skyvssea.controller.Controller;
 
 public class ActionPane extends HBox {
-    private Button moveBtn = new Button("Move");
     private Button killBtn = new Button("Kill");
     private Button specialEffectBtn = new Button("Special Effect");
     private Button skipBtn = new Button("Skip");
 
     public ActionPane(Controller controller) {
-        this.getChildren().addAll(moveBtn, killBtn, specialEffectBtn,skipBtn);
+        this.getChildren().addAll(killBtn, specialEffectBtn,skipBtn);
         this.setSpacing(20d);
 
-        maximizeControlSize(moveBtn);
         maximizeControlSize(killBtn);
         maximizeControlSize(specialEffectBtn);
         maximizeControlSize(skipBtn);

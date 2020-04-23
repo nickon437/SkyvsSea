@@ -18,6 +18,8 @@ public class PieceManager {
     /**
      * Create initial lineup of pieces for both sides
      */
+	//The precondition checks if the lineup numbers are not all zeroes
+	@Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
     public void initializePieces(Map<Hierarchy, Integer> lineup) {
         PieceFactory sharkFactory = SharkFactory.getInstance();
         PieceFactory eagleFactory = EagleFactory.getInstance();

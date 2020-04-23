@@ -5,12 +5,7 @@ import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.view.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observer;
+import java.util.*;
 
 public class Controller {
 
@@ -24,21 +19,24 @@ public class Controller {
 
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
-
     	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
+    	Tile previousTile = board.getCurrentTile();
+    	board.setCurrentTile(selectedTile);
+
         if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
 
-            // Model
-            Piece currentPiece = pieceManager.getCurrentPiece();
-            selectedTile.setPiece(currentPiece);
+            if (!selectedTile.equals(previousTile)) {
+                // Model
+                Piece currentPiece = pieceManager.getCurrentPiece();
+                selectedTile.setPiece(currentPiece);
 
-            // View
-            Tile prevTile = board.getCurrentTile();
-            PieceView pieceView = boardPane.getTileView(prevTile.getX(), prevTile.getY()).getPieceView();
-            boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
+                // View
+                PieceView pieceView = boardPane.getTileView(previousTile.getX(), previousTile.getY()).getPieceView();
+                boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
 
-            board.getCurrentTile().removePiece();
+                previousTile.removePiece();
+            }
 
             // TODO: Remove this later when implementing attacking
             changeTurn();
@@ -52,11 +50,12 @@ public class Controller {
                 }
             }
         }
-        board.setCurrentTile(selectedTile);
     }
 
     private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
         int numMove = piece.getNumMove();
+
+        board.highlightCurrentTile();
 
         List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
         for (int count = 1; count <= numMove; count++) {

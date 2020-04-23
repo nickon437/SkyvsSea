@@ -100,7 +100,7 @@ public class Controller {
 
     	this.board = new Board();
         this.pieceManager = new PieceManager();
-        this.playerManager = new PlayerManager();
+        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
 

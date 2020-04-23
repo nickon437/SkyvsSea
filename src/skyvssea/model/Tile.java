@@ -14,10 +14,9 @@ public class Tile extends Observable {
     private boolean isHighlighted;
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
-	public Tile(int x, int y, boolean light) {
+	public Tile(int x, int y) {
 		this.x = x;
 		this.y = y;
-        this.light = light;
         this.piece = null;
     }
 
@@ -35,19 +34,8 @@ public class Tile extends Observable {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-
-        Color baseColor;
-        if (isHighlighted) {
-            baseColor = TilePane.HIGHLIGHTED_COLOR;
-        } else {
-            if (light) {
-                baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
-            } else {
-                baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
-            }
-        }
         setChanged();
-        notifyObservers(baseColor);
+        notifyObservers(isHighlighted);
     }
 
 	public int getX() { return x; }

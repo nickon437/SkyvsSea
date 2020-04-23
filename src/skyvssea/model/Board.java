@@ -15,7 +15,7 @@ public class Board {
 
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
-				tiles[x][y] = new Tile(x, y, (x + y) % 2 == 0);
+				tiles[x][y] = new Tile(x, y);
 			}
 		}
 	}

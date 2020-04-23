@@ -26,6 +26,7 @@ public class Controller {
         if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
 
+            // selecting self-occupied tile is a valid move 
             if (!selectedTile.equals(previousSelectedTile)) {
                 // Configure model objects
                 Piece currentPiece = pieceManager.getCurrentPiece();

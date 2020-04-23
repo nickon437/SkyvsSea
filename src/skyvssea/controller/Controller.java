@@ -6,6 +6,7 @@ import skyvssea.model.*;
 import skyvssea.view.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Observer;
 
@@ -90,13 +91,13 @@ public class Controller {
     }
 
     @Requires("boardPane != null")
-    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Map<Hierarchy, Integer> lineup) {
+    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
     	this.boardPane = boardPane;
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
     	this.board = new Board();
-        this.pieceManager = new PieceManager(lineup);
+        this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager();
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
@@ -125,4 +126,13 @@ public class Controller {
 //            pieceView.paint(player.getColor());
         });
     }
+    
+	private Map<Hierarchy, Integer> createInitialLineUp() {
+		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		lineup.put(Hierarchy.BIG, 1);
+		lineup.put(Hierarchy.MEDIUM, 1);
+		lineup.put(Hierarchy.SMALL, 1);
+		lineup.put(Hierarchy.BABY, 1);
+		return lineup;
+	}
 }

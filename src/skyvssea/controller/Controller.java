@@ -20,22 +20,22 @@ public class Controller {
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
     	final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
-    	Tile previousTile = board.getCurrentTile();
+    	Tile previousSelectedTile = board.getCurrentTile();
     	board.setCurrentTile(selectedTile);
 
         if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
 
-            if (!selectedTile.equals(previousTile)) {
-                // Model
+            if (!selectedTile.equals(previousSelectedTile)) {
+                // Configure model objects
                 Piece currentPiece = pieceManager.getCurrentPiece();
                 selectedTile.setPiece(currentPiece);
 
-                // View
-                PieceView pieceView = boardPane.getTileView(previousTile.getX(), previousTile.getY()).getPieceView();
+                // Configure view objects
+                PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
                 boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
 
-                previousTile.removePiece();
+                previousSelectedTile.removePiece();
             }
 
             // TODO: Remove this later when implementing attacking

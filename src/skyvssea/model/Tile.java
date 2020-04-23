@@ -25,17 +25,11 @@ public class Tile extends Observable {
         return piece != null;
     }
 
-    public Piece getPiece() {
-        return piece;
-    }
+    public Piece getPiece() { return piece; }
 
-    public void setPiece(Piece piece) {
-	    this.piece = piece;
-    }
+    public void setPiece(Piece piece) { this.piece = piece; }
 
-    public void removePiece() {
-	    this.piece = null;
-    }
+    public void removePiece() { this.piece = null; }
 
     public boolean isHighlighted() { return isHighlighted; }
 
@@ -44,23 +38,19 @@ public class Tile extends Observable {
 
         Color baseColor;
         if (isHighlighted) {
-            baseColor = Color.valueOf(TilePane.HIGHLIGHTED_COLOR);
+            baseColor = TilePane.HIGHLIGHTED_COLOR;
         } else {
             if (light) {
-                baseColor = Color.valueOf(TilePane.DEFAULT_LIGHT_BASE_COLOR);
+                baseColor = TilePane.DEFAULT_LIGHT_BASE_COLOR;
             } else {
-                baseColor = Color.valueOf(TilePane.DEFAULT_DARK_BASE_COLOR);
+                baseColor = TilePane.DEFAULT_DARK_BASE_COLOR;
             }
         }
         setChanged();
         notifyObservers(baseColor);
     }
 
-	public int getX() {
-		return x;
-	}
+	public int getX() { return x; }
 
-	public int getY() {
-		return y;
-	}
+	public int getY() { return y; }
 }

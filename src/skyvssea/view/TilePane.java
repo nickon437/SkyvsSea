@@ -13,15 +13,15 @@ import java.util.Observer;
 
 public class TilePane extends StackPane implements Observer {
 
-    public static final String DEFAULT_LIGHT_BASE_COLOR = "#FCF5EF";
-    public static final String DEFAULT_DARK_BASE_COLOR = "#264F73";
-    public static final String HIGHLIGHTED_COLOR = "#FF5733";
+    public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.valueOf("#FCF5EF");
+    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#264F73");
+    public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FF5733");
 
     private Rectangle base;
     private int x;
     private int y;
 
-    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL &&" +
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0 && controller != null")
     public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
@@ -29,14 +29,14 @@ public class TilePane extends StackPane implements Observer {
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
-        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            controller.handleTileClicked(this);
-        });
+        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> controller.handleTileClicked(this));
     }
 
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
+            "tileSize >= 0")
     private Rectangle createBase(int x, int y, double tileSize) {
         Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
-        base.setStroke(Color.valueOf(DEFAULT_DARK_BASE_COLOR));
+        base.setStroke(DEFAULT_DARK_BASE_COLOR);
         return base;
     }
 

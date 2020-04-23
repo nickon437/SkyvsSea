@@ -12,7 +12,7 @@ public class ActionPane extends HBox {
     private Button skipBtn = new Button("Skip");
 
     public ActionPane(Controller controller) {
-        this.getChildren().addAll(killBtn, specialEffectBtn,skipBtn);
+        this.getChildren().addAll(killBtn, specialEffectBtn, skipBtn);
         this.setSpacing(20d);
 
         maximizeControlSize(killBtn);

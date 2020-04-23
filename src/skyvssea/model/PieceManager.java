@@ -37,26 +37,16 @@ public class PieceManager {
 		}
 	}
 
-    public Piece getCurrentPiece() {
-        return currentPiece;
-    }
+    public Piece getCurrentPiece() { return currentPiece; }
 
     @Requires("currentPiece != null")
-    public void setCurrentPiece(Piece currentPiece) {
-        this.currentPiece = currentPiece;
-    }
+    public void setCurrentPiece(Piece currentPiece) { this.currentPiece = currentPiece; }
 
-    public void clearCurrentPiece() {
-        currentPiece = null;
-    }
+    public void clearCurrentPiece() { currentPiece = null; }
 
-    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() {
-        return sharkPieces;
-    }
+    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() { return sharkPieces; }
 
-    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() {
-        return eaglePieces;
-    }
+    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() { return eaglePieces; }
 
     public ArrayList<Piece> getSharkPiecesList() {
         ArrayList<Piece> sharkPiecesList = new ArrayList<>();

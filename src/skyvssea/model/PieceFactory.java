@@ -3,7 +3,6 @@ package skyvssea.model;
 import com.google.java.contract.Ensures;
 
 public abstract class PieceFactory {
-//	public abstract Map<Hierarchy, ArrayList<Piece>> createInitialLineUp();
 	protected abstract BigCharacter createBigCharacter();
 	protected abstract MediumCharacter createMediumCharacter();
 	protected abstract SmallCharacter createSmallCharacter();
@@ -24,5 +23,4 @@ public abstract class PieceFactory {
 		
 		return piece;
 	}
-	
 }

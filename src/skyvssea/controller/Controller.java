@@ -19,7 +19,7 @@ public class Controller {
 
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
-    	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
+    	final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
     	Tile previousTile = board.getCurrentTile();
     	board.setCurrentTile(selectedTile);
 
@@ -65,7 +65,7 @@ public class Controller {
 
                 if (tile != null) {
                     if (tile.hasPiece()) {
-                        if (!tempDirections.contains(Direction.JUMPOVER)) {
+                        if (!tempDirections.contains(Direction.JUMP_OVER)) {
                             blockedDirections.add(direction);
                         }
                     } else {
@@ -103,6 +103,7 @@ public class Controller {
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
 
+        // Set up tiles on board
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
     	tileViews.getChildren().forEach((tileView) -> {

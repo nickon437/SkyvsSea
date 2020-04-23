@@ -22,12 +22,6 @@ public class PlayerManager {
 
     @Requires("piece != null")
     public Player checkSide(Piece piece) {
-//    	if (piece.getTeam() == Team.SHARK) {
-//    		return player1;
-//    	} else {
-//    		return player2;
-//    	}
-
     	for (Player player : players) {
             if (player.hasPiece(piece)) {
                 return player;

@@ -20,14 +20,14 @@ public class TilePane extends StackPane implements Observer {
     private Rectangle base;
     private int x;
     private int y;
-    private boolean light;
+    private boolean hasLightBaseColor;
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0 && controller != null")
     public TilePane(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
-        this.light = setDefaultBaseColor(x, y);
+        this.hasLightBaseColor = setDefaultBaseColor(x, y);
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
@@ -68,7 +68,7 @@ public class TilePane extends StackPane implements Observer {
 		if (((Boolean) isHighlighted).equals(Boolean.TRUE)) {
 			updateBaseColor(HIGHLIGHTED_COLOR);
 		} else {
-			if (light) {
+			if (hasLightBaseColor) {
 				updateBaseColor(DEFAULT_LIGHT_BASE_COLOR);
 			} else {
 				updateBaseColor(DEFAULT_DARK_BASE_COLOR);

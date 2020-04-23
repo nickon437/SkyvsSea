@@ -10,7 +10,6 @@ public class Tile extends Observable {
     private int x;
 	private int y;
     private Piece piece;
-    private boolean light;
     private boolean isHighlighted;
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")

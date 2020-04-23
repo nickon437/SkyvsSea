@@ -78,6 +78,10 @@ public class Board {
 		this.currentTile = currentTile;
 	}
 
+	public void clearCurrentTile() {
+		this.currentTile = null;
+	}
+
 	public Tile getTile(int x, int y) {
 		if (x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL) {
 			return tiles[x][y];
@@ -92,6 +96,4 @@ public class Board {
 			}
 		}
 	}
-
-
 }

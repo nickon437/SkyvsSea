@@ -79,6 +79,10 @@ public class Controller {
     private void changeTurn() {
         Player player = playerManager.changeTurn();
         infoPane.setPlayerName(player.getName());
+
+        board.clearHighlightedTiles();
+        board.clearCurrentTile();
+        pieceManager.clearCurrentPiece();
     }
 
     @Requires("boardPane != null")
@@ -89,7 +93,7 @@ public class Controller {
 
     	this.board = new Board();
         this.pieceManager = new PieceManager();
-        this.playerManager = new PlayerManager();
+        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
         infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
 
@@ -108,13 +112,6 @@ public class Controller {
             Piece piece = tile.getPiece();
             Player player = playerManager.checkSide(piece);
             this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
-            
-//            PieceView pieceView = new PieceView(piece.getName());
-//            this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
-//            this.boardPane.addPieceView(pieceView);
-//
-//            Player player = playerManager.checkSide(piece);
-//            pieceView.paint(player.getColor());
         });
     }
 }

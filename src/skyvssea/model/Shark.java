@@ -5,6 +5,6 @@ abstract class Shark extends Piece {
 			Direction.SOUTHEAST, Direction.SOUTH, Direction.SOUTHWEST, Direction.WEST, Direction.NORTHWEST};
 
 	protected Shark(String name, Hierarchy level, int numMove, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
-		super(name, Team.SHARK, level, numMove, MOVE_DIRECTION, attackRange, specialEffectCounter, specialEffect);
+		super(name, level, numMove, MOVE_DIRECTION, attackRange, specialEffectCounter, specialEffect);
 	}
 }

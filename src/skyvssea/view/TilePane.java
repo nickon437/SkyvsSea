@@ -56,7 +56,7 @@ public class TilePane extends StackPane implements Observer {
         base.setFill(color);
     }
 
-    @Requires("arg != null && arg instanceof Color")
+//    @Requires("arg != null && arg instanceof Color")
 	@Override
 	public void update(Observable tile, Object arg) {
         updateBaseColor((Color) arg);

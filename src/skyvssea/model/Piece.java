@@ -4,7 +4,6 @@ import java.util.List;
 
 public abstract class Piece {
     protected String name;
-    private Team team;
     private Hierarchy level;
     private int numMove;
     private Direction[] moveDirection;
@@ -13,9 +12,8 @@ public abstract class Piece {
     private SpecialEffect specialEffect;
     private List<SpecialEffect> appliedSpecialEffect;
 
-    protected Piece(String name, Team team, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
+    protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange, int specialEffectCounter, SpecialEffect specialEffect) {
     	this.name = name;
-    	this.team = team;
         this.level = level;
     	this.numMove = numMove;
     	this.moveDirection = moveDirection;
@@ -35,9 +33,5 @@ public abstract class Piece {
 
     protected SpecialEffect getSpecialEffect() {
 		return specialEffect;
-	}
-
-	public Team getTeam() {
-		return team;
 	}
 }

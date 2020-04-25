@@ -15,8 +15,8 @@ public class PlayerManager {
     }
 
     private void initializePlayers(Map<Hierarchy, ArrayList<Piece>> eaglePieces, Map<Hierarchy, ArrayList<Piece>> sharkPieces) {
-        players[0] = new Player("Eagle's turn", Color.LIGHTCORAL, eaglePieces);
-        players[1] = new Player("Shark's turn", Color.CORNFLOWERBLUE, sharkPieces);
+        players[0] = new Player("Eagle's turn", Color.valueOf("#E92707"), eaglePieces);
+        players[1] = new Player("Shark's turn", Color.valueOf("#390593"), sharkPieces);
         currentPlayer = players[0];
     }
 

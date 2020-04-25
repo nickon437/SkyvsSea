@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
-import skyvssea.model.Player;
 
 import java.util.ArrayList;
 
@@ -31,7 +30,7 @@ public class BoardPane extends Pane {
         setDynamicTileSize();
     }
 
-    public void setDynamicTileSize() {
+    private void setDynamicTileSize() {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             double paneWidth = getWidth();
             double paneHeight = getHeight();

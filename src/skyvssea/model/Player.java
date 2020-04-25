@@ -15,7 +15,7 @@ public class Player {
     public Player(String name, Color color, Map<Hierarchy, ArrayList<Piece>> pieces) {
         this.name = name;
         this.color = color;
-        this.pieces =  pieces;
+        this.pieces = pieces;
     }
 
     public String getName() {

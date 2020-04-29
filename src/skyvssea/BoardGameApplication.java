@@ -7,7 +7,6 @@ import skyvssea.controller.Controller;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         buildView(primaryStage);

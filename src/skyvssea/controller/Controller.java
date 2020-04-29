@@ -5,11 +5,11 @@ import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.view.*;
 
-import java.util.ArrayList;
-import java.util.Observer;
+import java.util.*;
 
 public class Controller {
 
+    private Game game;
     private Board board;
     private PieceManager pieceManager;
     private PlayerManager playerManager;
@@ -19,21 +19,28 @@ public class Controller {
 
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
+    	final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
+    	Tile previousSelectedTile = board.getCurrentTile();
+    	board.setCurrentTile(selectedTile);
 
-    	Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
         if (selectedTile.isHighlighted()) {
             board.clearHighlightedTiles();
 
-            // Model
-            Piece currentPiece = pieceManager.getCurrentPiece();
-            selectedTile.setPiece(currentPiece);
+            // selecting self-occupied tile is a valid move 
+            if (!selectedTile.equals(previousSelectedTile)) {
+                // Configure model objects
+                Piece currentPiece = pieceManager.getCurrentPiece();
+                selectedTile.setPiece(currentPiece);
 
-            // View
-            Tile prevTile = board.getCurrentTile();
-            PieceView pieceView = boardPane.getTileView(prevTile.getX(), prevTile.getY()).getPieceView();
-            boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
+                // Configure view objects
+                PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
+                tileView.setPieceView(pieceView);
 
-            board.getCurrentTile().removePiece();
+                previousSelectedTile.removePiece();
+            }
+
+            // TODO: Remove this later when implementing attacking
+            changeTurn();
         } else {
             board.clearHighlightedTiles();
             if (selectedTile.hasPiece()) {
@@ -44,38 +51,30 @@ public class Controller {
                 }
             }
         }
-        board.setCurrentTile(selectedTile);
     }
 
     private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
         int numMove = piece.getNumMove();
-        int pieceX = selectedTile.getX();
-        int pieceY = selectedTile.getY();
-        Tile[][] tiles = board.getTiles();
 
-        // Nick - TODO: Find a way to modularize the code
-        // Jiang - TODO: and customize available moves based on Piece type
-        // Highlight possible move tiles
+        board.highlightCurrentTile();
+
+        List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
         for (int count = 1; count <= numMove; count++) {
-            if ((pieceX + count) < BoardPane.NUM_SIDE_CELL) {
-                Tile rightTile = tiles[pieceX + count][pieceY];
-                board.highlightUnoccupiedTiles(rightTile);
-            }
+            ArrayList<Direction> blockedDirections = new ArrayList<>();
+            for (Direction direction : tempDirections) {
+                Tile tile = board.getTile(selectedTile, direction, count);
 
-            if ((pieceX - count) >= 0) {
-                Tile leftTile = tiles[pieceX - count][pieceY];
-                board.highlightUnoccupiedTiles(leftTile);
+                if (tile != null) {
+                    if (tile.hasPiece()) {
+                        if (!tempDirections.contains(Direction.JUMP_OVER)) {
+                            blockedDirections.add(direction);
+                        }
+                    } else {
+                        board.highlightUnoccupiedTile(tile);
+                    }
+                }
             }
-
-            if ((pieceY + count) < BoardPane.NUM_SIDE_CELL) {
-                Tile downTile = tiles[pieceX][pieceY + count];
-                board.highlightUnoccupiedTiles(downTile);
-            }
-
-            if ((pieceY - count) >= 0) {
-                Tile upTile = tiles[pieceX][pieceY - count];
-                board.highlightUnoccupiedTiles(upTile);
-            }
+            tempDirections.removeAll(blockedDirections);
         }
     }
 
@@ -85,7 +84,11 @@ public class Controller {
 
     private void changeTurn() {
         Player player = playerManager.changeTurn();
-        infoPane.setPlayerName(player.getName());
+        infoPane.setPlayerInfo(player);
+
+        board.clearHighlightedTiles();
+        board.clearCurrentTile();
+        pieceManager.clearCurrentPiece();
     }
 
     @Requires("boardPane != null")
@@ -94,12 +97,14 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
+    	this.game = new Game();
     	this.board = new Board();
-        this.pieceManager = new PieceManager();
-        this.playerManager = new PlayerManager();
+		this.pieceManager = new PieceManager(createInitialLineUp());
+        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
-        infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
+        // Set up tiles on board
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
     	tileViews.getChildren().forEach((tileView) -> {
@@ -115,13 +120,15 @@ public class Controller {
             Piece piece = tile.getPiece();
             Player player = playerManager.checkSide(piece);
             this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
-            
-//            PieceView pieceView = new PieceView(piece.getName());
-//            this.boardPane.getTileView(tile.getX(), tile.getY()).setPieceView(pieceView);
-//            this.boardPane.addPieceView(pieceView);
-//
-//            Player player = playerManager.checkSide(piece);
-//            pieceView.paint(player.getColor());
         });
     }
+    
+	private Map<Hierarchy, Integer> createInitialLineUp() {
+		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		lineup.put(Hierarchy.BIG, 1);
+		lineup.put(Hierarchy.MEDIUM, 1);
+		lineup.put(Hierarchy.SMALL, 1);
+		lineup.put(Hierarchy.BABY, 1);
+		return lineup;
+	}
 }

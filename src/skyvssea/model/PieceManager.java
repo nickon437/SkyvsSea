@@ -3,52 +3,56 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PieceManager {
-    private Map<Hierarchy, ArrayList<Piece>> sharkPieces;
-    private Map<Hierarchy, ArrayList<Piece>> eaglePieces;
+    private Map<Hierarchy, ArrayList<Piece>> sharkPieces = new HashMap<>();
+    private Map<Hierarchy, ArrayList<Piece>> eaglePieces = new HashMap<>();
     private Piece currentPiece;
 
-    public PieceManager() {
-        initializePieces();
+	public PieceManager(Map<Hierarchy, Integer> lineup) {
+        initializePieces(lineup);
     }
 
     /**
      * Create initial lineup of pieces for both sides
      */
-    public void initializePieces() {
-        //Using singleton pattern to create the factories (not sure if it's appropriate though)
+	//The precondition checks if the lineup numbers are not all zeroes
+	@Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
+    public void initializePieces(Map<Hierarchy, Integer> lineup) {
         PieceFactory sharkFactory = SharkFactory.getInstance();
         PieceFactory eagleFactory = EagleFactory.getInstance();
-        sharkPieces = sharkFactory.createInitialLineUp();
-        eaglePieces = eagleFactory.createInitialLineUp();
+
+        for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
+            createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
+            createPiecesByHierarchy(sharkPieces, sharkFactory, entry);
+        }
     }
 
-    public Piece getCurrentPiece() {
-        return currentPiece;
-    }
+	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<Piece>> pieces, PieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
+		Hierarchy level = creationInfo.getKey();    
+		int numPiecesToCreate = creationInfo.getValue();
+		pieces.put(level, new ArrayList<>());
+		for (int i = 0; i < numPiecesToCreate; i++) {
+			pieces.get(level).add(factory.createPiece(level));        		
+		}
+	}
+
+    public Piece getCurrentPiece() { return currentPiece; }
 
     @Requires("currentPiece != null")
-    public void setCurrentPiece(Piece currentPiece) {
-        this.currentPiece = currentPiece;
-    }
+    public void setCurrentPiece(Piece currentPiece) { this.currentPiece = currentPiece; }
 
-    public void clearCurrentPiece() {
-        currentPiece = null;
-    }
+    public void clearCurrentPiece() { currentPiece = null; }
 
-    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() {
-        return sharkPieces;
-    }
+    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() { return sharkPieces; }
 
-    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() {
-        return eaglePieces;
-    }
+    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() { return eaglePieces; }
 
     public ArrayList<Piece> getSharkPiecesList() {
         ArrayList<Piece> sharkPiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : sharkPieces.entrySet()) {
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : getSharkPieces().entrySet()) {
             sharkPiecesList.addAll(entry.getValue());
         }
         return sharkPiecesList;
@@ -56,7 +60,7 @@ public class PieceManager {
 
     public ArrayList<Piece> getEaglePiecesList() {
         ArrayList<Piece> eaglePiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : eaglePieces.entrySet()) {
+        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : getEaglePieces().entrySet()) {
             eaglePiecesList.addAll(entry.getValue());
         }
         return eaglePiecesList;
@@ -86,7 +90,7 @@ public class PieceManager {
                 for (Piece piece : entry.getValue()) {
                     pieceYCoord = pieceYCoord + (flip * pieceIndex);
                     flip = flip * -1;
-
+    
                     Tile tile = board.getTile(pieceXCoord, pieceYCoord);
                     tile.setPiece(piece);
                     startingPositions.add(tile);

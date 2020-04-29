@@ -15,19 +15,59 @@ public class Board {
 
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
-				tiles[x][y] = new Tile(x, y, (x + y) % 2 == 0);
+				tiles[x][y] = new Tile(x, y);
 			}
 		}
 	}
 
 	public Tile[][] getTiles() { return tiles; }
 
-	@Requires("tile != null")
-	public void highlightUnoccupiedTiles(Tile tile) {
-		if (!tile.hasPiece()) {
-			tile.setHighlighted(true);
-			highlightedTiles.add(tile);
+	@Requires("rootTile != null && distance >= 0")
+	public Tile getTile(Tile rootTile, Direction dir, int distance) {
+		int rootX = rootTile.getX();
+		int rootY = rootTile.getY();
+		Tile tile;
+		switch (dir) {
+			case NORTH:
+				tile = getTile(rootX, rootY - distance);
+				break;
+			case NORTHEAST:
+				tile = getTile(rootX + distance, rootY - distance);
+				break;
+			case EAST:
+				tile = getTile(rootX + distance, rootY);
+				break;
+			case SOUTHEAST:
+				tile = getTile(rootX + distance, rootY + distance);
+				break;
+			case SOUTH:
+				tile = getTile(rootX, rootY + distance);
+				break;
+			case SOUTHWEST:
+				tile = getTile(rootX - distance, rootY + distance);
+				break;
+			case WEST:
+				tile = getTile(rootX - distance, rootY);
+				break;
+			case NORTHWEST:
+				tile = getTile(rootX - distance, rootY - distance);
+				break;
+			default:
+				tile = null;
 		}
+		return tile;
+	}
+
+	// Nick - A special case where highlighting an occupied tile. Having this allows highlightUnoccupiedTile() enforces strict preconditions.
+	public void highlightCurrentTile() {
+		currentTile.setHighlighted(true);
+		highlightedTiles.add(currentTile);
+	}
+
+	@Requires("tile != null && !tile.hasPiece()")
+	public void highlightUnoccupiedTile(Tile tile) {
+		tile.setHighlighted(true);
+		highlightedTiles.add(tile);
 	}
 
 	public void clearHighlightedTiles() {
@@ -44,10 +84,15 @@ public class Board {
 		this.currentTile = currentTile;
 	}
 
-	// Nick - TODO: Modify precondition when provide flexible board size later
-	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
+	public void clearCurrentTile() {
+		this.currentTile = null;
+	}
+
 	public Tile getTile(int x, int y) {
-		return tiles[x][y];
+		if (x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL) {
+			return tiles[x][y];
+		}
+		return null;
 	}
 
 	public void setBaseColours() {
@@ -57,6 +102,4 @@ public class Board {
 			}
 		}
 	}
-
-
 }

@@ -34,7 +34,7 @@ public class Controller {
 
                 // Configure view objects
                 PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
-                boardPane.getTileView(tileView.getX(), tileView.getY()).setPieceView(pieceView);
+                tileView.setPieceView(pieceView);
 
                 previousSelectedTile.removePiece();
             }

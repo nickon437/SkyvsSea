@@ -14,8 +14,8 @@ import java.util.Observer;
 public class TilePane extends StackPane implements Observer {
 
     public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.valueOf("#FCF5EF");
-    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#264F73");
-    public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FF5733");
+    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#BDBDBD");
+    public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FCC42C");
 
     private Rectangle base;
     private int x;

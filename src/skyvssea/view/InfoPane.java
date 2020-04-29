@@ -4,20 +4,27 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import skyvssea.model.Player;
+import skyvssea.util.ColorUtil;
 
 public class InfoPane extends VBox {
     private Text playerNameText = new Text("Player's name");
+    private StackPane playerNameTextHolder = new StackPane(playerNameText);
     private TextArea statusText = new TextArea();
     private TextArea specialEffectText = new TextArea();
 
     public InfoPane() {
+        this.setAlignment(Pos.CENTER);
+
         formatPlayerNameText();
         setTextAreaDisabled(statusText, true);
         setTextAreaDisabled(specialEffectText, true);
 
-        this.getChildren().addAll(playerNameText, statusText, specialEffectText);
+        this.getChildren().addAll(playerNameTextHolder, statusText, specialEffectText);
 
         VBox.setVgrow(statusText, Priority.ALWAYS);
         VBox.setVgrow(specialEffectText, Priority.ALWAYS);
@@ -26,8 +33,8 @@ public class InfoPane extends VBox {
     }
 
     private void formatPlayerNameText() {
-        this.setAlignment(Pos.CENTER);
-        playerNameText.setStyle("-fx-font-weight: bold");
+        playerNameTextHolder.setPadding(new Insets(20d));
+        playerNameText.setStyle("-fx-font-weight: bold;");
     }
 
     // Nick - TODO: This kinda belongs in the TextArea, review what lecturer talked about this situation (ActionPane also has sth similar)
@@ -37,8 +44,13 @@ public class InfoPane extends VBox {
         textArea.setMouseTransparent(isDisabled);
     }
 
-    public void setPlayerName(String name) {
-        playerNameText.setText(name);
+    public void setPlayerInfo(Player player) {
+        playerNameText.setText(player.getName());
+        Color color = player.getColor();
+        playerNameTextHolder.setStyle("-fx-background-radius: 20;" +
+                "-fx-background-color: rgb(" + color.getRed()*255 + ", " +
+                color.getGreen()*255 + ", " + color.getBlue()*255 + ");");
+        playerNameText.setFill(ColorUtil.getTextContrastColor(color));
     }
 
     public void clearInfo() {

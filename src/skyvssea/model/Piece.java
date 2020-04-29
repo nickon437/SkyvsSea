@@ -3,7 +3,7 @@ package skyvssea.model;
 import java.util.List;
 
 public abstract class Piece {
-    protected String name;
+    private String name;
     private Hierarchy level;
     private int numMove;
     private Direction[] moveDirection;

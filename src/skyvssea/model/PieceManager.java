@@ -23,18 +23,18 @@ public class PieceManager {
     public void initializePieces(Map<Hierarchy, Integer> lineup) {
         PieceFactory sharkFactory = SharkFactory.getInstance();
         PieceFactory eagleFactory = EagleFactory.getInstance();
-        
-        for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {        	
-        	createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
-        	createPiecesByHierarchy(sharkPieces, sharkFactory, entry);
-          }
+
+        for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
+            createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
+            createPiecesByHierarchy(sharkPieces, sharkFactory, entry);
+        }
     }
 
 	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<Piece>> pieces, PieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
 		Hierarchy level = creationInfo.getKey();    
 		int numPiecesToCreate = creationInfo.getValue();
-		pieces.put(level, new ArrayList<Piece>());	
-		for (int i = 0; i < numPiecesToCreate; i ++) {
+		pieces.put(level, new ArrayList<>());
+		for (int i = 0; i < numPiecesToCreate; i++) {
 			pieces.get(level).add(factory.createPiece(level));        		
 		}
 	}

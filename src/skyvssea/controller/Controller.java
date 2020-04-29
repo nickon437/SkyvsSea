@@ -84,7 +84,7 @@ public class Controller {
 
     private void changeTurn() {
         Player player = playerManager.changeTurn();
-        infoPane.setPlayerName(player.getName());
+        infoPane.setPlayerInfo(player);
 
         board.clearHighlightedTiles();
         board.clearCurrentTile();
@@ -102,7 +102,7 @@ public class Controller {
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
-        infoPane.setPlayerName(playerManager.getCurrentPlayer().getName());
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
         // Set up tiles on board
     	Tile[][] tiles = board.getTiles();

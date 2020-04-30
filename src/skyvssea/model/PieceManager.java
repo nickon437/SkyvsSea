@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.model.piece.Piece;
 
 import java.util.ArrayList;
 import java.util.HashMap;

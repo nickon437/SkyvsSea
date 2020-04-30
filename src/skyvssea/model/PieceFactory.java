@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Ensures;
+import skyvssea.model.piece.*;
 
 public abstract class PieceFactory {
 	protected abstract BigCharacter createBigCharacter();

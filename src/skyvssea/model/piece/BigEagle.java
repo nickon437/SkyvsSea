@@ -1,4 +1,4 @@
-package skyvssea.model;
+package skyvssea.model.piece;
 
 public class BigEagle extends Eagle implements BigCharacter {
 	public BigEagle() {

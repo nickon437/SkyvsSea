@@ -1,4 +1,4 @@
-package skyvssea.model;
+package skyvssea.model.piece;
 
 public class SmallShark extends Shark implements SmallCharacter{
 	public SmallShark() {

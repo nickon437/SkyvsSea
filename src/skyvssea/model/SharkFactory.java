@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import skyvssea.model.piece.*;
+
 public class SharkFactory extends PieceFactory {
 
 	private static SharkFactory sharkFactory;

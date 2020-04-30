@@ -1,4 +1,4 @@
-package skyvssea.model;
+package skyvssea.model.piece;
 
 public class MediumShark extends Shark implements MediumCharacter{
 	public MediumShark() {

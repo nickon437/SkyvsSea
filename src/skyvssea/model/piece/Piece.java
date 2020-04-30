@@ -1,4 +1,8 @@
-package skyvssea.model;
+package skyvssea.model.piece;
+
+import skyvssea.model.Direction;
+import skyvssea.model.Hierarchy;
+import skyvssea.model.SpecialEffect;
 
 import java.util.List;
 

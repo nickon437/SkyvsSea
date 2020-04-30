@@ -1,4 +1,6 @@
-package skyvssea.model;
+package skyvssea.model.piece;
+
+import skyvssea.model.Hierarchy;
 
 public interface BigCharacter {
 	Hierarchy DEFAULT_LEVEL = Hierarchy.BIG;

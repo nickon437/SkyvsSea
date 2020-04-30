@@ -1,4 +1,4 @@
-package skyvssea.model;
+package skyvssea.model.piece;
 
 public class MediumEagle extends Eagle implements MediumCharacter {
 	public MediumEagle() {

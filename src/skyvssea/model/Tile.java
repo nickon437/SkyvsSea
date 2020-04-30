@@ -1,8 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-import javafx.scene.paint.Color;
-import skyvssea.view.TilePane;
+import skyvssea.model.piece.Piece;
 
 import java.util.Observable;
 

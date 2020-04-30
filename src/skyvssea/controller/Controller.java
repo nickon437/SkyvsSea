@@ -3,6 +3,7 @@ package skyvssea.controller;
 import com.google.java.contract.Requires;
 import javafx.scene.Group;
 import skyvssea.model.*;
+import skyvssea.model.piece.Piece;
 import skyvssea.view.*;
 
 import java.util.*;

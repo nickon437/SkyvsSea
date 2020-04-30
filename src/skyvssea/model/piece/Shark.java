@@ -1,4 +1,8 @@
-package skyvssea.model;
+package skyvssea.model.piece;
+
+import skyvssea.model.Direction;
+import skyvssea.model.Hierarchy;
+import skyvssea.model.SpecialEffect;
 
 abstract class Shark extends Piece {
 	private final static Direction MOVE_DIRECTION[] = { Direction.NORTH, Direction.NORTHEAST, Direction.EAST,

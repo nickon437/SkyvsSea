@@ -58,14 +58,7 @@ public class Board {
 		return tile;
 	}
 
-	// Nick - A special case where highlighting an occupied tile. Having this allows highlightUnoccupiedTile() enforces strict preconditions.
-	public void highlightCurrentTile() {
-		currentTile.setHighlighted(true);
-		highlightedTiles.add(currentTile);
-	}
-
-	@Requires("tile != null && !tile.hasPiece()")
-	public void highlightUnoccupiedTile(Tile tile) {
+	public void highlightenTile(Tile tile) {
 		tile.setHighlighted(true);
 		highlightedTiles.add(tile);
 	}

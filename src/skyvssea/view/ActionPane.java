@@ -9,22 +9,27 @@ import skyvssea.controller.Controller;
 public class ActionPane extends HBox {
     private Button killBtn = new Button("Kill");
     private Button specialEffectBtn = new Button("Special Effect");
-    private Button skipBtn = new Button("Skip");
+    private Button endBtn = new Button("End");
 
     public ActionPane(Controller controller) {
-        this.getChildren().addAll(killBtn, specialEffectBtn, skipBtn);
+        this.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
         this.setSpacing(20d);
 
         maximizeControlSize(killBtn);
         maximizeControlSize(specialEffectBtn);
-        maximizeControlSize(skipBtn);
+        maximizeControlSize(endBtn);
 
-        skipBtn.setOnAction(e -> controller.handleSkipButton());
+        specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton());
+        endBtn.setOnAction(e -> controller.handleEndButton());
     }
 
     private void maximizeControlSize(Control control) {
         control.setPrefHeight(50d);
         HBox.setHgrow(control, Priority.ALWAYS);
         control.setMaxWidth(Double.MAX_VALUE);
+    }
+
+    public void setSpecialEffectBtnDisable(boolean isDisabled) {
+        specialEffectBtn.setDisable(isDisabled);
     }
 }

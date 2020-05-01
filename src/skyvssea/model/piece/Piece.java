@@ -52,6 +52,11 @@ public abstract class Piece {
 		return specialEffect;
 	}
 
+	public boolean isSpecialEffectAvailable() {
+        if (specialEffectCounter <= 0) { return true; }
+        return false;
+    }
+
 	public SpecialEffectManager getSpecialEffectManager() {
         if (specialEffectManager == null) {
             specialEffectManager = new SpecialEffectManager(this);
@@ -61,6 +66,9 @@ public abstract class Piece {
 
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus() {
+        if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(this);
+        }
         if (specialEffectCounter > 0) { specialEffectCounter--; }
         specialEffectManager.updateEffectiveDuration();
     }

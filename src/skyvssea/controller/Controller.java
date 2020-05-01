@@ -79,6 +79,10 @@ public class Controller {
         }
     }
 
+    public void handleSpecialEffectButton() {
+
+    }
+
     public void handleSkipButton() {
         changeTurn();
     }

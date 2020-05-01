@@ -3,17 +3,17 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.Stat;
 import skyvssea.model.piece.Piece;
 
-public class DoubleAttackRange extends AbstractSpecialEffect {
+public class DoubleMoveRange extends AbstractSpecialEffect {
 
-    public DoubleAttackRange() {
+    public DoubleMoveRange() {
         super(2);
     }
 
     @Override
     public void apply(Piece target) {
-        Stat<Integer> affectedStat = target.getAttackRangeStat();
-        affectedStat.setValue(target.getAttackRange() * 2);
-        affectedStats.add(affectedStat);
+        Stat<Integer> numMoveStat = target.getNumMoveStat();
+        numMoveStat.setValue(target.getNumMove() * 2);
+        affectedStats.add(numMoveStat);
     }
 
     @Override

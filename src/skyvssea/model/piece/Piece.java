@@ -2,6 +2,7 @@ package skyvssea.model.piece;
 
 import skyvssea.model.Direction;
 import skyvssea.model.Hierarchy;
+import skyvssea.model.SpecialEffectManager;
 import skyvssea.model.Stat;
 import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
@@ -16,8 +17,10 @@ public abstract class Piece {
     private Stat<Integer> specialEffectCounter;
     private AbstractSpecialEffect specialEffect;
     private List<AbstractSpecialEffect> appliedSpecialEffect;
+    private SpecialEffectManager specialEffectManager;
 
-    protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange, int specialEffectCounter, AbstractSpecialEffect specialEffect) {
+    protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange,
+                    int specialEffectCounter, AbstractSpecialEffect specialEffect) {
     	this.name = name;
         this.level = new Stat(level);
     	this.numMove = new Stat(Integer.valueOf(numMove));
@@ -30,16 +33,26 @@ public abstract class Piece {
     public String getName() { return name; }
 
     public int getNumMove() { return numMove.getValue(); }
+    public Stat<Integer> getNumMoveStat() { return numMove; }
 
     public Direction[] getMoveDirection() { return moveDirection; }
 
     public int getAttackRange() { return attackRange.getValue(); }
     public Stat<Integer> getAttackRangeStat() { return attackRange; }
 
-    abstract protected void performSpeEff(Piece target);
+    public void performSpeEff(Piece target) {
+        target.getSpecialEffectManager().add(specialEffect);
+    }
     //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target
 
     protected AbstractSpecialEffect getSpecialEffect() {
 		return specialEffect;
 	}
+
+	public SpecialEffectManager getSpecialEffectManager() {
+        if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(this);
+        }
+        return specialEffectManager;
+    }
 }

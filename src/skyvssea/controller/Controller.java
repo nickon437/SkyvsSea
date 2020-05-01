@@ -79,8 +79,12 @@ public class Controller {
         }
     }
 
-    public void handleSpecialEffectButton() {
-
+    public void handleSpecialEffectButton(TilePane tileView) {
+        // For testing purposes;
+        Piece currentPiece = board.getCurrentTile().getPiece();
+        if (currentPiece != null && currentPiece.getName().equals("Big Eagle")) {
+            currentPiece.performSpeEff(currentPiece);
+        }
     }
 
     public void handleSkipButton() {

@@ -10,9 +10,4 @@ public class BigShark extends Shark implements BigCharacter {
                 BigCharacter.DEFAULT_ATTACK_RANGE, BigCharacter.SPECIAL_EFFECT_COOLDOWN,
                 SpecialEffectFactory.getInstance().createSpecialEffect(SpecialEffectCode.DOUBLE_ATTACK_RANGE));
 	}
-	
-    @Override
-    protected void performSpeEff(Piece target) {
-    
-    }
 }

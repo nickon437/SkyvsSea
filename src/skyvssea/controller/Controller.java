@@ -97,9 +97,7 @@ public class Controller {
 
         // Nick - TODO: Check if special effect is available
         Piece currentPiece = pieceManager.getCurrentPiece();
-        if (!currentPiece.isSpecialEffectAvailable()) {
-            actionPane.setSpecialEffectBtnDisable(true);
-        }
+        actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
     public void handleSpecialEffectButton() {

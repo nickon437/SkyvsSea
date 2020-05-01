@@ -1,8 +1,8 @@
 package skyvssea.model.piece;
 
-public class SmallShark extends Shark implements SmallCharacter{
+public class SmallShark extends Shark implements SmallCharacter {
 	public SmallShark() {
 		//TODO: create SpecialEffect object
-		super("Small Shark", SmallCharacter.DEFAULT_LEVEL, SmallCharacter.DEFAULT_NUM_MOVE, SmallCharacter.DEFAULT_ATTACK_RANGE, SmallCharacter.SPECIAL_EFFECT_COOLDOWN, null);
+		super("Small Shark", DEFAULT_LEVEL, DEFAULT_NUM_MOVE, DEFAULT_ATTACK_RANGE, null, SPECIAL_EFFECT_COOLDOWN);
 	}
 }

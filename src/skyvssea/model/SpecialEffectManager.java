@@ -18,5 +18,14 @@ public class SpecialEffectManager {
         specialEffect.apply(receiver);
     }
 
-    public void remove(AbstractSpecialEffect specialEffect) {}
+    private void remove(AbstractSpecialEffect specialEffect) {
+        appliedSpecialEffects.remove(specialEffect);
+    }
+
+    public void updateEffectiveDuration() {
+        for (AbstractSpecialEffect specialEffect : appliedSpecialEffects) {
+            boolean isActive = specialEffect.updateEffectiveDuration();
+            if (!isActive) { remove(specialEffect); }
+        }
+    }
 }

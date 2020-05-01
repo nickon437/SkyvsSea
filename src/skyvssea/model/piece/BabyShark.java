@@ -1,7 +1,7 @@
 package skyvssea.model.piece;
 
-public class BabyShark extends Shark implements BabyCharacter{
+public class BabyShark extends Shark implements BabyCharacter {
 	public BabyShark() {
-		super("Baby Shark", BabyCharacter.DEFAULT_LEVEL, BabyCharacter.DEFAULT_NUM_MOVE, BabyCharacter.DEFAULT_ATTACK_RANGE, BabyCharacter.SPECIAL_EFFECT_COOLDOWN, null);
+		super("Baby Shark", DEFAULT_LEVEL, DEFAULT_NUM_MOVE, DEFAULT_ATTACK_RANGE, null, SPECIAL_EFFECT_COOLDOWN);
 	}
 }

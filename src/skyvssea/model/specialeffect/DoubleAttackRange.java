@@ -17,7 +17,7 @@ public class DoubleAttackRange extends AbstractSpecialEffect {
     }
 
     @Override
-    public void remove() {
+    protected void remove() {
         Stat<Integer> affectedStat = affectedStats.get(0);
         affectedStat.setValue(affectedStat.getValue() / 2);
     }

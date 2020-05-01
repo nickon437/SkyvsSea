@@ -83,7 +83,7 @@ public class Controller {
         // For testing purposes;
         Piece currentPiece = board.getCurrentTile().getPiece();
         if (currentPiece != null && currentPiece.getName().equals("Big Eagle")) {
-            currentPiece.performSpeEff(currentPiece);
+            currentPiece.performSpecialEffect(currentPiece);
         }
     }
 
@@ -98,6 +98,13 @@ public class Controller {
         board.clearHighlightedTiles();
         board.clearCurrentTile();
         pieceManager.clearCurrentPiece();
+    }
+
+    private void endTurn() {
+        pieceManager.updatePieceStatus();
+        changeTurn();
+
+        // TODO: Add save for undo here
     }
 
     @Requires("boardPane != null")

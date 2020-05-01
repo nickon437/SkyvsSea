@@ -48,8 +48,14 @@ public class PieceManager {
     public void clearCurrentPiece() { currentPiece = null; }
 
     public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() { return sharkPieces; }
-
     public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() { return eaglePieces; }
+
+    public ArrayList<Map<Hierarchy, ArrayList<Piece>>> getAllPiecesList() {
+        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = new ArrayList<>();
+        piecesList.add(sharkPieces);
+        piecesList.add(eaglePieces);
+        return piecesList;
+    }
 
     public ArrayList<Piece> getSharkPiecesList() {
         ArrayList<Piece> sharkPiecesList = new ArrayList<>();
@@ -73,9 +79,7 @@ public class PieceManager {
         int midPoint = Board.NUM_SIDE_CELL / 2;
 
         // Use ArrayList to reduce code duplication when traverse through HashMap
-        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = new ArrayList<>();
-        piecesList.add(sharkPieces);
-        piecesList.add(eaglePieces);
+        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = getAllPiecesList();
 
         for (Map<Hierarchy, ArrayList<Piece>> pieces : piecesList) {
             int pieceXCoord = 0;
@@ -83,9 +87,7 @@ public class PieceManager {
             int pieceIndex = 0;
             int flip = 1;
 
-            if (piecesList.indexOf(pieces) != 0) {
-                pieceXCoord = Board.NUM_SIDE_CELL - 1;
-            }
+            if (piecesList.indexOf(pieces) != 0) { pieceXCoord = Board.NUM_SIDE_CELL - 1; }
 
             for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : pieces.entrySet()) {
                 for (Piece piece : entry.getValue()) {
@@ -100,7 +102,16 @@ public class PieceManager {
                 }
             }
         }
-
         return startingPositions;
+    }
+
+    public void updatePieceStatus() {
+        for (Map<Hierarchy, ArrayList<Piece>> playerPieces : getAllPiecesList()) {
+            for (Map.Entry<Hierarchy, ArrayList<Piece>> pieces : playerPieces.entrySet()) {
+                for (Piece piece : pieces.getValue()) {
+                    piece.updateStatus();
+                }
+            }
+        }
     }
 }

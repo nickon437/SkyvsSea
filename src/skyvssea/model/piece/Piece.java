@@ -56,8 +56,7 @@ public abstract class Piece {
 	}
 
 	public boolean isSpecialEffectAvailable() {
-        if (specialEffectCounter <= 0) { return true; }
-        return false;
+        return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
     }
 
 	public SpecialEffectManager getSpecialEffectManager() {

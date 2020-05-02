@@ -93,11 +93,13 @@ public class Controller {
         highlightPossibleAttackTiles();
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         System.out.println("Update GameState to " + game.getCurrentGameState());
-        actionPane.setDisable(false);
 
-        // Nick - TODO: Check if special effect is available
         Piece currentPiece = pieceManager.getCurrentPiece();
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
+    }
+
+    public void handleKillButton() {
+
     }
 
     public void handleSpecialEffectButton() {
@@ -152,7 +154,6 @@ public class Controller {
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
         System.out.println("Update GameState to " + game.getCurrentGameState());
-        actionPane.setDisable(true);
 
         // TODO: Add save for undo here
     }
@@ -163,7 +164,7 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game();
+    	this.game = new Game(actionPane);
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());

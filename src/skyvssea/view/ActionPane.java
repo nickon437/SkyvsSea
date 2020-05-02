@@ -19,6 +19,7 @@ public class ActionPane extends HBox {
         maximizeControlSize(specialEffectBtn);
         maximizeControlSize(endBtn);
 
+        killBtn.setOnAction(e -> controller.handleKillButton());
         specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton());
         endBtn.setOnAction(e -> controller.handleEndButton());
     }

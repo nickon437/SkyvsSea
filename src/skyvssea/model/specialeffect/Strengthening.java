@@ -7,7 +7,7 @@ import skyvssea.model.piece.Piece;
 public class Strengthening extends AbstractSpecialEffect {
 
     public Strengthening() {
-        super(DEFAULT_CASTER_TURN);
+        super("Strengthening", DEFAULT_CASTER_TURN);
     }
 
     @Override
@@ -25,5 +25,10 @@ public class Strengthening extends AbstractSpecialEffect {
         Stat<Hierarchy> levelStat = currentValueStats.get(0);
         Hierarchy originalLevel = (Hierarchy) originalValueStats.get(0).getValue();
         levelStat.setValue(originalLevel);
+    }
+
+    @Override
+    public String toString() {
+        return "Increase the hierarchy of a piece";
     }
 }

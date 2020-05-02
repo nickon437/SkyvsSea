@@ -12,12 +12,18 @@ public abstract class AbstractSpecialEffect {
     // Nick - I leave it as list because maybe it will be useful for an SE that is a combination of SE like freezing, idk?
     protected ArrayList<Stat> originalValueStats = new ArrayList<>();
     protected ArrayList<Stat> currentValueStats = new ArrayList<>();
+    protected String name;
     protected int effectiveDuration; // 3 = till the next turn of the caster.
 
-    protected AbstractSpecialEffect(int effectiveDuration) {
+    protected AbstractSpecialEffect(String name, int effectiveDuration) {
+        this.name = name;
 //        this.DEFAULT_EFFECTIVE_NUM_TURN = effectiveDuration;
         this.effectiveDuration = effectiveDuration;
     }
+
+    public String getName() { return name; }
+
+    public int getEffectiveDuration() { return effectiveDuration; }
 
     public boolean updateEffectiveDuration() {
         boolean isActive = true;
@@ -46,4 +52,6 @@ public abstract class AbstractSpecialEffect {
     public abstract void apply(Piece target) throws CloneNotSupportedException;
     protected abstract void remove();
 
+    @Override
+    public abstract String toString();
 }

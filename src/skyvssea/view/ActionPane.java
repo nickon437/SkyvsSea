@@ -15,6 +15,11 @@ public class ActionPane extends HBox {
         this.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
         this.setSpacing(20d);
 
+        killBtn.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold;");
+        specialEffectBtn.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold;");
+        endBtn.setStyle("-fx-font-weight: bold;");
+        endBtn.setCancelButton(true);
+
         maximizeControlSize(killBtn);
         maximizeControlSize(specialEffectBtn);
         maximizeControlSize(endBtn);

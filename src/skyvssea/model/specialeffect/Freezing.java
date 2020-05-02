@@ -5,7 +5,9 @@ import skyvssea.model.piece.Piece;
 
 public class Freezing extends AbstractSpecialEffect {
 
-    public Freezing() { super(DEFAULT_CASTER_TURN); }
+    public Freezing() {
+        super("Freezing", DEFAULT_CASTER_TURN);
+    }
 
     @Override
     public void apply(Piece target) throws CloneNotSupportedException {
@@ -35,5 +37,10 @@ public class Freezing extends AbstractSpecialEffect {
         Stat<Integer> moveRangeStat = currentValueStats.get(1);
         int originalMoveRange = (int) originalValueStats.get(1).getValue();
         moveRangeStat.setValue(Integer.valueOf(originalMoveRange));
+    }
+
+    @Override
+    public String toString() {
+        return "Stop a piece from moving or attacking";
     }
 }

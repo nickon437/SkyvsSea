@@ -6,7 +6,7 @@ import skyvssea.model.piece.Piece;
 public class DoubleMoveRange extends AbstractSpecialEffect {
 
     public DoubleMoveRange() {
-        super(DEFAULT_CASTER_TURN);
+        super("Double move range", DEFAULT_CASTER_TURN);
     }
 
     @Override
@@ -24,5 +24,10 @@ public class DoubleMoveRange extends AbstractSpecialEffect {
         Stat<Integer> moveRangeStat = currentValueStats.get(0);
         int originalMoveRange = (int) originalValueStats.get(0).getValue();
         moveRangeStat.setValue(Integer.valueOf(originalMoveRange));
+    }
+
+    @Override
+    public String toString() {
+        return "Double their own move range";
     }
 }

@@ -2,10 +2,7 @@ package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
-import skyvssea.model.Direction;
-import skyvssea.model.Hierarchy;
-import skyvssea.model.SpecialEffectManager;
-import skyvssea.model.Stat;
+import skyvssea.model.*;
 import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
 public abstract class Piece {
@@ -20,13 +17,13 @@ public abstract class Piece {
     private SpecialEffectManager specialEffectManager;
 
     protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange,
-                    AbstractSpecialEffect specialEffect, int specialEffectCooldown) {
+                    SpecialEffectCode specialEffectCode, int specialEffectCooldown) {
     	this.name = name;
         this.level = new Stat(level);
     	this.numMove = new Stat(Integer.valueOf(numMove));
     	this.moveDirection = moveDirection;
     	this.attackRange = new Stat(Integer.valueOf(attackRange));
-    	this.specialEffect = specialEffect;
+    	this.specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         this.DEFAULT_SPECIAL_EFFECT_COOLDOWN = new Stat(Integer.valueOf(specialEffectCooldown));
         this.specialEffectCounter = 0;
     }
@@ -65,6 +62,36 @@ public abstract class Piece {
         }
         return specialEffectManager;
     }
+
+    @Override
+    public String toString() {
+        String summary = "Name: " + getName() + "\n" +
+                "Level: " + getLevel() + "\n" +
+                "Move range: " + getNumMove() + "\n" +
+                "Movable directions: ";
+        for (Direction direction : getMoveDirection()) {
+            summary += direction.toString() + " ";
+        }
+        summary += "\nAttack range: " + getAttackRange();
+        return summary;
+    }
+
+    // Nick - Feel free to change the wording so that it sounds more cohesive
+    public String getSpecialEffectSummary() {
+        if (specialEffect == null) { return "Not applicable"; }
+        specialEffect.getName();
+        specialEffect.getEffectiveDuration();
+        DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue().intValue();
+        specialEffect.toString();
+        String summary = "Special effect's name (SE): " +  specialEffect.getName() + "\n" +
+                "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
+                "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue().intValue() + "\n" +
+                "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
+                "SE description: " + specialEffect.toString();
+        return summary;
+    }
+
+    // Nick - TODO: Show the current applied specialeffect info
 
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus() {

@@ -6,7 +6,7 @@ import skyvssea.model.piece.Piece;
 public class DoubleAttackRange extends AbstractSpecialEffect {
 
     public DoubleAttackRange() {
-        super(DEFAULT_CASTER_TURN);
+        super("Double attack range", DEFAULT_CASTER_TURN);
     }
 
     @Override
@@ -24,5 +24,10 @@ public class DoubleAttackRange extends AbstractSpecialEffect {
         Stat<Integer> attackRangeStat = currentValueStats.get(0);
         int originalAttackRange = (int) originalValueStats.get(0).getValue();
         attackRangeStat.setValue(Integer.valueOf(originalAttackRange));
+    }
+
+    @Override
+    public String toString() {
+        return "Double a piece attack range";
     }
 }

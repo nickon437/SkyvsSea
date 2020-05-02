@@ -153,6 +153,14 @@ public class Controller {
         // TODO: Add save for undo here
     }
 
+    public void handleTileHovered(TilePane tileView) {
+        Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
+        if (hoveringTile.hasPiece()) {
+            Piece hoveringPiece = hoveringTile.getPiece();
+            infoPane.setPieceInfo(hoveringPiece);
+        }
+    }
+
     @Requires("boardPane != null && actionPane != null && infoPane != null")
     public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
     	this.boardPane = boardPane;

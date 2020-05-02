@@ -5,7 +5,9 @@ import skyvssea.model.piece.Piece;
 
 public class Retarding extends AbstractSpecialEffect {
 
-    public Retarding() { super(DEFAULT_CASTER_TURN); }
+    public Retarding() {
+        super("Retarding", DEFAULT_CASTER_TURN);
+    }
 
     @Override
     public void apply(Piece target) throws CloneNotSupportedException {
@@ -22,5 +24,10 @@ public class Retarding extends AbstractSpecialEffect {
         Stat<Integer> moveRangeStat = currentValueStats.get(0);
         int originalMoveRange = (int) originalValueStats.get(0).getValue();
         moveRangeStat.setValue(Integer.valueOf(originalMoveRange));
+    }
+
+    @Override
+    public String toString() {
+        return "Reduce an enemy’s movement with their move range decreased by 2";
     }
 }

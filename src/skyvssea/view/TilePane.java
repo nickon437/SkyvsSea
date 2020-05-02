@@ -32,7 +32,8 @@ public class TilePane extends StackPane implements Observer {
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
-        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> controller.handleTileClicked(this));
+        this.setOnMouseClicked(e -> controller.handleTileClicked(this));
+        this.setOnMouseEntered(e -> controller.handleTileHovered(this));
     }
 
 	private boolean setDefaultBaseColor(int x, int y) {

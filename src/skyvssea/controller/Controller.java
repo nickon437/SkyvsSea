@@ -50,7 +50,7 @@ public class Controller {
                         Piece piece = selectedTile.getPiece();
                         if (playerManager.checkSide(piece).equals(playerManager.getCurrentPlayer())) {
                             pieceManager.setCurrentPiece(piece);
-                            highlightenPossibleMoveTiles(piece, selectedTile);
+                            highlightPossibleMoveTiles(piece, selectedTile);
                         }
                     }
                 }
@@ -64,10 +64,10 @@ public class Controller {
         }
     }
 
-    private void highlightenPossibleMoveTiles(Piece piece, Tile selectedTile) {
+    private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
         int numMove = piece.getNumMove();
 
-        board.highlightenTile(selectedTile);
+        board.highlightTile(selectedTile);
 
         List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
         for (int count = 1; count <= numMove; count++) {
@@ -81,7 +81,7 @@ public class Controller {
                             blockedDirections.add(direction);
                         }
                     } else {
-                        board.highlightenTile(tile);
+                        board.highlightTile(tile);
                     }
                 }
             }
@@ -90,7 +90,7 @@ public class Controller {
     }
 
     private void switchToAttackMode() {
-        highlightenPossibleAttackTiles();
+        highlightPossibleAttackTiles();
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         System.out.println("Update GameState to " + game.getCurrentGameState());
         actionPane.setDisable(false);
@@ -105,7 +105,7 @@ public class Controller {
         System.out.println("Update GameState to " + game.getCurrentGameState());
     }
 
-    public void highlightenPossibleAttackTiles() {
+    public void highlightPossibleAttackTiles() {
         Tile currentTile = board.getCurrentTile();
         Piece currentPiece = pieceManager.getCurrentPiece();
         int attackRange = currentPiece.getAttackRange();
@@ -128,7 +128,7 @@ public class Controller {
                 Tile checkTile = board.getTile(x, y);
                 System.out.println("Current checked tile | x: " + x + " | y: " + y);
                 if (checkTile.hasPiece()) {
-                    board.highlightenTile(checkTile);
+                    board.highlightTile(checkTile);
                 }
             }
         }

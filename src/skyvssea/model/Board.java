@@ -58,7 +58,7 @@ public class Board {
 		return tile;
 	}
 
-	public void highlightenTile(Tile tile) {
+	public void highlightTile(Tile tile) {
 		tile.setHighlighted(true);
 		highlightedTiles.add(tile);
 	}

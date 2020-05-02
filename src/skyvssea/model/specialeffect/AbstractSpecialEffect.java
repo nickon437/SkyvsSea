@@ -6,11 +6,13 @@ import skyvssea.model.piece.Piece;
 import java.util.ArrayList;
 
 public abstract class AbstractSpecialEffect {
-//    protected final int DEFAULT_EFFECTIVE_NUM_TURN;
+    protected static final int DEFAULT_CASTER_TURN = 3;
+//    protected final int DEFAULT_EFFECTIVE_NUM_TURN; // Nick - Commented out just incase for a power that allow other player to delay the effect duration
 
     // Nick - I leave it as list because maybe it will be useful for an SE that is a combination of SE like freezing, idk?
-    protected ArrayList<Stat> affectedStats = new ArrayList<>();
-    protected int effectiveDuration;
+    protected ArrayList<Stat> originalValueStats = new ArrayList<>();
+    protected ArrayList<Stat> currentValueStats = new ArrayList<>();
+    protected int effectiveDuration; // 3 = till the next turn of the caster.
 
     protected AbstractSpecialEffect(int effectiveDuration) {
 //        this.DEFAULT_EFFECTIVE_NUM_TURN = effectiveDuration;
@@ -27,7 +29,21 @@ public abstract class AbstractSpecialEffect {
         return isActive;
     }
 
-    public abstract void apply(Piece target);
+    protected void applyOnStat() {
+//        Stat<Integer> moveRangeStat = target.getAttackRangeStat();
+//
+//        Stat<Integer> originalValueStat = new Stat<>(moveRangeStat.getValue());
+//        originalValueStats.add(moveRangeStat);
+//
+//        moveRangeStat.setValue((moveRangeStat.getValue() * 2));
+//        currentValueStats.add(moveRangeStat);
+    }
+
+    protected void saveOriginalValueStat(Stat stat) throws CloneNotSupportedException {
+        originalValueStats.add(stat.clone());
+    }
+
+    public abstract void apply(Piece target) throws CloneNotSupportedException;
     protected abstract void remove();
 
 }

@@ -14,8 +14,12 @@ public class SpecialEffectManager {
     }
 
     public void add(AbstractSpecialEffect specialEffect) {
-        appliedSpecialEffects.add(specialEffect);
-        specialEffect.apply(receiver);
+        try {
+            specialEffect.apply(receiver);
+            appliedSpecialEffects.add(specialEffect);
+        } catch (CloneNotSupportedException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public void updateEffectiveDuration() {

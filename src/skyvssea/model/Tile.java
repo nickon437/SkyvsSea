@@ -10,6 +10,7 @@ public class Tile extends Observable {
 	private int y;
     private Piece piece;
     private boolean isHighlighted;
+    private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
 	public Tile(int x, int y) {

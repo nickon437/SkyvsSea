@@ -3,18 +3,16 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.Stat;
 import skyvssea.model.piece.Piece;
 
-public class DoubleMoveRange extends AbstractSpecialEffect {
+public class Retard extends AbstractSpecialEffect {
 
-    public DoubleMoveRange() {
-        super(DEFAULT_CASTER_TURN);
-    }
+    public Retard() { super(DEFAULT_CASTER_TURN); }
 
     @Override
     public void apply(Piece target) throws CloneNotSupportedException {
         Stat<Integer> moveRangeStat = target.getNumMoveStat();
         originalValueStats.add(moveRangeStat.clone());
 
-        int modifiedMoveRange = moveRangeStat.getValue() * 2;
+        int modifiedMoveRange = moveRangeStat.getValue() / 2;
         moveRangeStat.setValue(Integer.valueOf(modifiedMoveRange));
         currentValueStats.add(moveRangeStat);
     }

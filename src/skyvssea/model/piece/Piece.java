@@ -33,6 +33,9 @@ public abstract class Piece {
 
     public String getName() { return name; }
 
+    public Hierarchy getLevel() { return level.getValue(); }
+    public Stat<Hierarchy> getLevelStat() { return level; }
+
     public int getNumMove() { return numMove.getValue(); }
     public Stat<Integer> getNumMoveStat() { return numMove; }
 

@@ -3,9 +3,9 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.Stat;
 import skyvssea.model.piece.Piece;
 
-public class Retard extends AbstractSpecialEffect {
+public class Retarding extends AbstractSpecialEffect {
 
-    public Retard() { super(DEFAULT_CASTER_TURN); }
+    public Retarding() { super(DEFAULT_CASTER_TURN); }
 
     @Override
     public void apply(Piece target) throws CloneNotSupportedException {

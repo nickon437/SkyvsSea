@@ -1,8 +1,6 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.AbstractSpecialEffect;
-import skyvssea.model.specialeffect.DoubleAttackRange;
-import skyvssea.model.specialeffect.DoubleMoveRange;
+import skyvssea.model.specialeffect.*;
 
 public class SpecialEffectFactory {
 
@@ -23,6 +21,12 @@ public class SpecialEffectFactory {
     private AbstractSpecialEffect createDoubleMoveRange() {
         return new DoubleMoveRange();
     }
+    private AbstractSpecialEffect createRetarding() {
+        return new Retarding();
+    }
+    private AbstractSpecialEffect createFreezing() { return new Freezing(); }
+    private AbstractSpecialEffect createStrengthening() { return new Strengthening(); }
+    private AbstractSpecialEffect createWeakening() { return new Weakening(); }
 
     public AbstractSpecialEffect createSpecialEffect(SpecialEffectCode code) {
         switch (code) {
@@ -30,6 +34,14 @@ public class SpecialEffectFactory {
                 return createDoubleAttackRange();
             case DOUBLE_MOVE_RANGE:
                 return createDoubleMoveRange();
+            case RETARDING:
+                return createRetarding();
+            case FREEZING:
+                return createFreezing();
+            case STRENGTHENING:
+                return createStrengthening();
+            case WEAKENING:
+                return createWeakening();
             default:
                 return null;
         }

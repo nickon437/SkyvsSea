@@ -6,6 +6,6 @@ public enum SpecialEffectCode {
     DOUBLE_MOVE_RANGE,
     RETARDING,
     FREEZING,
-    WEAKING,
+    WEAKENING,
     STRENGTHENING;
 }

@@ -3,9 +3,9 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.Stat;
 import skyvssea.model.piece.Piece;
 
-public class Frozen extends AbstractSpecialEffect {
+public class Freezing extends AbstractSpecialEffect {
 
-    protected Frozen() { super(DEFAULT_CASTER_TURN); }
+    public Freezing() { super(DEFAULT_CASTER_TURN); }
 
     @Override
     public void apply(Piece target) throws CloneNotSupportedException {

@@ -5,7 +5,7 @@ import skyvssea.model.piece.Piece;
 
 import java.util.ArrayList;
 
-public abstract class AbstractSpecialEffect {
+public abstract class AbstractSpecialEffect implements Cloneable {
     protected static final int DEFAULT_CASTER_TURN = 3;
 //    protected final int DEFAULT_EFFECTIVE_NUM_TURN; // Nick - Commented out just incase for a power that allow other player to delay the effect duration
 
@@ -35,22 +35,18 @@ public abstract class AbstractSpecialEffect {
         return isActive;
     }
 
-    protected void applyOnStat() {
-//        Stat<Integer> moveRangeStat = target.getAttackRangeStat();
-//
-//        Stat<Integer> originalValueStat = new Stat<>(moveRangeStat.getValue());
-//        originalValueStats.add(moveRangeStat);
-//
-//        moveRangeStat.setValue((moveRangeStat.getValue() * 2));
-//        currentValueStats.add(moveRangeStat);
-    }
-
-    protected void saveOriginalValueStat(Stat stat) throws CloneNotSupportedException {
-        originalValueStats.add(stat.clone());
-    }
-
     public abstract void apply(Piece target) throws CloneNotSupportedException;
     protected abstract void remove();
+
+    public AbstractSpecialEffect clone() {
+        try {
+            AbstractSpecialEffect clone = (AbstractSpecialEffect) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Override
     public abstract String toString();

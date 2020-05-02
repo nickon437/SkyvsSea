@@ -43,14 +43,10 @@ public abstract class Piece {
 
     @Requires("specialEffectCounter <= 0")
     public void performSpecialEffect(Piece target) {
-        target.getSpecialEffectManager().add(specialEffect);
+        target.getSpecialEffectManager().add(specialEffect.clone());
         specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue();
     }
     //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target
-
-    protected AbstractSpecialEffect getSpecialEffect() {
-		return specialEffect;
-	}
 
 	public boolean isSpecialEffectAvailable() {
         return (specialEffect != null && specialEffectCounter <= 0) ? true : false;

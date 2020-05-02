@@ -20,7 +20,6 @@ public class Controller {
 
     @Requires("tileView != null")
     public void handleTileClicked(TilePane tileView) {
-        System.out.println("GameState at tileClicked: " + game.getCurrentGameState());
         if (game.getCurrentGameState() != GameState.READY_TO_ATTACK) {
             final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
             Tile previousSelectedTile = board.getCurrentTile();
@@ -92,7 +91,6 @@ public class Controller {
     private void switchToAttackMode() {
         highlightPossibleAttackTiles();
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
 
         Piece currentPiece = pieceManager.getCurrentPiece();
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
@@ -104,7 +102,6 @@ public class Controller {
 
     public void handleSpecialEffectButton() {
         game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
     }
 
     public void highlightPossibleAttackTiles() {
@@ -128,7 +125,6 @@ public class Controller {
         for (int x = leftX; x <= rightX; x++) {
             for (int y = topY; y <= bottomY; y++) {
                 Tile checkTile = board.getTile(x, y);
-                System.out.println("Current checked tile | x: " + x + " | y: " + y);
                 if (checkTile.hasPiece()) {
                     board.highlightTile(checkTile);
                 }
@@ -153,7 +149,6 @@ public class Controller {
         pieceManager.updatePieceStatus();
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
 
         // TODO: Add save for undo here
     }

@@ -153,12 +153,17 @@ public class Controller {
         // TODO: Add save for undo here
     }
 
-    public void handleTileHovered(TilePane tileView) {
+    public void handleTileMouseEntered(TilePane tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
+        tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
             Piece hoveringPiece = hoveringTile.getPiece();
             infoPane.setPieceInfo(hoveringPiece);
         }
+    }
+
+    public void handleTileMouseExited(TilePane tileView) {
+        tileView.updateBaseColorAsHovered(false);
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")

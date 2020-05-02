@@ -2,7 +2,6 @@ package skyvssea.view;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -33,7 +32,8 @@ public class TilePane extends StackPane implements Observer {
         this.getChildren().add(base);
 
         this.setOnMouseClicked(e -> controller.handleTileClicked(this));
-        this.setOnMouseEntered(e -> controller.handleTileHovered(this));
+        this.setOnMouseEntered(e -> controller.handleTileMouseEntered(this));
+        this.setOnMouseExited(e -> controller.handleTileMouseExited(this));
     }
 
 	private boolean setDefaultBaseColor(int x, int y) {
@@ -62,6 +62,13 @@ public class TilePane extends StackPane implements Observer {
     @Requires("color != null")
     private void updateBaseColor(Color color) {
         base.setFill(color);
+    }
+
+    public void updateBaseColorAsHovered(boolean isHovered) {
+        Color baseColor = (Color) base.getFill();
+        baseColor = isHovered ? Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), .7) :
+                Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 1);
+        base.setFill(baseColor);
     }
 
     @Requires("isHighlighted != null && isHighlighted instanceof Boolean")

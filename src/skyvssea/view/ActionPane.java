@@ -1,10 +1,13 @@
 package skyvssea.view;
 
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import skyvssea.controller.Controller;
+import skyvssea.util.ButtonUtil;
+import skyvssea.util.ColorUtil;
 
 public class ActionPane extends HBox {
     private Button killBtn = new Button("Kill");
@@ -15,17 +18,32 @@ public class ActionPane extends HBox {
         this.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
         this.setSpacing(20d);
 
-        killBtn.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold;");
-        specialEffectBtn.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-weight: bold;");
-        endBtn.setStyle("-fx-font-weight: bold;");
-        endBtn.setCancelButton(true);
+        formatKillBtn(controller);
+        formatSpecialEffectBtn(controller);
+        formatEndBtn(controller);
+    }
 
+    private void formatKillBtn(Controller controller) {
         maximizeControlSize(killBtn);
-        maximizeControlSize(specialEffectBtn);
-        maximizeControlSize(endBtn);
-
+        ButtonUtil.formatStandardButton(killBtn, ColorUtil.STANDARD_BUTTON_COLOR);
+        killBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(killBtn, true));
+        killBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(killBtn, false));
         killBtn.setOnAction(e -> controller.handleKillButton());
+    }
+
+    private void formatSpecialEffectBtn(Controller controller) {
+        maximizeControlSize(specialEffectBtn);
+        ButtonUtil.formatStandardButton(specialEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
+        specialEffectBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, true));
+        specialEffectBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, false));
         specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton());
+    }
+
+    private void formatEndBtn(Controller controller) {
+        maximizeControlSize(endBtn);
+        endBtn.setStyle("-fx-font-weight: bold;");
+        endBtn.setCursor(Cursor.HAND);
+        endBtn.setCancelButton(true);
         endBtn.setOnAction(e -> controller.handleEndButton());
     }
 
@@ -37,5 +55,17 @@ public class ActionPane extends HBox {
 
     public void setSpecialEffectBtnDisable(boolean isDisabled) {
         specialEffectBtn.setDisable(isDisabled);
+    }
+
+    public double getSpecialEffectOpacity() {
+        return specialEffectBtn.getOpacity();
+    }
+
+    public double getKillOpacity() {
+        return killBtn.getOpacity();
+    }
+
+    public boolean getSpeEffBtnDisable() {
+        return specialEffectBtn.isDisable();
     }
 }

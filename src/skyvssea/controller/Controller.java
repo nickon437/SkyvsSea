@@ -1,6 +1,7 @@
 package skyvssea.controller;
 
 import com.google.java.contract.Requires;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.model.piece.Piece;
@@ -153,16 +154,27 @@ public class Controller {
         // TODO: Add save for undo here
     }
 
-    public void handleTileMouseEntered(TilePane tileView) {
+    public void handleMouseEnteredTile(TilePane tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
         tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
             Piece hoveringPiece = hoveringTile.getPiece();
             infoPane.setPieceInfo(hoveringPiece);
         }
+
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            Piece currentPiece = hoveringTile.getPiece();
+            if (currentPiece != null && playerManager.getCurrentPlayer().equals(playerManager.checkSide(currentPiece))) {
+                tileView.setCursor(Cursor.HAND);
+            }
+        } else if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
+            tileView.setCursor(Cursor.DEFAULT);
+        } else {
+            if (hoveringTile.isHighlighted()) { tileView.setCursor(Cursor.HAND); }
+        }
     }
 
-    public void handleTileMouseExited(TilePane tileView) {
+    public void handleMouseExitedTile(TilePane tileView) {
         tileView.updateBaseColorAsHovered(false);
     }
 

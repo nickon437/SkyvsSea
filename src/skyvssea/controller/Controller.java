@@ -3,6 +3,7 @@ package skyvssea.controller;
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
@@ -97,11 +98,13 @@ public class Controller {
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
-    public void handleKillButton() {
-
+    public void handleKillButton(Button button) {
+        actionPane.shiftActionIndicator(button);
+        game.setCurrentGameState(GameState.KILLING);
     }
 
-    public void handleSpecialEffectButton() {
+    public void handleSpecialEffectButton(Button button) {
+        actionPane.shiftActionIndicator(button);
         game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT);
     }
 
@@ -133,7 +136,8 @@ public class Controller {
         }
     }
 
-    public void handleEndButton() {
+    public void handleEndButton(Button button) {
+        actionPane.shiftActionIndicator(button);
         endTurn();
     }
 
@@ -147,6 +151,7 @@ public class Controller {
     }
 
     private void endTurn() {
+        actionPane.hideActionIndicator();
         pieceManager.updatePieceStatus();
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);

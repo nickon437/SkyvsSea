@@ -1,5 +1,7 @@
 package skyvssea.model;
 
+import com.google.java.contract.Ensures;
+
 public enum Hierarchy {
 	BABY(0),
     SMALL(1),
@@ -20,5 +22,15 @@ public enum Hierarchy {
 	        }
 	    }
 	    return null;
+	}
+	
+	@Ensures("values().length - 1 == result.magnitude")
+	public static Hierarchy maxLevel() {
+		return Hierarchy.STEROID;
+	}
+
+	@Ensures("result.magnitude == 0")
+	public static Hierarchy minLevel() {
+		return Hierarchy.BABY;
 	}
 }

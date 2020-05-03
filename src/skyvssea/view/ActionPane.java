@@ -56,16 +56,4 @@ public class ActionPane extends HBox {
     public void setSpecialEffectBtnDisable(boolean isDisabled) {
         specialEffectBtn.setDisable(isDisabled);
     }
-
-    public double getSpecialEffectOpacity() {
-        return specialEffectBtn.getOpacity();
-    }
-
-    public double getKillOpacity() {
-        return killBtn.getOpacity();
-    }
-
-    public boolean getSpeEffBtnDisable() {
-        return specialEffectBtn.isDisable();
-    }
 }

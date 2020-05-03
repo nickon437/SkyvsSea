@@ -3,6 +3,8 @@ package skyvssea.view;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import skyvssea.controller.Controller;
@@ -26,6 +28,8 @@ public class ActionPane extends HBox {
     private void formatKillBtn(Controller controller) {
         maximizeControlSize(killBtn);
         ButtonUtil.formatStandardButton(killBtn, ColorUtil.STANDARD_BUTTON_COLOR);
+        killBtn.setGraphic(new ImageView("resources/icons/kill.png"));
+        killBtn.setGraphicTextGap(10);
         killBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(killBtn, true));
         killBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(killBtn, false));
         killBtn.setOnAction(e -> controller.handleKillButton());
@@ -34,6 +38,8 @@ public class ActionPane extends HBox {
     private void formatSpecialEffectBtn(Controller controller) {
         maximizeControlSize(specialEffectBtn);
         ButtonUtil.formatStandardButton(specialEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
+        specialEffectBtn.setGraphic(new ImageView("resources/icons/special-effect.png"));
+        specialEffectBtn.setGraphicTextGap(10);
         specialEffectBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, true));
         specialEffectBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, false));
         specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton());
@@ -44,6 +50,8 @@ public class ActionPane extends HBox {
         endBtn.setStyle("-fx-font-weight: bold;");
         endBtn.setCursor(Cursor.HAND);
         endBtn.setCancelButton(true);
+        endBtn.setGraphic(new ImageView("resources/icons/end-turn.png"));
+        endBtn.setGraphicTextGap(8);
         endBtn.setOnAction(e -> controller.handleEndButton());
     }
 

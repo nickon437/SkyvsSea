@@ -1,14 +1,14 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 import java.util.Observable;
 
 public class Tile extends Observable {
     private int x;
 	private int y;
-    private Piece piece;
+    private AbstractPiece piece;
     private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
@@ -23,9 +23,9 @@ public class Tile extends Observable {
         return piece != null;
     }
 
-    public Piece getPiece() { return piece; }
+    public AbstractPiece getPiece() { return piece; }
 
-    public void setPiece(Piece piece) { this.piece = piece; }
+    public void setPiece(AbstractPiece piece) { this.piece = piece; }
 
     public void removePiece() { this.piece = null; }
 

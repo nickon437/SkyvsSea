@@ -1,7 +1,7 @@
 package skyvssea.model.specialeffect;
 
 import skyvssea.model.Stat;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 public class Freezing extends AbstractSpecialEffect {
 
@@ -10,7 +10,7 @@ public class Freezing extends AbstractSpecialEffect {
     }
 
     @Override
-    public void apply(Piece target) throws CloneNotSupportedException {
+    public void apply(AbstractPiece target) throws CloneNotSupportedException {
         // Attack range
         Stat<Integer> attackRangeStat = target.getAttackRangeStat();
         originalValueStats.add(attackRangeStat.clone());

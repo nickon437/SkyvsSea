@@ -1,15 +1,15 @@
 package skyvssea.model;
 
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
 import java.util.ArrayList;
 
 public class SpecialEffectManager {
     private ArrayList<AbstractSpecialEffect> appliedSpecialEffects = new ArrayList<>();
-    private Piece receiver;
+    private AbstractPiece receiver;
 
-    public SpecialEffectManager(Piece piece) {
+    public SpecialEffectManager(AbstractPiece piece) {
         this.receiver = piece;
     }
 

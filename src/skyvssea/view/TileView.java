@@ -10,7 +10,7 @@ import skyvssea.controller.Controller;
 import java.util.Observable;
 import java.util.Observer;
 
-public class TilePane extends StackPane implements Observer {
+public class TileView extends StackPane implements Observer {
 
     public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.valueOf("#FCF5EF");
     public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#BDBDBD");
@@ -24,7 +24,7 @@ public class TilePane extends StackPane implements Observer {
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0 && controller != null")
-    public TilePane(int x, int y, double tileSize, Controller controller) {
+    public TileView(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
         this.hasLightBaseColor = setDefaultBaseColor(x, y);

@@ -5,10 +5,10 @@ import com.google.java.contract.Requires;
 import skyvssea.model.*;
 import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
-public abstract class Piece {
+public abstract class AbstractPiece {
     private String name;
     private Stat<Hierarchy> level;
-    private Stat<Integer> numMove;
+    private Stat<Integer> moveRange;
     private Direction[] moveDirection;
     private Stat<Integer> attackRange;
     private AbstractSpecialEffect specialEffect;
@@ -16,11 +16,11 @@ public abstract class Piece {
     private int specialEffectCounter; // 0 = ready to use special effect
     private SpecialEffectManager specialEffectManager;
 
-    protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange,
-                    SpecialEffectCode specialEffectCode, int specialEffectCooldown) {
+    protected AbstractPiece(String name, Hierarchy level, int moveRange, Direction[] moveDirection, int attackRange,
+                            SpecialEffectCode specialEffectCode, int specialEffectCooldown) {
     	this.name = name;
         this.level = new Stat(level);
-    	this.numMove = new Stat(Integer.valueOf(numMove));
+    	this.moveRange = new Stat(Integer.valueOf(moveRange));
     	this.moveDirection = moveDirection;
     	this.attackRange = new Stat(Integer.valueOf(attackRange));
     	this.specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
@@ -33,8 +33,8 @@ public abstract class Piece {
     public Hierarchy getLevel() { return level.getValue(); }
     public Stat<Hierarchy> getLevelStat() { return level; }
 
-    public int getNumMove() { return numMove.getValue(); }
-    public Stat<Integer> getNumMoveStat() { return numMove; }
+    public int getMoveRange() { return moveRange.getValue(); }
+    public Stat<Integer> getNumMoveStat() { return moveRange; }
 
     public Direction[] getMoveDirection() { return moveDirection; }
 
@@ -42,7 +42,7 @@ public abstract class Piece {
     public Stat<Integer> getAttackRangeStat() { return attackRange; }
 
     @Requires("specialEffectCounter <= 0")
-    public void performSpecialEffect(Piece target) {
+    public void performSpecialEffect(AbstractPiece target) {
         target.getSpecialEffectManager().add(specialEffect.clone());
         specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue();
     }
@@ -63,7 +63,7 @@ public abstract class Piece {
     public String toString() {
         String summary = "Name: " + getName() + "\n" +
                 "Level: " + getLevel() + "\n" +
-                "Move range: " + getNumMove() + "\n" +
+                "Move range: " + getMoveRange() + "\n" +
                 "Movable directions: ";
         for (Direction direction : getMoveDirection()) {
             summary += direction.toString() + " ";

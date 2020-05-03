@@ -1,7 +1,7 @@
 package skyvssea.model.specialeffect;
 
 import skyvssea.model.Stat;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public abstract class AbstractSpecialEffect implements Cloneable {
         return isActive;
     }
 
-    public abstract void apply(Piece target) throws CloneNotSupportedException;
+    public abstract void apply(AbstractPiece target) throws CloneNotSupportedException;
     protected abstract void remove();
 
     public AbstractSpecialEffect clone() {

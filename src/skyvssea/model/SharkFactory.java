@@ -2,13 +2,13 @@ package skyvssea.model;
 
 import skyvssea.model.piece.*;
 
-public class SharkFactory extends PieceFactory {
+public class SharkFactory extends AbstractPieceFactory {
 
 	private static SharkFactory sharkFactory;
 
 	private SharkFactory() {}
 
-	public static PieceFactory getInstance() {
+	public static AbstractPieceFactory getInstance() {
 		if (sharkFactory == null) {
 			sharkFactory = new SharkFactory();
 		}

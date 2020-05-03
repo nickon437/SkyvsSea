@@ -1,16 +1,16 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PieceManager {
-    private Map<Hierarchy, ArrayList<Piece>> sharkPieces = new HashMap<>();
-    private Map<Hierarchy, ArrayList<Piece>> eaglePieces = new HashMap<>();
-    private Piece currentPiece;
+    private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new HashMap<>();
+    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
+    private AbstractPiece currentPiece;
 
 	public PieceManager(Map<Hierarchy, Integer> lineup) {
         initializePieces(lineup);
@@ -22,8 +22,8 @@ public class PieceManager {
 	//The precondition checks if the lineup numbers are not all zeroes
 	@Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
     public void initializePieces(Map<Hierarchy, Integer> lineup) {
-        PieceFactory sharkFactory = SharkFactory.getInstance();
-        PieceFactory eagleFactory = EagleFactory.getInstance();
+        AbstractPieceFactory sharkFactory = SharkFactory.getInstance();
+        AbstractPieceFactory eagleFactory = EagleFactory.getInstance();
 
         for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
             createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
@@ -31,7 +31,7 @@ public class PieceManager {
         }
     }
 
-	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<Piece>> pieces, PieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
+	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
 		Hierarchy level = creationInfo.getKey();    
 		int numPiecesToCreate = creationInfo.getValue();
 		pieces.put(level, new ArrayList<>());
@@ -40,34 +40,34 @@ public class PieceManager {
 		}
 	}
 
-    public Piece getCurrentPiece() { return currentPiece; }
+    public AbstractPiece getCurrentPiece() { return currentPiece; }
 
     @Requires("currentPiece != null")
-    public void setCurrentPiece(Piece currentPiece) { this.currentPiece = currentPiece; }
+    public void setCurrentPiece(AbstractPiece currentPiece) { this.currentPiece = currentPiece; }
 
     public void clearCurrentPiece() { currentPiece = null; }
 
-    public Map<Hierarchy, ArrayList<Piece>> getSharkPieces() { return sharkPieces; }
-    public Map<Hierarchy, ArrayList<Piece>> getEaglePieces() { return eaglePieces; }
+    public Map<Hierarchy, ArrayList<AbstractPiece>> getSharkPieces() { return sharkPieces; }
+    public Map<Hierarchy, ArrayList<AbstractPiece>> getEaglePieces() { return eaglePieces; }
 
-    public ArrayList<Map<Hierarchy, ArrayList<Piece>>> getAllPiecesList() {
-        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = new ArrayList<>();
+    public ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> getAllPiecesList() {
+        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = new ArrayList<>();
         piecesList.add(sharkPieces);
         piecesList.add(eaglePieces);
         return piecesList;
     }
 
-    public ArrayList<Piece> getSharkPiecesList() {
-        ArrayList<Piece> sharkPiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : getSharkPieces().entrySet()) {
+    public ArrayList<AbstractPiece> getSharkPiecesList() {
+        ArrayList<AbstractPiece> sharkPiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : getSharkPieces().entrySet()) {
             sharkPiecesList.addAll(entry.getValue());
         }
         return sharkPiecesList;
     }
 
-    public ArrayList<Piece> getEaglePiecesList() {
-        ArrayList<Piece> eaglePiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : getEaglePieces().entrySet()) {
+    public ArrayList<AbstractPiece> getEaglePiecesList() {
+        ArrayList<AbstractPiece> eaglePiecesList = new ArrayList<>();
+        for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : getEaglePieces().entrySet()) {
             eaglePiecesList.addAll(entry.getValue());
         }
         return eaglePiecesList;
@@ -79,9 +79,9 @@ public class PieceManager {
         int midPoint = Board.NUM_SIDE_CELL / 2;
 
         // Use ArrayList to reduce code duplication when traverse through HashMap
-        ArrayList<Map<Hierarchy, ArrayList<Piece>>> piecesList = getAllPiecesList();
+        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = getAllPiecesList();
 
-        for (Map<Hierarchy, ArrayList<Piece>> pieces : piecesList) {
+        for (Map<Hierarchy, ArrayList<AbstractPiece>> pieces : piecesList) {
             int pieceXCoord = 0;
             int pieceYCoord = midPoint;
             int pieceIndex = 0;
@@ -89,8 +89,8 @@ public class PieceManager {
 
             if (piecesList.indexOf(pieces) != 0) { pieceXCoord = Board.NUM_SIDE_CELL - 1; }
 
-            for (Map.Entry<Hierarchy, ArrayList<Piece>> entry : pieces.entrySet()) {
-                for (Piece piece : entry.getValue()) {
+            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : pieces.entrySet()) {
+                for (AbstractPiece piece : entry.getValue()) {
                     pieceYCoord = pieceYCoord + (flip * pieceIndex);
                     flip = flip * -1;
     
@@ -106,9 +106,9 @@ public class PieceManager {
     }
 
     public void updatePieceStatus() {
-        for (Map<Hierarchy, ArrayList<Piece>> playerPieces : getAllPiecesList()) {
-            for (Map.Entry<Hierarchy, ArrayList<Piece>> pieces : playerPieces.entrySet()) {
-                for (Piece piece : pieces.getValue()) {
+        for (Map<Hierarchy, ArrayList<AbstractPiece>> playerPieces : getAllPiecesList()) {
+            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> pieces : playerPieces.entrySet()) {
+                for (AbstractPiece piece : pieces.getValue()) {
                     piece.updateStatus();
                 }
             }

@@ -2,7 +2,7 @@ package skyvssea.model.specialeffect;
 
 import skyvssea.model.Hierarchy;
 import skyvssea.model.Stat;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 public class Strengthening extends AbstractSpecialEffect {
 
@@ -11,7 +11,7 @@ public class Strengthening extends AbstractSpecialEffect {
     }
 
     @Override
-    public void apply(Piece target) throws CloneNotSupportedException {
+    public void apply(AbstractPiece target) throws CloneNotSupportedException {
         Stat<Hierarchy> levelStat = target.getLevelStat();
         originalValueStats.add(levelStat.clone());
 

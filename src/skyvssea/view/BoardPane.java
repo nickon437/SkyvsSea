@@ -21,7 +21,7 @@ public class BoardPane extends Pane {
     public BoardPane(Controller controller) {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
-                TilePane tileView = new TilePane(x, y, tileSize, controller);
+                TileView tileView = new TileView(x, y, tileSize, controller);
                 tileGroup.getChildren().add(tileView);
             }
         }
@@ -50,8 +50,8 @@ public class BoardPane extends Pane {
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
 
         for (Node node : getTileGroup().getChildren()) {
-            TilePane tilePane = (TilePane) node;
-            tilePane.updateTileSize(tileSize, mostLeftX, mostTopY);
+            TileView tileView = (TileView) node;
+            tileView.updateTileSize(tileSize, mostLeftX, mostTopY);
         }
     }
 
@@ -76,10 +76,10 @@ public class BoardPane extends Pane {
 	}
 
 	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
-	public TilePane getTileView(int x, int y) {
+	public TileView getTileView(int x, int y) {
 		for (Node node : tileGroup.getChildren()) {
-			if (((TilePane) node).getX() == x && ((TilePane) node).getY() == y) {
-				return (TilePane) node;
+			if (((TileView) node).getX() == x && ((TileView) node).getY() == y) {
+				return (TileView) node;
 			}
 		}
 		return null;

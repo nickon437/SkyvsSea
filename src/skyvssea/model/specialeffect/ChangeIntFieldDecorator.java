@@ -1,7 +1,7 @@
 package skyvssea.model.specialeffect;
 
 public abstract class ChangeIntFieldDecorator extends AbstractSpecialEffectDecorator {
-	private Integer originalValue;
+	private int originalValue;
 	private double factor;
 	
 	public ChangeIntFieldDecorator(double factor, SpecialEffect specialEffect) {
@@ -9,7 +9,7 @@ public abstract class ChangeIntFieldDecorator extends AbstractSpecialEffectDecor
 		this.setFactor(factor);
 	}
 
-	public Integer getOriginalValue() {
+	public int getOriginalValue() {
 		return originalValue;
 	}
 

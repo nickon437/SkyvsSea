@@ -3,7 +3,7 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.piece.AbstractPiece;
 
 public class SpecialEffectBase implements SpecialEffect {
-	private Integer effectiveDuration;
+	private int effectiveDuration;
 	private String name;
 	
 	public SpecialEffectBase(String name, int effectiveDuration) {

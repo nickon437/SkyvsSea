@@ -1,13 +1,7 @@
 package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
-import com.google.java.contract.Requires;
-import skyvssea.model.Direction;
-import skyvssea.model.Hierarchy;
-import skyvssea.model.SpecialEffectCode;
-import skyvssea.model.SpecialEffectFactory;
-import skyvssea.model.SpecialEffectManager;
-import skyvssea.model.Stat;
+import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
 
 public abstract class AbstractPiece {
@@ -23,8 +17,9 @@ public abstract class AbstractPiece {
 
 	private SpecialEffectManager specialEffectManager;
 
-    protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange, Direction[] moveDirection, int attackRange,
-                    SpecialEffectCode specialEffectCode, int specialEffectCooldown) {
+    protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
+                            Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
+                            int specialEffectCooldown) {
     	this.name = name;
     	this.attackLevel = attackLevel;
     	this.defenceLevel = defenceLevel;
@@ -38,15 +33,22 @@ public abstract class AbstractPiece {
 
     public String getName() { return name; }
 
+    public Hierarchy getAttackLevel() { return attackLevel; }
+    public void setAttackLevel(Hierarchy attackLevel) { this.attackLevel = attackLevel; }
+
+    public Hierarchy getDefenceLevel() { return defenceLevel; }
+    public void setDefenceLevel(Hierarchy defenceLevel) { this.defenceLevel = defenceLevel; }
+
     public int getMoveRange() { return moveRange; }
+    public void setMoveRange(int moveRange) { this.moveRange = moveRange; }
 
     public Direction[] getMoveDirection() { return moveDirection; }
 
     public int getAttackRange() { return attackRange; }
-    
-    public void setAttackRange(int attackRange) {
-    	this.attackRange = attackRange;
-    }
+    public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
+
+    public int getSpecialEffectCounter() { return specialEffectCounter; }
+    public void setSpecialEffectCounter(int specialEffectCounter) { this.specialEffectCounter = specialEffectCounter; }
 
     public abstract void performSpecialEffect(AbstractPiece target);
     
@@ -57,13 +59,7 @@ public abstract class AbstractPiece {
     	}
 	}
     
-    public void resetSpecialEffectCounter() {
-    	specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN;
-    }
-
-    protected SpecialEffect getSpecialEffect() {
-		return specialEffect;
-	}
+    public void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
 
 	public boolean isSpecialEffectAvailable() {
 		return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
@@ -109,32 +105,4 @@ public abstract class AbstractPiece {
         if (specialEffectCounter > 0) { specialEffectCounter--; }
         specialEffectManager.updateEffectiveDuration();
     }
-
-	public void setNumMove(int moveRange) {
-		moveRange = moveRange;
-	}
-	
-    public Hierarchy getAttackLevel() {
-		return attackLevel;
-	}
-
-	public void setAttackLevel(Hierarchy attackLevel) {
-		this.attackLevel = attackLevel;
-	}
-
-	public Hierarchy getDefenceLevel() {
-		return defenceLevel;
-	}
-
-	public void setDefenceLevel(Hierarchy defenceLevel) {
-		this.defenceLevel = defenceLevel;
-	}
-	
-	public int getSpecialEffectCounter() {
-		return specialEffectCounter;
-	}
-	
-	public void setSpecialEffectCounter(int specialEffectCounter) {
-		this.specialEffectCounter = specialEffectCounter;
-	}
 }

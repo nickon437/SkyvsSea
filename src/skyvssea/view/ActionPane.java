@@ -7,7 +7,6 @@ import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
@@ -45,8 +44,7 @@ public class ActionPane extends VBox {
     private void formatKillBtn(Controller controller) {
         maximizeControlSize(killBtn);
         ButtonUtil.formatStandardButton(killBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-        killBtn.setGraphic(new ImageView("resources/icons/kill.png"));
-        killBtn.setGraphicTextGap(10);
+        ButtonUtil.formatGraphic(killBtn, "resources/icons/kill.png");
         killBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(killBtn, true));
         killBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(killBtn, false));
         killBtn.setOnAction(e -> controller.handleKillButton(killBtn));
@@ -55,8 +53,7 @@ public class ActionPane extends VBox {
     private void formatSpecialEffectBtn(Controller controller) {
         maximizeControlSize(specialEffectBtn);
         ButtonUtil.formatStandardButton(specialEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-        specialEffectBtn.setGraphic(new ImageView("resources/icons/special-effect.png"));
-        specialEffectBtn.setGraphicTextGap(10);
+        ButtonUtil.formatGraphic(specialEffectBtn, "resources/icons/special-effect.png");
         specialEffectBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, true));
         specialEffectBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, false));
         specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton(specialEffectBtn));
@@ -67,8 +64,7 @@ public class ActionPane extends VBox {
         endBtn.setStyle("-fx-font-weight: bold;");
         endBtn.setCursor(Cursor.HAND);
         endBtn.setCancelButton(true);
-        endBtn.setGraphic(new ImageView("resources/icons/end-turn.png"));
-        endBtn.setGraphicTextGap(8);
+        ButtonUtil.formatGraphic(endBtn, "resources/icons/end-turn.png");
         endBtn.setOnAction(e -> controller.handleEndButton(endBtn));
     }
 

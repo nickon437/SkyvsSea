@@ -10,7 +10,8 @@ import skyvssea.model.specialeffect.SpecialEffect;
 
 public abstract class Piece {
     private String name;
-    private Hierarchy level;
+    private Hierarchy attackLevel;
+	private Hierarchy defenceLevel;
     private int numMove;
     private Direction[] moveDirection;
     private int attackRange;
@@ -19,10 +20,11 @@ public abstract class Piece {
     private int specialEffectCounter; // 0 = ready to use special effect
     private SpecialEffectManager specialEffectManager;
 
-    protected Piece(String name, Hierarchy level, int numMove, Direction[] moveDirection, int attackRange,
+    protected Piece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int numMove, Direction[] moveDirection, int attackRange,
                     SpecialEffect specialEffect, int specialEffectCooldown) {
     	this.name = name;
-        this.setLevel(level);
+    	this.attackLevel = attackLevel;
+    	this.defenceLevel = defenceLevel;
     	this.numMove = numMove;
     	this.moveDirection = moveDirection;
     	this.attackRange = attackRange;
@@ -78,12 +80,20 @@ public abstract class Piece {
 	public void setNumMove(int moveRange) {
 		numMove = moveRange;
 	}
-
-	public Hierarchy getLevel() {
-		return level;
+	
+    public Hierarchy getAttackLevel() {
+		return attackLevel;
 	}
 
-	public void setLevel(Hierarchy level) {
-		this.level = level;
-	};
+	public void setAttackLevel(Hierarchy attackLevel) {
+		this.attackLevel = attackLevel;
+	}
+
+	public Hierarchy getDefenceLevel() {
+		return defenceLevel;
+	}
+
+	public void setDefenceLevel(Hierarchy defenceLevel) {
+		this.defenceLevel = defenceLevel;
+	}
 }

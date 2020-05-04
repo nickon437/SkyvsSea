@@ -6,8 +6,7 @@ public enum Hierarchy {
 	BABY(0),
     SMALL(1),
     MEDIUM(2),
-    BIG(3),
-    STEROID(4);
+    BIG(3);
 	
 	public final int magnitude;
 	
@@ -26,7 +25,7 @@ public enum Hierarchy {
 	
 	@Ensures("values().length - 1 == result.magnitude")
 	public static Hierarchy maxLevel() {
-		return Hierarchy.STEROID;
+		return Hierarchy.BIG;
 	}
 
 	@Ensures("result.magnitude == 0")

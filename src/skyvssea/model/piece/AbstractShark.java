@@ -1,7 +1,6 @@
 package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
-import skyvssea.model.specialeffect.SpecialEffect;
 import skyvssea.model.Direction;
 import skyvssea.model.Hierarchy;
 

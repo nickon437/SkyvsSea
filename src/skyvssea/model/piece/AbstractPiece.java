@@ -1,13 +1,11 @@
 package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
-import com.google.java.contract.Requires;
 import skyvssea.model.Direction;
 import skyvssea.model.Hierarchy;
 import skyvssea.model.SpecialEffectCode;
 import skyvssea.model.SpecialEffectFactory;
 import skyvssea.model.SpecialEffectManager;
-import skyvssea.model.Stat;
 import skyvssea.model.specialeffect.SpecialEffect;
 
 public abstract class AbstractPiece {
@@ -110,8 +108,8 @@ public abstract class AbstractPiece {
         specialEffectManager.updateEffectiveDuration();
     }
 
-	public void setNumMove(int moveRange) {
-		moveRange = moveRange;
+	public void setMoveRange(int moveRange) {
+		this.moveRange = moveRange;
 	}
 	
     public Hierarchy getAttackLevel() {

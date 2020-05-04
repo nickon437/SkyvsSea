@@ -1,14 +1,17 @@
 package skyvssea.model.piece;
 
-import skyvssea.model.specialeffect.SpecialEffectTimer;
-import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
-import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.SpecialEffectCode;
 
-public class SmallEagle extends Eagle implements SmallCharacter {
+public class SmallEagle extends AbstractEagle implements SmallCharacter {
+	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.FREEZING;
+	
 	public SmallEagle() {
-		super("Small Eagle", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_NUM_MOVE, DEFAULT_ATTACK_RANGE, 
-				new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectTimer(SpecialEffect.DEFAULT_CASTER_TURN))), 
+		super("Small Eagle", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_CODE, 
 				SPECIAL_EFFECT_COOLDOWN);
 	}
+	
+	@Override
+    public void performSpecialEffect(AbstractPiece target) {
+		performSpecialEffect(target, SPECIAL_EFFECT_CODE);
+    }
 }

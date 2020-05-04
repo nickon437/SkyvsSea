@@ -1,14 +1,17 @@
 package skyvssea.model.piece;
 
-import skyvssea.model.specialeffect.ChangeAttackLevelDecorator;
-import skyvssea.model.specialeffect.ChangeDefenceLevelDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectTimer;
+import skyvssea.model.SpecialEffectCode;
 
-public class SmallShark extends Shark implements SmallCharacter {
+public class SmallShark extends AbstractShark implements SmallCharacter {
+	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.STRENGTHENING;
+	
 	public SmallShark() {
-		super("Small Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_NUM_MOVE, DEFAULT_ATTACK_RANGE, 
-				new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectTimer(SpecialEffect.DEFAULT_CASTER_TURN))), 
+		super("Small Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_CODE, 
 				SPECIAL_EFFECT_COOLDOWN);
+	}
+
+	@Override
+	public void performSpecialEffect(AbstractPiece target) {
+		performSpecialEffect(target, SPECIAL_EFFECT_CODE);
 	}
 }

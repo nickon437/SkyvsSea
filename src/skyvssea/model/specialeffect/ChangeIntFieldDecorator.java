@@ -1,7 +1,5 @@
 package skyvssea.model.specialeffect;
 
-import skyvssea.model.piece.Piece;
-
 public abstract class ChangeIntFieldDecorator extends AbstractSpecialEffectDecorator {
 	private Integer originalValue;
 	private double factor;

@@ -1,7 +1,7 @@
 package skyvssea.model.specialeffect;
 
 import skyvssea.model.Hierarchy;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 	public ChangeAttackLevelDecorator(int change, SpecialEffect specialEffect) {
@@ -13,7 +13,7 @@ public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 	}
 	
 	@Override
-	public void apply(Piece target) {
+	public void apply(AbstractPiece target) {
 		setOriginalValue(target.getAttackLevel());
 		Hierarchy newLevel = getNewLevel();
 		target.setAttackLevel(newLevel);	
@@ -21,7 +21,7 @@ public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 	}
 	   
 	@Override
-	public void remove(Piece target) {
+	public void remove(AbstractPiece target) {
 		target.setAttackLevel(getOriginalValue());
 		super.remove(target); 
 	}

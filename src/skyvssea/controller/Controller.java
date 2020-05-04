@@ -1,9 +1,11 @@
 package skyvssea.controller;
 
 import com.google.java.contract.Requires;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import skyvssea.model.*;
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
 import java.util.*;
@@ -19,8 +21,7 @@ public class Controller {
     private InfoPane infoPane;
 
     @Requires("tileView != null")
-    public void handleTileClicked(TilePane tileView) {
-        System.out.println("GameState at tileClicked: " + game.getCurrentGameState());
+    public void handleTileClicked(TileView tileView) {
         if (game.getCurrentGameState() != GameState.READY_TO_ATTACK) {
             final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
             Tile previousSelectedTile = board.getCurrentTile();
@@ -33,7 +34,7 @@ public class Controller {
                     // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
                     if (!selectedTile.equals(previousSelectedTile)) {
                         // Configure model objects
-                        Piece currentPiece = pieceManager.getCurrentPiece();
+                        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
                         selectedTile.setPiece(currentPiece);
 
                         // Configure view objects
@@ -47,7 +48,7 @@ public class Controller {
                 } else {
                     board.clearHighlightedTiles();
                     if (selectedTile.hasPiece()) {
-                        Piece piece = selectedTile.getPiece();
+                        AbstractPiece piece = selectedTile.getPiece();
                         if (playerManager.checkSide(piece).equals(playerManager.getCurrentPlayer())) {
                             pieceManager.setCurrentPiece(piece);
                             highlightPossibleMoveTiles(piece, selectedTile);
@@ -56,7 +57,7 @@ public class Controller {
                 }
             } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
                 if (selectedTile.isHighlighted()) {
-                    Piece currentPiece = pieceManager.getCurrentPiece();
+                    AbstractPiece currentPiece = pieceManager.getCurrentPiece();
                     currentPiece.performSpecialEffect(selectedTile.getPiece());
                     endTurn();
                 }
@@ -64,8 +65,8 @@ public class Controller {
         }
     }
 
-    private void highlightPossibleMoveTiles(Piece piece, Tile selectedTile) {
-        int numMove = piece.getNumMove();
+    private void highlightPossibleMoveTiles(AbstractPiece piece, Tile selectedTile) {
+        int numMove = piece.getMoveRange();
 
         board.highlightTile(selectedTile);
 
@@ -92,22 +93,24 @@ public class Controller {
     private void switchToAttackMode() {
         highlightPossibleAttackTiles();
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
-        actionPane.setDisable(false);
 
-        // Nick - TODO: Check if special effect is available
-        Piece currentPiece = pieceManager.getCurrentPiece();
+        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
-    public void handleSpecialEffectButton() {
+    public void handleKillButton(Button button) {
+        actionPane.shiftActionIndicator(button);
+        game.setCurrentGameState(GameState.KILLING);
+    }
+
+    public void handleSpecialEffectButton(Button button) {
+        actionPane.shiftActionIndicator(button);
         game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
     }
 
     public void highlightPossibleAttackTiles() {
         Tile currentTile = board.getCurrentTile();
-        Piece currentPiece = pieceManager.getCurrentPiece();
+        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
         int attackRange = currentPiece.getAttackRange();
 
         int leftX = currentTile.getX() - attackRange;
@@ -126,7 +129,6 @@ public class Controller {
         for (int x = leftX; x <= rightX; x++) {
             for (int y = topY; y <= bottomY; y++) {
                 Tile checkTile = board.getTile(x, y);
-                System.out.println("Current checked tile | x: " + x + " | y: " + y);
                 if (checkTile.hasPiece()) {
                     board.highlightTile(checkTile);
                 }
@@ -134,7 +136,8 @@ public class Controller {
         }
     }
 
-    public void handleEndButton() {
+    public void handleEndButton(Button button) {
+        actionPane.shiftActionIndicator(button);
         endTurn();
     }
 
@@ -148,13 +151,36 @@ public class Controller {
     }
 
     private void endTurn() {
+        actionPane.hideActionIndicator();
         pieceManager.updatePieceStatus();
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
-        System.out.println("Update GameState to " + game.getCurrentGameState());
-        actionPane.setDisable(true);
 
         // TODO: Add save for undo here
+    }
+
+    public void handleMouseEnteredTile(TileView tileView) {
+        Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
+        tileView.updateBaseColorAsHovered(true);
+        if (hoveringTile.hasPiece()) {
+            AbstractPiece hoveringPiece = hoveringTile.getPiece();
+            infoPane.setPieceInfo(hoveringPiece);
+        }
+
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            AbstractPiece currentPiece = hoveringTile.getPiece();
+            if (currentPiece != null && playerManager.getCurrentPlayer().equals(playerManager.checkSide(currentPiece))) {
+                tileView.setCursor(Cursor.HAND);
+            }
+        } else if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
+            tileView.setCursor(Cursor.DEFAULT);
+        } else {
+            if (hoveringTile.isHighlighted()) { tileView.setCursor(Cursor.HAND); }
+        }
+    }
+
+    public void handleMouseExitedTile(TileView tileView) {
+        tileView.updateBaseColorAsHovered(false);
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
@@ -163,7 +189,7 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game();
+    	this.game = new Game(actionPane);
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
@@ -174,16 +200,16 @@ public class Controller {
     	Tile[][] tiles = board.getTiles();
     	Group tileViews = this.boardPane.getTileGroup();
     	tileViews.getChildren().forEach((tileView) -> {
-    		int x = ((TilePane) tileView).getX();
-    		int y = ((TilePane) tileView).getY();
+    		int x = ((TileView) tileView).getX();
+    		int y = ((TileView) tileView).getY();
     		tiles[x][y].addObserver((Observer) tileView);
     	});
     	board.setBaseColours();
 
-        //Initialize PieceView objects and assign to the corresponding TilePane objects
+        //Initialize PieceView objects and assign to the corresponding TileView objects
         ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         startingPositions.forEach(tile -> {
-            Piece piece = tile.getPiece();
+            AbstractPiece piece = tile.getPiece();
             Player player = playerManager.checkSide(piece);
             this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
         });

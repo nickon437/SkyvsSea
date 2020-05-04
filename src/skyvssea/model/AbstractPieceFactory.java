@@ -3,23 +3,23 @@ package skyvssea.model;
 import com.google.java.contract.Ensures;
 import skyvssea.model.piece.*;
 
-public abstract class PieceFactory {
+public abstract class AbstractPieceFactory {
 	protected abstract BigCharacter createBigCharacter();
 	protected abstract MediumCharacter createMediumCharacter();
 	protected abstract SmallCharacter createSmallCharacter();
 	protected abstract BabyCharacter createBabyCharacter();
 
 	@Ensures("result != null")
-	public Piece createPiece(Hierarchy level) {
-		Piece piece = null;
+	public AbstractPiece createPiece(Hierarchy level) {
+		AbstractPiece piece = null;
 		if (level == Hierarchy.BIG) {
-			piece = (Piece) createBigCharacter();
+			piece = (AbstractPiece) createBigCharacter();
 		} else if (level == Hierarchy.MEDIUM) {
-			piece = (Piece) createMediumCharacter();
+			piece = (AbstractPiece) createMediumCharacter();
 		} else if (level == Hierarchy.SMALL) {
-			piece = (Piece) createSmallCharacter();
+			piece = (AbstractPiece) createSmallCharacter();
 		} else if (level == Hierarchy.BABY) {
-			piece = (Piece) createBabyCharacter();
+			piece = (AbstractPiece) createBabyCharacter();
 		}
 		
 		return piece;

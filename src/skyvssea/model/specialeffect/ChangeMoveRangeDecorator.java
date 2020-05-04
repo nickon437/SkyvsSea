@@ -1,6 +1,6 @@
 package skyvssea.model.specialeffect;
 
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 	
@@ -9,19 +9,19 @@ public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 	}
 	
 	@Override
-	public void apply(Piece target) {
+	public void apply(AbstractPiece target) {
 		changeMoveRange(target);
 		super.apply(target);
 	}
 	   
 	@Override
-	public void remove(Piece target) {
+	public void remove(AbstractPiece target) {
 		target.setNumMove(getOriginalValue());
 		super.remove(target); 
 	}
 	
-	private void changeMoveRange(Piece target) {
-		setOriginalValue(target.getNumMove());
+	private void changeMoveRange(AbstractPiece target) {
+		setOriginalValue(target.getMoveRange());
     	target.setNumMove((int) (getOriginalValue() * getFactor()));
 	}
 }

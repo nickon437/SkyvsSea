@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import skyvssea.model.Player;
+import skyvssea.model.piece.AbstractPiece;
 import skyvssea.util.ColorUtil;
 
 public class InfoPane extends VBox {
@@ -53,7 +54,12 @@ public class InfoPane extends VBox {
         playerNameText.setFill(ColorUtil.getTextContrastColor(color));
     }
 
-    public void clearInfo() {
+    public void setPieceInfo(AbstractPiece piece) {
+        statusText.setText(piece.toString());
+        specialEffectText.setText(piece.getSpecialEffectSummary());
+    }
+
+    public void clearPieceInfo() {
         statusText.clear();
         specialEffectText.clear();
     }

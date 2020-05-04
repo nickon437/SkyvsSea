@@ -2,7 +2,7 @@ package skyvssea.model.specialeffect;
 
 import com.google.java.contract.Ensures;
 
-import skyvssea.model.piece.Piece;
+import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 	private SpecialEffect specialEffect;
@@ -13,19 +13,29 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 	}
 
 	@Override
-	public void apply(Piece target) {
+	public void apply(AbstractPiece target) {
 		specialEffect.apply(target);			
 		
 	}
 	   
 	@Override
-	public void remove(Piece target) {
+	public void remove(AbstractPiece target) {
 		specialEffect.remove(target); 			
 	}
 	
 	@Override
 	public boolean updateEffectiveDuration() {
 		return specialEffect.updateEffectiveDuration();
+	}
+	
+	@Override
+	public int getEffectiveDuration() {
+		return specialEffect.getEffectiveDuration();
+	}
+
+	@Override
+	public String getName() {
+		return specialEffect.getName();
 	}
 	
 }

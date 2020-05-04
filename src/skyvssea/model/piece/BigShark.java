@@ -1,16 +1,17 @@
 package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
-import skyvssea.model.SpecialEffectFactory;
-import skyvssea.model.specialeffect.SpecialEffectTimer;
-import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
-import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
 
-public class BigShark extends Shark implements BigCharacter {
+public class BigShark extends AbstractShark implements BigCharacter {
+	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.DOUBLE_ATTACK_RANGE;
+	
 	public BigShark() {
-		super("Big Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_NUM_MOVE, DEFAULT_ATTACK_RANGE,
-				new ChangeAttackRangeDecorator(2, new SpecialEffectTimer(SpecialEffect.DEFAULT_CASTER_TURN)),
+		super("Big Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_CODE,
 				SPECIAL_EFFECT_COOLDOWN);
+	}
+	
+	@Override
+	public void performSpecialEffect(AbstractPiece target) {
+		performSpecialEffect(target, SPECIAL_EFFECT_CODE);
 	}
 }

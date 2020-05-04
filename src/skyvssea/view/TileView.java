@@ -2,7 +2,6 @@ package skyvssea.view;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,7 +10,7 @@ import skyvssea.controller.Controller;
 import java.util.Observable;
 import java.util.Observer;
 
-public class TilePane extends StackPane implements Observer {
+public class TileView extends StackPane implements Observer {
 
     public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.valueOf("#FCF5EF");
     public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#BDBDBD");
@@ -25,14 +24,16 @@ public class TilePane extends StackPane implements Observer {
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL && " +
             "tileSize >= 0 && controller != null")
-    public TilePane(int x, int y, double tileSize, Controller controller) {
+    public TileView(int x, int y, double tileSize, Controller controller) {
         this.x = x;
         this.y = y;
         this.hasLightBaseColor = setDefaultBaseColor(x, y);
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
-        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> controller.handleTileClicked(this));
+        this.setOnMouseClicked(e -> controller.handleTileClicked(this));
+        this.setOnMouseEntered(e -> controller.handleMouseEnteredTile(this));
+        this.setOnMouseExited(e -> controller.handleMouseExitedTile(this));
     }
 
 	private boolean setDefaultBaseColor(int x, int y) {
@@ -61,6 +62,13 @@ public class TilePane extends StackPane implements Observer {
     @Requires("color != null")
     private void updateBaseColor(Color color) {
         base.setFill(color);
+    }
+
+    public void updateBaseColorAsHovered(boolean isHovered) {
+        Color baseColor = (Color) base.getFill();
+        baseColor = isHovered ? Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), .7) :
+                Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 1);
+        base.setFill(baseColor);
     }
 
     @Requires("isHighlighted != null && isHighlighted instanceof Boolean")

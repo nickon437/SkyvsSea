@@ -1,9 +1,24 @@
 package skyvssea.model;
 
-public class Game {
-    private GameState currentGameState = GameState.READY_TO_MOVE;
+import skyvssea.view.ActionPane;
 
-    public void setCurrentGameState(GameState newState) { this.currentGameState = newState; }
+public class Game {
+    private GameState currentGameState;
+    private ActionPane actionPane;
+
+    public Game(ActionPane actionPane) {
+        this.actionPane = actionPane;
+        setCurrentGameState(GameState.READY_TO_MOVE);
+    }
+
+    public void setCurrentGameState(GameState newState) {
+        this.currentGameState = newState;
+        if (newState == GameState.READY_TO_MOVE) {
+            actionPane.setDisable(true);
+        } else {
+            actionPane.setDisable(false);
+        }
+    }
 
     public GameState getCurrentGameState() { return currentGameState; }
 }

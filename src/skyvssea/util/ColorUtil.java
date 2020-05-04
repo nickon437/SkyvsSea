@@ -15,7 +15,7 @@ public class ColorUtil {
     }
 
     public static Color getHoveringColor(boolean isHovered, Color backgroundColor) {
-        backgroundColor = isHovered ? Color.color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), .5) :
+        backgroundColor = isHovered ? Color.color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), .8) :
                 Color.color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), 1);
         return backgroundColor;
     }

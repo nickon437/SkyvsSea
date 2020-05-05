@@ -26,9 +26,10 @@ public abstract class AbstractPiece {
     	this.moveRange = moveRange;
     	this.moveDirection = moveDirection;
     	this.attackRange = attackRange;
-    	this.specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
-        this.DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
-        this.specialEffectCounter = 0;
+    	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
+        DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
+        specialEffectCounter = 0;
+        specialEffectManager = new SpecialEffectManager(this);
     }
 
     public String getName() { return name; }
@@ -66,9 +67,6 @@ public abstract class AbstractPiece {
     }
 
 	public SpecialEffectManager getSpecialEffectManager() {
-        if (specialEffectManager == null) {
-            specialEffectManager = new SpecialEffectManager(this);
-        }
         return specialEffectManager;
     }
 
@@ -99,9 +97,6 @@ public abstract class AbstractPiece {
     
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus() {
-        if (specialEffectManager == null) {
-            specialEffectManager = new SpecialEffectManager(this);
-        }
         if (specialEffectCounter > 0) { specialEffectCounter--; }
         specialEffectManager.updateEffectiveDuration();
     }

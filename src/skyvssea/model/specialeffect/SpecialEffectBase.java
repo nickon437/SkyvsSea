@@ -41,4 +41,9 @@ public class SpecialEffectBase implements SpecialEffect {
 		return name;
 	}
 
+	@Override
+	public SpecialEffect copy() {
+		return new SpecialEffectBase(name, effectiveDuration);
+	}
+
 }

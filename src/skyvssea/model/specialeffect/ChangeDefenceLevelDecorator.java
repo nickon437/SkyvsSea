@@ -1,5 +1,7 @@
 package skyvssea.model.specialeffect;
 
+import com.google.java.contract.Ensures;
+
 import skyvssea.model.Hierarchy;
 import skyvssea.model.piece.AbstractPiece;
 
@@ -24,6 +26,17 @@ public class ChangeDefenceLevelDecorator extends ChangeHierarchyFieldDecorator {
 	public void remove(AbstractPiece target) {
 		target.setDefenceLevel(getOriginalValue());
 		super.remove(target); 
+	}
+
+	@Ensures("result != null")
+	@Override
+	public SpecialEffect copy() {
+		if (getChange() != null) {
+			return new ChangeDefenceLevelDecorator(getChange(), getSpecialEffect().copy());
+		} else if (getSpecificLevel() != null) {
+			return new ChangeDefenceLevelDecorator(getSpecificLevel(), getSpecialEffect().copy());
+		}
+		return null;
 	}
 
 	

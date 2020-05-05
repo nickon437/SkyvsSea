@@ -2,7 +2,7 @@ package skyvssea.model.specialeffect;
 
 import skyvssea.model.Hierarchy;
 
-public class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorator {
+public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorator {
 	private Hierarchy originalValue;
 	private Integer change;
 	private Hierarchy specificLevel;
@@ -28,9 +28,9 @@ public class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorato
 	public Hierarchy getNewLevel() {
 		Hierarchy newLevel = null;
 		
-		assert change != null || specificLevel != null;
-		if (change != null) {
-			int newMagnitude = originalValue.magnitude + change;
+		assert getChange() != null || getSpecificLevel() != null;
+		if (getChange() != null) {
+			int newMagnitude = originalValue.magnitude + getChange();
 			// if client gives an excessive change value resulting in an invalid level, this will return the appropriate max/min level
 			if (newMagnitude > Hierarchy.maxLevel().magnitude) {
 				newLevel = Hierarchy.maxLevel();
@@ -39,9 +39,17 @@ public class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorato
 			} else {
 				newLevel = Hierarchy.valueOfMagnitude(newMagnitude);
 			}
-		} else if (specificLevel != null) {
-			newLevel = specificLevel;
+		} else if (getSpecificLevel() != null) {
+			newLevel = getSpecificLevel();
 		}
 		return newLevel;
+	}
+
+	public Integer getChange() {
+		return change;
+	}
+
+	public Hierarchy getSpecificLevel() {
+		return specificLevel;
 	}
 }

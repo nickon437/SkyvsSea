@@ -24,4 +24,9 @@ public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 		setOriginalValue(target.getMoveRange());
     	target.setMoveRange((int) (getOriginalValue() * getFactor()));
 	}
+
+	@Override
+	public SpecialEffect copy() {
+		return new ChangeMoveRangeDecorator(this.getFactor(), this.getSpecialEffect().copy());
+	}
 }

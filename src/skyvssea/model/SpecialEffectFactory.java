@@ -56,4 +56,8 @@ public class SpecialEffectFactory {
                 return null;
         }
     }
+    
+    public SpecialEffect copy(SpecialEffect specialEffect) {
+    	return specialEffect.copy();
+    }
 }

@@ -24,4 +24,9 @@ public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 		setOriginalValue(target.getAttackRange());
     	target.setAttackRange((int) (getOriginalValue() * getFactor()));
 	}
+
+	@Override
+	public SpecialEffect copy() {
+		return new ChangeAttackRangeDecorator(this.getFactor(), this.getSpecialEffect().copy());
+	}
 }

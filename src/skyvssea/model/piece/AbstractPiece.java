@@ -11,7 +11,6 @@ public abstract class AbstractPiece {
     private int moveRange;
     private Direction[] moveDirection;
     private int attackRange;
-    private SpecialEffectCode specialEffectCode;
     private SpecialEffect specialEffect;
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
@@ -27,7 +26,6 @@ public abstract class AbstractPiece {
     	this.moveRange = moveRange;
     	this.moveDirection = moveDirection;
     	this.attackRange = attackRange;
-    	this.specialEffectCode = specialEffectCode;
     	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
         specialEffectCounter = 0;
@@ -53,7 +51,7 @@ public abstract class AbstractPiece {
     public int getSpecialEffectCounter() { return specialEffectCounter; }
 
 	public void performSpecialEffect(AbstractPiece target) {
-	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
+	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
 	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
 			target.getSpecialEffectManager().add(specialEffect);
     		resetSpecialEffectCounter();    		

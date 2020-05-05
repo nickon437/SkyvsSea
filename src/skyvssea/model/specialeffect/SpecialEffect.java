@@ -10,4 +10,5 @@ public interface SpecialEffect {
 	boolean updateEffectiveDuration();
 	int getEffectiveDuration();
 	String getName();
+	SpecialEffect copy();
 }

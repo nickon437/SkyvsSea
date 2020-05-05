@@ -14,28 +14,32 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 
 	@Override
 	public void apply(AbstractPiece target) {
-		specialEffect.apply(target);			
+		getSpecialEffect().apply(target);			
 		
 	}
 	   
 	@Override
 	public void remove(AbstractPiece target) {
-		specialEffect.remove(target); 			
+		getSpecialEffect().remove(target); 			
 	}
 	
 	@Override
 	public boolean updateEffectiveDuration() {
-		return specialEffect.updateEffectiveDuration();
+		return getSpecialEffect().updateEffectiveDuration();
 	}
 	
 	@Override
 	public int getEffectiveDuration() {
-		return specialEffect.getEffectiveDuration();
+		return getSpecialEffect().getEffectiveDuration();
 	}
 
 	@Override
 	public String getName() {
-		return specialEffect.getName();
+		return getSpecialEffect().getName();
+	}
+
+	public SpecialEffect getSpecialEffect() {
+		return specialEffect;
 	}
 	
 }

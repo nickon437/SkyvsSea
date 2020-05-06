@@ -35,6 +35,6 @@ public class ButtonUtil {
         imageView.setSmooth(true);
         imageView.setFitHeight(24);
         button.setGraphic(imageView);
-        button.setGraphicTextGap(10);
+        button.setGraphicTextGap(4);
     }
 }

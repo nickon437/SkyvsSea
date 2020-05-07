@@ -25,13 +25,15 @@ public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 		super.remove(target); 
 	}
 
+	@Ensures("result != null")
 	@Override
 	public SpecialEffect copy() {
+		SpecialEffect copy = null;
 		if (change != null) {
-			return new ChangeAttackLevelDecorator(change, specialEffect.copy());
+			copy = new ChangeAttackLevelDecorator(change, specialEffect.copy());
 		} else if (specificLevel != null) {
-			return new ChangeAttackLevelDecorator(specificLevel, specialEffect.copy());
+			copy = new ChangeAttackLevelDecorator(specificLevel, specialEffect.copy());
 		}
-		return null;
+		return copy;
 	}
 }

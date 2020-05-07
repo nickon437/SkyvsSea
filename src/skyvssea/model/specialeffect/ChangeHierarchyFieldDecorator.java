@@ -1,11 +1,12 @@
 package skyvssea.model.specialeffect;
 
+import com.google.java.contract.Requires;
 import skyvssea.model.Hierarchy;
 
 public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorator {
-	private Hierarchy originalValue;
-	private Integer change;
-	private Hierarchy specificLevel;
+	protected Hierarchy originalValue;
+	protected Integer change;
+	protected Hierarchy specificLevel;
 	
 	public ChangeHierarchyFieldDecorator(int change, SpecialEffect specialEffect) {
 		super(specialEffect);
@@ -16,21 +17,13 @@ public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffec
 		super(specialEffect);
 		this.specificLevel = level;
 	}
-	
-	public Hierarchy getOriginalValue() {
-		return originalValue;
-	}
 
-	public void setOriginalValue(Hierarchy originalValue) {
-		this.originalValue = originalValue;
-	}
-	
+	@Requires("change != null || specificLevel != null")
 	public Hierarchy getNewLevel() {
 		Hierarchy newLevel = null;
-		
-		assert getChange() != null || getSpecificLevel() != null;
-		if (getChange() != null) {
-			int newMagnitude = originalValue.magnitude + getChange();
+
+		if (change != null) {
+			int newMagnitude = originalValue.magnitude + change;
 			// if client gives an excessive change value resulting in an invalid level, this will return the appropriate max/min level
 			if (newMagnitude > Hierarchy.maxLevel().magnitude) {
 				newLevel = Hierarchy.maxLevel();
@@ -39,17 +32,9 @@ public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffec
 			} else {
 				newLevel = Hierarchy.valueOfMagnitude(newMagnitude);
 			}
-		} else if (getSpecificLevel() != null) {
-			newLevel = getSpecificLevel();
+		} else if (specificLevel != null) {
+			newLevel = specificLevel;
 		}
 		return newLevel;
-	}
-
-	public Integer getChange() {
-		return change;
-	}
-
-	public Hierarchy getSpecificLevel() {
-		return specificLevel;
 	}
 }

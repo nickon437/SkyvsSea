@@ -16,17 +16,15 @@ public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 	   
 	@Override
 	public void remove(AbstractPiece target) {
-		target.setMoveRange(getOriginalValue());
+		target.setMoveRange(originalValue);
 		super.remove(target); 
 	}
 	
 	private void changeMoveRange(AbstractPiece target) {
-		setOriginalValue(target.getMoveRange());
-    	target.setMoveRange((int) (getOriginalValue() * getFactor()));
+		originalValue = target.getMoveRange();
+    	target.setMoveRange((int) (originalValue * factor));
 	}
 
 	@Override
-	public SpecialEffect copy() {
-		return new ChangeMoveRangeDecorator(this.getFactor(), this.getSpecialEffect().copy());
-	}
+	public SpecialEffect copy() { return new ChangeMoveRangeDecorator(factor, specialEffect.copy()); }
 }

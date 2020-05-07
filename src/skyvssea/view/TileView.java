@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
+import skyvssea.util.ColorUtil;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -66,9 +67,8 @@ public class TileView extends StackPane implements Observer {
 
     public void updateBaseColorAsHovered(boolean isHovered) {
         Color baseColor = (Color) base.getFill();
-        baseColor = isHovered ? Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), .7) :
-                Color.color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 1);
-        base.setFill(baseColor);
+        Color modifiedColor = ColorUtil.getHoveringColor(isHovered, baseColor);
+        base.setFill(modifiedColor);
     }
 
     @Requires("isHighlighted != null && isHighlighted instanceof Boolean")

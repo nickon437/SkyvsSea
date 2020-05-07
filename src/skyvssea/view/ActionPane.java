@@ -4,7 +4,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.*;
@@ -20,6 +19,7 @@ public class ActionPane extends VBox {
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
 
+    private static final double BUTTON_HEIGHT = 50;
     private static final double SPACING = 20;
 
     public ActionPane(Controller controller) {
@@ -30,9 +30,9 @@ public class ActionPane extends VBox {
         buttonHolder.setSpacing(SPACING);
 
         formatActionIndicator();
-        formatKillBtn(controller);
-        formatSpecialEffectBtn(controller);
-        formatEndBtn(controller);
+        formatKillBtn(killBtn, controller);
+        formatSpecialEffectBtn(specialEffectBtn, controller);
+        formatEndBtn(endBtn, controller);
     }
 
     private void formatActionIndicator() {
@@ -41,40 +41,62 @@ public class ActionPane extends VBox {
         actionIndicator.setBackground(new Background(new BackgroundFill(ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null)));
     }
 
-    private void formatKillBtn(Controller controller) {
-        maximizeControlSize(killBtn);
-        ButtonUtil.formatStandardButton(killBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(killBtn, "resources/icons/kill.png");
-        killBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(killBtn, true));
-        killBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(killBtn, false));
-        killBtn.setOnAction(e -> controller.handleKillButton(killBtn));
+    private void formatKillBtn(Button button, Controller controller) {
+        maximizeControlSize(button);
+        ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+        ButtonUtil.formatGraphic(button, "resources/icons/kill.png");
+        button.setOnMouseEntered(e -> {
+            ButtonUtil.formatHoveringEffect(button, true);
+            controller.handleMouseEnteredKillBtn();
+        });
+        button.setOnMouseExited(e -> {
+            ButtonUtil.formatHoveringEffect(button, false);
+            controller.handleMouseExitedKillBtn();
+        });
+        button.setOnAction(e -> {
+            shiftActionIndicator(button);
+            controller.handleKillButton();
+        });
     }
 
-    private void formatSpecialEffectBtn(Controller controller) {
-        maximizeControlSize(specialEffectBtn);
-        ButtonUtil.formatStandardButton(specialEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(specialEffectBtn, "resources/icons/special-effect.png");
-        specialEffectBtn.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, true));
-        specialEffectBtn.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(specialEffectBtn, false));
-        specialEffectBtn.setOnAction(e -> controller.handleSpecialEffectButton(specialEffectBtn));
+    private void formatSpecialEffectBtn(Button button, Controller controller) {
+        maximizeControlSize(button);
+        ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+        ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
+        button.setOnMouseEntered(e -> {
+            ButtonUtil.formatHoveringEffect(button, true);
+            controller.handleMouseEnteredSpecialEffectBtn();
+        });
+        button.setOnMouseExited(e -> {
+            ButtonUtil.formatHoveringEffect(button, false);
+            controller.handleMouseExitedSpecialEffectBtn();
+        });
+        button.setOnAction(e -> {
+            shiftActionIndicator(button);
+            controller.handleSpecialEffectButton();
+        });
     }
 
-    private void formatEndBtn(Controller controller) {
-        maximizeControlSize(endBtn);
-        endBtn.setStyle("-fx-font-weight: bold;");
-        endBtn.setCursor(Cursor.HAND);
-        endBtn.setCancelButton(true);
-        ButtonUtil.formatGraphic(endBtn, "resources/icons/end-turn.png");
-        endBtn.setOnAction(e -> controller.handleEndButton(endBtn));
+    private void formatEndBtn(Button button, Controller controller) {
+        maximizeControlSize(button);
+        ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
+        ButtonUtil.formatGraphic(button, "resources/icons/end-turn.png");
+        button.setCancelButton(true);
+        button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
+        button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+        button.setOnAction(e -> {
+            shiftActionIndicator(button);
+            controller.handleEndButton();
+        });
     }
 
     private void maximizeControlSize(Control control) {
-        control.setPrefHeight(50d);
+        control.setPrefHeight(BUTTON_HEIGHT);
         HBox.setHgrow(control, Priority.ALWAYS);
         control.setMaxWidth(Double.MAX_VALUE);
     }
 
-    public void shiftActionIndicator(Button button) {
+    private void shiftActionIndicator(Button button) {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);
         double xCoord = 0;
         for (int i = 0; i < buttonIndex; i++) {

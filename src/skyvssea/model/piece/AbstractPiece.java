@@ -15,7 +15,7 @@ public abstract class AbstractPiece {
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
 
-	private SpecialEffectManager specialEffectManager;
+	private SpecialEffectManagerProxy specialEffectManagerProxy;
 
     protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
@@ -29,7 +29,6 @@ public abstract class AbstractPiece {
     	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
         specialEffectCounter = 0;
-        specialEffectManager = new SpecialEffectManager(this);
     }
 
     public String getName() { return name; }
@@ -53,7 +52,7 @@ public abstract class AbstractPiece {
 	public void performSpecialEffect(AbstractPiece target) {
 	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
 	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
-			target.getSpecialEffectManager().add(specialEffect);
+			target.getSpecialEffectManagerProxy().add(specialEffect);
     		resetSpecialEffectCounter();    		
     	}
 	}
@@ -64,8 +63,12 @@ public abstract class AbstractPiece {
 		return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
     }
 
-	public SpecialEffectManager getSpecialEffectManager() {
-        return specialEffectManager;
+    @Ensures("specialEffectManagerProxy != null")
+	public SpecialEffectManagerProxy getSpecialEffectManagerProxy() {
+        if (specialEffectManagerProxy == null) {
+            specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
+        }
+        return specialEffectManagerProxy;
     }
 
     @Override
@@ -96,6 +99,6 @@ public abstract class AbstractPiece {
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus() {
         if (specialEffectCounter > 0) { specialEffectCounter--; }
-        specialEffectManager.updateEffectiveDuration();
+        getSpecialEffectManagerProxy().updateEffectiveDuration();
     }
 }

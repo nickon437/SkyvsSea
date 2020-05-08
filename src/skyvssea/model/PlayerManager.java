@@ -39,4 +39,8 @@ public class PlayerManager {
         currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
         return currentPlayer;
     }
+
+	public boolean isCurrentPlayerPiece(AbstractPiece currentPiece) {
+		return getCurrentPlayer().equals(checkSide(currentPiece));
+	}
 }

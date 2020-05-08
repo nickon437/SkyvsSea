@@ -98,4 +98,14 @@ public class TileView extends StackPane implements Observer {
 	public void setPieceView(PieceView pieceView) {
 		getChildren().add(pieceView);
 	}
+	
+	public void removePieceView() {
+		for (Node node : getChildren()) {
+            if (node instanceof PieceView) {
+            	getChildren().remove(node);
+            	return;
+            }
+        }
+	}
+	
 }

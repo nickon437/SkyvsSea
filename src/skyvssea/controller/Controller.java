@@ -21,47 +21,56 @@ public class Controller {
 
     @Requires("tileView != null")
     public void handleTileClicked(TileView tileView) {
-        if (game.getCurrentGameState() != GameState.READY_TO_ATTACK) {
-            final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
-            Tile previousSelectedTile = board.getCurrentTile();
-            board.setCurrentTile(selectedTile);
+    	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
+        	return;
+        }
+    	
+        final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
+        Tile previousSelectedTile = board.getCurrentTile();
+        board.setCurrentTile(selectedTile);
 
-            if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
-                if (selectedTile.isHighlighted()) {
-                    board.clearHighlightedTiles();
+        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            if (selectedTile.isHighlighted()) {
+            	board.clearHighlightedTiles();
+                // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
+                if (!selectedTile.equals(previousSelectedTile)) {
+                    // Configure model objects
+                    selectedTile.setPiece(currentPiece);
 
-                    // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
-                    if (!selectedTile.equals(previousSelectedTile)) {
-                        // Configure model objects
-                        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
-                        selectedTile.setPiece(currentPiece);
+                    // Configure view objects
+                    PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
+                    tileView.setPieceView(pieceView);
 
-                        // Configure view objects
-                        PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
-                        tileView.setPieceView(pieceView);
-
-                        previousSelectedTile.removePiece();
-                    }
-
-                    switchToAttackMode();
-                } else {
-                    board.clearHighlightedTiles();
-                    if (selectedTile.hasPiece()) {
-                        AbstractPiece piece = selectedTile.getPiece();
-                        if (playerManager.checkSide(piece).equals(playerManager.getCurrentPlayer())) {
-                            pieceManager.setCurrentPiece(piece);
-                            highlightPossibleMoveTiles(piece, selectedTile);
-                        }
-                    }
+                    previousSelectedTile.removePiece();
                 }
-            } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
-                if (selectedTile.isHighlighted()) {
-                    AbstractPiece currentPiece = pieceManager.getCurrentPiece();
-                    currentPiece.performSpecialEffect(selectedTile.getPiece());
-                    endTurn();
+
+                switchToAttackMode();
+            } else {
+            	board.clearHighlightedTiles();
+                if (selectedTile.hasPiece()) {
+                    AbstractPiece newSelectedPiece = selectedTile.getPiece();
+                    if (playerManager.checkSide(newSelectedPiece).equals(playerManager.getCurrentPlayer())) {
+                        pieceManager.setCurrentPiece(newSelectedPiece);
+                        highlightPossibleMoveTiles(selectedTile);
+                    }
                 }
             }
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+            if (selectedTile.isHighlighted()) {
+                currentPiece.performSpecialEffect(selectedTile.getPiece());
+                endTurn();
+            }
+        } else if (game.getCurrentGameState() == GameState.KILLING) {
+        	if (selectedTile.isHighlighted()) {
+        		//TODO: Jiang: currently does not alter pieceManager to kill, if necessary i will implement it later 
+        		selectedTile.removePiece();
+                tileView.removePieceView();
+        		
+        		endTurn();
+            }
         }
+        
     }
 
     public void handleMouseEnteredTile(TileView tileView) {
@@ -74,7 +83,7 @@ public class Controller {
 
         if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
             AbstractPiece currentPiece = hoveringTile.getPiece();
-            if (currentPiece != null && playerManager.getCurrentPlayer().equals(playerManager.checkSide(currentPiece))) {
+            if (currentPiece != null && playerManager.isCurrentPlayerPiece(currentPiece)) {
                 tileView.setCursor(Cursor.HAND);
             }
         } else if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
@@ -87,7 +96,8 @@ public class Controller {
         tileView.updateBaseColorAsHovered(false);
     }
 
-    private void highlightPossibleMoveTiles(AbstractPiece piece, Tile selectedTile) {
+    private void highlightPossibleMoveTiles(Tile selectedTile) {
+    	AbstractPiece piece = selectedTile.getPiece();
         int numMove = piece.getMoveRange();
 
         board.highlightTile(selectedTile);
@@ -118,8 +128,14 @@ public class Controller {
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
-    public void handleKillButton() { game.setCurrentGameState(GameState.KILLING); }
-    public void handleMouseEnteredKillBtn() { highlightPossibleAttackTiles(true); }
+    public void handleKillButton() { 
+    	game.setCurrentGameState(GameState.KILLING); 
+    }
+    
+    public void handleMouseEnteredKillBtn() { 
+    	highlightPossibleAttackTiles(true); 
+    }
+    
     public void handleMouseExitedKillBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
@@ -140,32 +156,39 @@ public class Controller {
 
     // TODO: Add highlight tiles for killable targets logic here
     public void highlightPossibleAttackTiles(boolean isKillOption) {
-        Tile currentTile = board.getCurrentTile();
-        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
-        int attackRange = currentPiece.getAttackRange();
-
-        int leftX = currentTile.getX() - attackRange;
-        leftX = leftX >= 0 ? leftX : 0;
-
-        int topY = currentTile.getY() - attackRange;
-        topY = topY >= 0 ? topY : 0;
-
-        int rightX = currentTile.getX() + attackRange;
-        rightX = rightX < Board.NUM_SIDE_CELL ? rightX : Board.NUM_SIDE_CELL - 1;
-
-        int bottomY = currentTile.getY() + attackRange;
-        bottomY = bottomY < Board.NUM_SIDE_CELL ? bottomY : Board.NUM_SIDE_CELL - 1;
-
-        // Nick - TODO: Block attack if there is piece in sight
-        for (int x = leftX; x <= rightX; x++) {
-            for (int y = topY; y <= bottomY; y++) {
-                Tile checkTile = board.getTile(x, y);
-                if (checkTile.hasPiece()) {
-                    if (!isKillOption) {
-                        board.highlightTile(checkTile);
-                    }
+        Tile selectedTile = board.getCurrentTile();
+        AbstractPiece selectedPiece = selectedTile.getPiece();
+        
+        int attackRange = selectedPiece.getAttackRange();
+        
+        List<Direction> tempDirections = new ArrayList<>();
+        Direction attackDirections[] = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+        tempDirections.addAll(Arrays.asList(attackDirections));
+        
+        for (int count = 1; count <= attackRange; count++) {
+            ArrayList<Direction> blockedDirections = new ArrayList<>();
+            for (Direction direction : tempDirections) {
+                Tile currentTile = board.getTile(selectedTile, direction, count);
+                if (currentTile == null) {
+                	//out of bound
+                	blockedDirections.add(direction);
+                	continue;
                 }
+                
+                if (currentTile.hasPiece()) {
+                	AbstractPiece currentPiece = currentTile.getPiece();
+                	if (!playerManager.isCurrentPlayerPiece(currentPiece)) {
+                		Hierarchy enemyDefenceLevel = currentPiece.getDefenceLevel();
+                		Hierarchy selectedPieceAttackLevel = selectedPiece.getAttackLevel();
+                		//Only able to kill an enemy with strictly lower defense level
+                		if (selectedPieceAttackLevel.compareTo(enemyDefenceLevel) > 0) {
+                			board.highlightTile(currentTile);  
+                		}
+                	}
+                	blockedDirections.add(direction);
+                } 
             }
+            tempDirections.removeAll(blockedDirections);
         }
     }
 

@@ -52,7 +52,7 @@ public class Controller {
                     AbstractPiece newSelectedPiece = selectedTile.getPiece();
                     if (playerManager.checkSide(newSelectedPiece).equals(playerManager.getCurrentPlayer())) {
                         pieceManager.setCurrentPiece(newSelectedPiece);
-                        highlightPossibleMoveTiles(selectedTile);
+                        board.highlightPossibleMoveTiles(selectedTile);
                     }
                 }
             }
@@ -96,32 +96,6 @@ public class Controller {
         tileView.updateBaseColorAsHovered(false);
     }
 
-    private void highlightPossibleMoveTiles(Tile selectedTile) {
-    	AbstractPiece piece = selectedTile.getPiece();
-        int numMove = piece.getMoveRange();
-
-        board.highlightTile(selectedTile);
-
-        List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
-        for (int count = 1; count <= numMove; count++) {
-            ArrayList<Direction> blockedDirections = new ArrayList<>();
-            for (Direction direction : tempDirections) {
-                Tile tile = board.getTile(selectedTile, direction, count);
-
-                if (tile != null) {
-                    if (tile.hasPiece()) {
-                        if (!tempDirections.contains(Direction.JUMP_OVER)) {
-                            blockedDirections.add(direction);
-                        }
-                    } else {
-                        board.highlightTile(tile);
-                    }
-                }
-            }
-            tempDirections.removeAll(blockedDirections);
-        }
-    }
-
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         AbstractPiece currentPiece = pieceManager.getCurrentPiece();
@@ -133,62 +107,24 @@ public class Controller {
     }
     
     public void handleMouseEnteredKillBtn() { 
-    	highlightPossibleAttackTiles(true); 
+    	board.highlightPossibleAttackTiles(playerManager, true); 
     }
     
     public void handleMouseExitedKillBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
-            highlightPossibleAttackTiles(true);
+            board.highlightPossibleAttackTiles(playerManager, true);
         }
     }
 
     public void handleSpecialEffectButton() { game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT); }
-    public void handleMouseEnteredSpecialEffectBtn() { highlightPossibleAttackTiles(false); }
+    public void handleMouseEnteredSpecialEffectBtn() { board.highlightPossibleAttackTiles(playerManager, false); }
     public void handleMouseExitedSpecialEffectBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
-            highlightPossibleAttackTiles(false);
-        }
-    }
-
-    // TODO: Add highlight tiles for killable targets logic here
-    public void highlightPossibleAttackTiles(boolean isKillOption) {
-        Tile selectedTile = board.getCurrentTile();
-        AbstractPiece selectedPiece = selectedTile.getPiece();
-        
-        int attackRange = selectedPiece.getAttackRange();
-        
-        List<Direction> tempDirections = new ArrayList<>();
-        Direction attackDirections[] = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
-        tempDirections.addAll(Arrays.asList(attackDirections));
-        
-        for (int count = 1; count <= attackRange; count++) {
-            ArrayList<Direction> blockedDirections = new ArrayList<>();
-            for (Direction direction : tempDirections) {
-                Tile currentTile = board.getTile(selectedTile, direction, count);
-                if (currentTile == null) {
-                	//out of bound
-                	blockedDirections.add(direction);
-                	continue;
-                }
-                
-                if (currentTile.hasPiece()) {
-                	AbstractPiece currentPiece = currentTile.getPiece();
-                	if (!playerManager.isCurrentPlayerPiece(currentPiece)) {
-                		Hierarchy enemyDefenceLevel = currentPiece.getDefenceLevel();
-                		Hierarchy selectedPieceAttackLevel = selectedPiece.getAttackLevel();
-                		//Only able to kill an enemy with strictly lower defense level
-                		if (selectedPieceAttackLevel.compareTo(enemyDefenceLevel) > 0) {
-                			board.highlightTile(currentTile);  
-                		}
-                	}
-                	blockedDirections.add(direction);
-                } 
-            }
-            tempDirections.removeAll(blockedDirections);
+            board.highlightPossibleAttackTiles(playerManager, false);
         }
     }
 

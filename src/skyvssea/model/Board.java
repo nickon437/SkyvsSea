@@ -2,7 +2,11 @@ package skyvssea.model;
 
 import com.google.java.contract.Requires;
 
+import skyvssea.model.piece.AbstractPiece;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Board {
 	public static final int NUM_SIDE_CELL = 10;
@@ -94,5 +98,68 @@ public class Board {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
+	}
+
+	public void highlightPossibleAttackTiles(PlayerManager playerManager, boolean isKillOption) {
+	    Tile selectedTile = getCurrentTile();
+	    AbstractPiece selectedPiece = selectedTile.getPiece();
+	    
+	    int attackRange = selectedPiece.getAttackRange();
+	    
+	    List<Direction> tempDirections = new ArrayList<>();
+	    Direction attackDirections[] = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+	    tempDirections.addAll(Arrays.asList(attackDirections));
+	    
+	    for (int count = 1; count <= attackRange; count++) {
+	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        for (Direction direction : tempDirections) {
+	            Tile currentTile = getTile(selectedTile, direction, count);
+	            if (currentTile == null) {
+	            	//out of bound
+	            	blockedDirections.add(direction);
+	            	continue;
+	            }
+	            
+	            if (currentTile.hasPiece()) {
+	            	AbstractPiece currentPiece = currentTile.getPiece();
+	            	if (!playerManager.isCurrentPlayerPiece(currentPiece)) {
+	            		Hierarchy enemyDefenceLevel = currentPiece.getDefenceLevel();
+	            		Hierarchy selectedPieceAttackLevel = selectedPiece.getAttackLevel();
+	            		//Only able to kill an enemy with strictly lower defense level
+	            		if (selectedPieceAttackLevel.compareTo(enemyDefenceLevel) > 0) {
+	            			highlightTile(currentTile);  
+	            		}
+	            	}
+	            	blockedDirections.add(direction);
+	            } 
+	        }
+	        tempDirections.removeAll(blockedDirections);
+	    }
+	}
+
+	public void highlightPossibleMoveTiles(Tile selectedTile) {
+		AbstractPiece piece = selectedTile.getPiece();
+	    int numMove = piece.getMoveRange();
+	
+	    highlightTile(selectedTile);
+	
+	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
+	    for (int count = 1; count <= numMove; count++) {
+	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        for (Direction direction : tempDirections) {
+	            Tile tile = getTile(selectedTile, direction, count);
+	
+	            if (tile != null) {
+	                if (tile.hasPiece()) {
+	                    if (!tempDirections.contains(Direction.JUMP_OVER)) {
+	                        blockedDirections.add(direction);
+	                    }
+	                } else {
+	                    highlightTile(tile);
+	                }
+	            }
+	        }
+	        tempDirections.removeAll(blockedDirections);
+	    }
 	}
 }

@@ -15,7 +15,7 @@ public abstract class AbstractPiece {
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
 
-	private SpecialEffectManagerProxy specialEffectManagerProxy;
+	private SpecialEffectManagerInterface specialEffectManagerProxy;
 
     protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
@@ -64,7 +64,7 @@ public abstract class AbstractPiece {
     }
 
     @Ensures("specialEffectManagerProxy != null")
-	public SpecialEffectManagerProxy getSpecialEffectManagerProxy() {
+	public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }

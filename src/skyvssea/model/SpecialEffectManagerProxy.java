@@ -7,7 +7,7 @@ import skyvssea.model.specialeffect.SpecialEffect;
 
 public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface {
 
-    private SpecialEffectManager specialEffectManager;
+    private SpecialEffectManagerInterface specialEffectManager;
     private AbstractPiece target;
 
     public SpecialEffectManagerProxy(AbstractPiece piece) {

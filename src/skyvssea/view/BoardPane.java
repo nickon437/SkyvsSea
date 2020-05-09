@@ -15,6 +15,7 @@ public class BoardPane extends Pane {
     public static final int NUM_SIDE_CELL = 10;
     private Group tileGroup = new Group();
     private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
+    private ArrayList<ObstacleView> obstacleViewGroup = new ArrayList<>();
     private double tileSize;
 
     @Requires("controller != null")
@@ -38,6 +39,7 @@ public class BoardPane extends Pane {
             tileSize = boardSideSize / NUM_SIDE_CELL;
             updateTilesSize(tileSize, paneWidth, paneHeight);
             updatePiecesSize(tileSize);
+            updateObstacleSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -51,29 +53,32 @@ public class BoardPane extends Pane {
 
         for (Node node : getTileGroup().getChildren()) {
             TileView tileView = (TileView) node;
-            tileView.updateTileSize(tileSize, mostLeftX, mostTopY);
+            tileView.updateSize(tileSize);
+            tileView.updatePosition(tileSize, mostLeftX, mostTopY);
         }
     }
 
     @Requires("tileSize >= 0")
     private void updatePiecesSize(double tileSize) {
         for (PieceView pieceView : pieceViewGroup) {
-            pieceView.updatePieceViewSize(tileSize);
+            pieceView.updateSize(tileSize);
         }
     }
 
+    private void updateObstacleSize(double tileSize) {
+        for (ObstacleView obstacleView : obstacleViewGroup) {
+            obstacleView.updateSize(tileSize);
+        }
+    }
+
+    public void setTileGroup(Group tileGroup) { this.tileGroup = tileGroup; }
     public void setPieceGroup(ArrayList<PieceView> pieceViews) {
         this.pieceViewGroup = pieceViews;
     }
 
-    @Requires("pieceView != null")
-    public void addPieceView(PieceView pieceView) {
-    	pieceViewGroup.add(pieceView);
+    public Group getTileGroup() {
+        return tileGroup;
     }
-
-	public Group getTileGroup() {
-		return tileGroup;
-	}
 
 	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public TileView getTileView(int x, int y) {
@@ -85,11 +90,19 @@ public class BoardPane extends Pane {
 		return null;
 	}
 
-	public void initializePieceView(int x, int y, String name, Color color) {
-		PieceView pieceView = new PieceView(name, color);
-        getTileView(x, y).setPieceView(pieceView);
-        addPieceView(pieceView);
-	}
+	public PieceView instantiatePieceView(int x, int y, String name, Color color) {
+        PieceView pieceView = new PieceView(name, color);
+        getTileView(x, y).setGameObjAvatar(pieceView);
+        pieceViewGroup.add(pieceView);
+        return pieceView;
+    }
+
+    public ObstacleView instantiateObstacleView(int x, int y) {
+        ObstacleView obstacleView = new ObstacleView();
+        getTileView(x, y).setGameObjAvatar(obstacleView);
+        obstacleViewGroup.add(obstacleView);
+        return obstacleView;
+    }
 
 
 }

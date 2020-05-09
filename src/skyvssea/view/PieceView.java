@@ -5,10 +5,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import skyvssea.model.Avatar;
 import skyvssea.util.ColorUtil;
 
-
-public class PieceView extends StackPane {
+public class PieceView extends /*StackPane implements */Avatar {
     private Circle border;
     private Circle circle;
     private Text text;
@@ -32,7 +32,7 @@ public class PieceView extends StackPane {
         return text;
     }
 
-    public void updatePieceViewSize(double tileSize) {
+    public void updateSize(double tileSize) {
         final double CIRCLE_CONTENT_PERCENTAGE = 0.8;
         final double LABEL_CONTENT_PERCENTAGE = 0.9;
         final double OFFSET = 0.05;

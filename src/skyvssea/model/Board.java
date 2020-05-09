@@ -1,8 +1,10 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.controller.Controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Board {
 	public static final int NUM_SIDE_CELL = 10;
@@ -10,17 +12,24 @@ public class Board {
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile currentTile;
 
-	public Board() {
+	public Board(Controller controller) {
 		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
 
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
-				tiles[x][y] = new Tile(x, y);
+				tiles[x][y] = new Tile(x, y, controller);
 			}
 		}
 	}
 
 	public Tile[][] getTiles() { return tiles; }
+	public ArrayList<Tile> getTileList() {
+		ArrayList<Tile> tileList = new ArrayList<>();
+		for (Tile[] tiles : tiles) {
+			tileList.addAll(Arrays.asList(tiles));
+		}
+		return tileList;
+	}
 
 	@Requires("rootTile != null && distance >= 0")
 	public Tile getTile(Tile rootTile, Direction dir, int distance) {

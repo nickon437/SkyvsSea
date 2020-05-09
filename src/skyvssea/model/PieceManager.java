@@ -95,7 +95,7 @@ public class PieceManager {
                     flip = flip * -1;
     
                     Tile tile = board.getTile(pieceXCoord, pieceYCoord);
-                    tile.setPiece(piece);
+                    tile.setGameObject(piece);
                     startingPositions.add(tile);
 
                     pieceIndex++;

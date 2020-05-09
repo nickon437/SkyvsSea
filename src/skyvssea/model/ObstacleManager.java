@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ObstacleManager {
 
-    private static final double OBSTACLE_APPEARANCE_PROBABLITY = 0.15;
+    private static final double OBSTACLE_APPEARANCE_PROBABLITY = 0.1;
 
     public ArrayList<Tile> setObstacleOnBoard(Board board) {
         ArrayList<Tile> obstacleTiles = new ArrayList<>();

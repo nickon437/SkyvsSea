@@ -2,6 +2,7 @@ package skyvssea.model.specialeffect;
 
 import com.google.java.contract.Ensures;
 
+import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
@@ -26,6 +27,9 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 
 	@Override
 	public String getName() { return specialEffect.getName(); }
+	
+	@Override
+	public TargetType getTargetType() { return specialEffect.getTargetType(); }
 
 	public SpecialEffect getSpecialEffect() { return specialEffect; }
 }

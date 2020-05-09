@@ -1,5 +1,6 @@
 package skyvssea.model.specialeffect;
 
+import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public interface SpecialEffect {
@@ -11,4 +12,5 @@ public interface SpecialEffect {
 	int getEffectiveDuration();
 	String getName();
 	SpecialEffect copy();
+	TargetType getTargetType();
 }

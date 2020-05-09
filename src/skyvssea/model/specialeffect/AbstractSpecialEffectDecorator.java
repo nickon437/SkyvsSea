@@ -2,7 +2,6 @@ package skyvssea.model.specialeffect;
 
 import com.google.java.contract.Ensures;
 
-import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {

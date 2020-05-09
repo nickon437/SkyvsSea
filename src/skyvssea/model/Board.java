@@ -3,6 +3,7 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,14 +101,14 @@ public class Board {
 		}
 	}
 
-	public void highlightPossibleAttackTiles(PlayerManager playerManager, boolean isKillOption) {
+	public void highlightPossibleKillTiles(PlayerManager playerManager) {
 	    Tile selectedTile = getCurrentTile();
 	    AbstractPiece selectedPiece = selectedTile.getPiece();
 	    
 	    int attackRange = selectedPiece.getAttackRange();
 	    
 	    List<Direction> tempDirections = new ArrayList<>();
-	    Direction attackDirections[] = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
+	    Direction attackDirections[] = selectedPiece.getAttackDirections();
 	    tempDirections.addAll(Arrays.asList(attackDirections));
 	    
 	    for (int count = 1; count <= attackRange; count++) {
@@ -143,7 +144,7 @@ public class Board {
 	
 	    highlightTile(selectedTile);
 	
-	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirection()));
+	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirections()));
 	    for (int count = 1; count <= numMove; count++) {
 	        ArrayList<Direction> blockedDirections = new ArrayList<>();
 	        for (Direction direction : tempDirections) {
@@ -158,6 +159,49 @@ public class Board {
 	                    highlightTile(tile);
 	                }
 	            }
+	        }
+	        tempDirections.removeAll(blockedDirections);
+	    }
+	}
+
+	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
+		Tile selectedTile = getCurrentTile();
+	    AbstractPiece selectedPiece = selectedTile.getPiece();
+	    TargetType targetType = selectedPiece.getSpecialEffectTargetType();
+	    
+	    if (targetType == TargetType.SELF) {
+	    	highlightTile(selectedTile);
+	    	return;
+	    } 
+	    
+	    int attackRange = selectedPiece.getAttackRange();
+	    List<Direction> tempDirections = new ArrayList<>();
+	    Direction attackDirections[] = selectedPiece.getAttackDirections();
+	    tempDirections.addAll(Arrays.asList(attackDirections));
+	    
+	    boolean isComrades = true;
+	    if (targetType == TargetType.ENEMIES) {
+	    	isComrades = false;
+	    }
+	    
+	    for (int count = 1; count <= attackRange; count++) {
+	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        for (Direction direction : tempDirections) {
+	            Tile currentTile = getTile(selectedTile, direction, count);
+	            if (currentTile == null) {
+	            	//out of bound
+	            	blockedDirections.add(direction);
+	            	continue;
+	            }
+	            
+	            if (currentTile.hasPiece()) {
+	            	AbstractPiece currentPiece = currentTile.getPiece();
+	            	boolean isCurrentPlayerPiece = playerManager.isCurrentPlayerPiece(currentPiece);
+	            	if (isComrades == isCurrentPlayerPiece) { 
+	            		highlightTile(currentTile);  
+	            	}
+	            	blockedDirections.add(direction);
+	            } 
 	        }
 	        tempDirections.removeAll(blockedDirections);
 	    }

@@ -66,7 +66,6 @@ public class Controller {
         		//TODO: Jiang: currently does not alter pieceManager to kill, if necessary i will implement it later 
         		selectedTile.removePiece();
                 tileView.removePieceView();
-        		
         		endTurn();
             }
         }
@@ -102,29 +101,25 @@ public class Controller {
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
-    public void handleKillButton() { 
-    	game.setCurrentGameState(GameState.KILLING); 
-    }
+    public void handleKillButton() { game.setCurrentGameState(GameState.KILLING); }
     
-    public void handleMouseEnteredKillBtn() { 
-    	board.highlightPossibleAttackTiles(playerManager, true); 
-    }
+    public void handleMouseEnteredKillBtn() { board.highlightPossibleKillTiles(playerManager); }
     
     public void handleMouseExitedKillBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
-            board.highlightPossibleAttackTiles(playerManager, true);
+            board.highlightPossibleKillTiles(playerManager);
         }
     }
 
     public void handleSpecialEffectButton() { game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT); }
-    public void handleMouseEnteredSpecialEffectBtn() { board.highlightPossibleAttackTiles(playerManager, false); }
+    public void handleMouseEnteredSpecialEffectBtn() { board.highlightPossibleSpecialEffectTiles(playerManager); }
     public void handleMouseExitedSpecialEffectBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
-            board.highlightPossibleAttackTiles(playerManager, false);
+            board.highlightPossibleSpecialEffectTiles(playerManager);
         }
     }
 

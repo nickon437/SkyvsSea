@@ -22,7 +22,7 @@ public class PlayerManager {
     }
 
     @Requires("piece != null")
-    public Player checkSide(AbstractPiece piece) {
+    public Player returnSide(AbstractPiece piece) {
     	for (Player player : players) {
             if (player.hasPiece(piece)) {
                 return player;
@@ -41,6 +41,6 @@ public class PlayerManager {
     }
 
 	public boolean isCurrentPlayerPiece(AbstractPiece currentPiece) {
-		return getCurrentPlayer().equals(checkSide(currentPiece));
+		return getCurrentPlayer().equals(returnSide(currentPiece));
 	}
 }

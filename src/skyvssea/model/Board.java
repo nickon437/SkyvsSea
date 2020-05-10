@@ -100,16 +100,41 @@ public class Board {
 			}
 		}
 	}
+	
+	public void highlightPossibleMoveTiles(Tile selectedTile) {
+		AbstractPiece selectedPiece = selectedTile.getPiece();
+		int moveRange = selectedPiece.getMoveRange();	
+		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getMoveDirections()));
+	
+	    for (int count = 1; count <= moveRange; count++) {
+	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        for (Direction direction : tempDirections) {
+	            Tile currentTile = getTile(selectedTile, direction, count);
+	            if (currentTile == null) {
+	            	//out of bound
+	            	blockedDirections.add(direction);
+	            	continue;
+	            }
+	            
+	            if (currentTile.hasPiece()) {
+	            	if (!tempDirections.contains(Direction.JUMP_OVER)) {
+	            		blockedDirections.add(direction);
+	            	}
+	            } else {
+	            	highlightTile(currentTile);
+	            }
+	        }
+	        tempDirections.removeAll(blockedDirections);
+	    }
+	    
+	    highlightTile(selectedTile);
+	}
 
 	public void highlightPossibleKillTiles(PlayerManager playerManager) {
 	    Tile selectedTile = getCurrentTile();
 	    AbstractPiece selectedPiece = selectedTile.getPiece();
-	    
 	    int attackRange = selectedPiece.getAttackRange();
-	    
-	    List<Direction> tempDirections = new ArrayList<>();
-	    Direction attackDirections[] = selectedPiece.getAttackDirections();
-	    tempDirections.addAll(Arrays.asList(attackDirections));
+	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getAttackDirections()));
 	    
 	    for (int count = 1; count <= attackRange; count++) {
 	        ArrayList<Direction> blockedDirections = new ArrayList<>();
@@ -137,33 +162,7 @@ public class Board {
 	        tempDirections.removeAll(blockedDirections);
 	    }
 	}
-
-	public void highlightPossibleMoveTiles(Tile selectedTile) {
-		AbstractPiece piece = selectedTile.getPiece();
-	    int numMove = piece.getMoveRange();
 	
-	    highlightTile(selectedTile);
-	
-	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(piece.getMoveDirections()));
-	    for (int count = 1; count <= numMove; count++) {
-	        ArrayList<Direction> blockedDirections = new ArrayList<>();
-	        for (Direction direction : tempDirections) {
-	            Tile tile = getTile(selectedTile, direction, count);
-	
-	            if (tile != null) {
-	                if (tile.hasPiece()) {
-	                    if (!tempDirections.contains(Direction.JUMP_OVER)) {
-	                        blockedDirections.add(direction);
-	                    }
-	                } else {
-	                    highlightTile(tile);
-	                }
-	            }
-	        }
-	        tempDirections.removeAll(blockedDirections);
-	    }
-	}
-
 	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
 		Tile selectedTile = getCurrentTile();
 	    AbstractPiece selectedPiece = selectedTile.getPiece();
@@ -175,10 +174,7 @@ public class Board {
 	    } 
 	    
 	    int attackRange = selectedPiece.getAttackRange();
-	    List<Direction> tempDirections = new ArrayList<>();
-	    Direction attackDirections[] = selectedPiece.getAttackDirections();
-	    tempDirections.addAll(Arrays.asList(attackDirections));
-	    
+	    List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getAttackDirections()));
 	    boolean isComrades = true;
 	    if (targetType == TargetType.ENEMIES) {
 	    	isComrades = false;
@@ -196,8 +192,8 @@ public class Board {
 	            
 	            if (currentTile.hasPiece()) {
 	            	AbstractPiece currentPiece = currentTile.getPiece();
-	            	boolean isCurrentPlayerPiece = playerManager.isCurrentPlayerPiece(currentPiece);
-	            	if (isComrades == isCurrentPlayerPiece) { 
+	            	boolean currentPlayerHasPiece = playerManager.isCurrentPlayerPiece(currentPiece);
+	            	if (isComrades == currentPlayerHasPiece) { 
 	            		highlightTile(currentTile);  
 	            	}
 	            	blockedDirections.add(direction);

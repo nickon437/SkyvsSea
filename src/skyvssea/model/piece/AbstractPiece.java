@@ -5,7 +5,7 @@ import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
 import skyvssea.model.specialeffect.TargetType;
 
-public abstract class AbstractPiece {
+public abstract class AbstractPiece extends GameObject {
     private String name;
     private Hierarchy attackLevel;
 	private Hierarchy defenceLevel;

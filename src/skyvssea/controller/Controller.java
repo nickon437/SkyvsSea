@@ -15,6 +15,7 @@ public class Controller {
     private Board board;
     private PieceManager pieceManager;
     private PlayerManager playerManager;
+    private ObstacleManager obstacleManager;
     private BoardPane boardPane;
     private ActionPane actionPane;
     private InfoPane infoPane;
@@ -35,21 +36,15 @@ public class Controller {
             	board.clearHighlightedTiles();
                 // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
                 if (!selectedTile.equals(previousSelectedTile)) {
-                    // Configure model objects
-                    selectedTile.setPiece(currentPiece);
-
-                    // Configure view objects
-                    PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
-                    tileView.setPieceView(pieceView);
-
-                    previousSelectedTile.removePiece();
+                    selectedTile.setGameObject(currentPiece);
+                    previousSelectedTile.removeGameObject();
                 }
 
                 switchToAttackMode();
             } else {
             	board.clearHighlightedTiles();
                 if (selectedTile.hasPiece()) {
-                    AbstractPiece newSelectedPiece = selectedTile.getPiece();
+                    AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.returnSide(newSelectedPiece).equals(playerManager.getCurrentPlayer())) {
                         pieceManager.setCurrentPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles(selectedTile);
@@ -58,14 +53,13 @@ public class Controller {
             }
         } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
             if (selectedTile.isHighlighted()) {
-                currentPiece.performSpecialEffect(selectedTile.getPiece());
+                currentPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
                 endTurn();
             }
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
         		//TODO: Jiang: currently does not alter pieceManager to kill, if necessary i will implement it later 
-        		selectedTile.removePiece();
-                tileView.removePieceView();
+        		selectedTile.removeGameObject();
         		endTurn();
             }
         }   
@@ -75,19 +69,18 @@ public class Controller {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
         tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
-            AbstractPiece hoveringPiece = hoveringTile.getPiece();
+            AbstractPiece hoveringPiece = (AbstractPiece) hoveringTile.getGameObject();
             infoPane.setPieceInfo(hoveringPiece);
         }
 
-        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
-            AbstractPiece currentPiece = hoveringTile.getPiece();
-            if (currentPiece != null && playerManager.isCurrentPlayerPiece(currentPiece)) {
+        if (hoveringTile.isHighlighted()) {
+            tileView.setCursor(Cursor.HAND);
+        } else if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            GameObject currentObject = hoveringTile.getGameObject();
+            if (currentObject instanceof AbstractPiece &&
+            		playerManager.isCurrentPlayerPiece((AbstractPiece) currentObject)) {
                 tileView.setCursor(Cursor.HAND);
             }
-        } else if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
-            tileView.setCursor(Cursor.DEFAULT);
-        } else {
-            if (hoveringTile.isHighlighted()) { tileView.setCursor(Cursor.HAND); }
         }
     }
     public void handleMouseExitedTile(TileView tileView) {
@@ -175,23 +168,41 @@ public class Controller {
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
-        // Set up tiles on board
-    	Tile[][] tiles = board.getTiles();
-    	Group tileViews = this.boardPane.getTileGroup();
-    	tileViews.getChildren().forEach((tileView) -> {
-    		int x = ((TileView) tileView).getX();
-    		int y = ((TileView) tileView).getY();
-    		tiles[x][y].addObserver((Observer) tileView);
-    	});
-    	board.setBaseColours();
+        setTiles();
+        setPieces();
+        setObstacles();
+    }
 
-        //Initialize PieceView objects and assign to the corresponding TileView objects
-        ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
-        startingPositions.forEach(tile -> {
-            AbstractPiece piece = tile.getPiece();
+    private void setTiles() {
+        Tile[][] tiles = board.getTiles();
+        List<TileView> tileViews = boardPane.getTileViewGroup();
+        for (TileView tileView : tileViews) {
+            int x = tileView.getX();
+            int y = tileView.getY();
+            tiles[x][y].addObserver(tileView);
+            tiles[x][y].addAvatar(tileView);
+        }
+        board.setBaseColours();
+    }
+
+    private void setPieces() {
+        List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
+        for (Tile tile : startingPositions) {
+            AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.returnSide(piece);
-            this.boardPane.initializePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
-        });
+            PieceView pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
+            piece.addAvatar(pieceView);
+        }
+    }
+
+    private void setObstacles() {
+        this.obstacleManager = new ObstacleManager();
+        List<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+        for (Tile tile : obstacleTiles) {
+            Obstacle obstacle = (Obstacle) tile.getGameObject();
+            ObstacleView obstacleView = boardPane.instantiateObstacleView(tile.getX(), tile.getY());
+            obstacle.addAvatar(obstacleView);
+        }
     }
     
 	private Map<Hierarchy, Integer> createInitialLineUp() {

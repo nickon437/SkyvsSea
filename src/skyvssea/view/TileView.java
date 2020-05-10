@@ -1,13 +1,10 @@
 package skyvssea.view;
 
 import com.google.java.contract.Requires;
-import javafx.scene.Node;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
-import skyvssea.model.GameObject;
 import skyvssea.model.Tile;
 import skyvssea.util.ColorUtil;
 
@@ -78,51 +75,21 @@ public class TileView extends Avatar implements Observer {
         base.setFill(modifiedColor);
     }
 
-//    @Requires("isHighlighted != null && isHighlighted instanceof Boolean")
+    @Requires("arg instanceof Boolean && arg instanceof Avatar")
 	@Override
 	public void update(Observable tile, Object arg) {
-//        if (((Boolean) isHighlighted).equals(Boolean.TRUE)) {
-//            updateBaseColor(HIGHLIGHTED_COLOR);
-//        } else {
-//            if (hasLightBaseColor) {
-//                updateBaseColor(DEFAULT_LIGHT_BASE_COLOR);
-//            } else {
-//                updateBaseColor(DEFAULT_DARK_BASE_COLOR);
-//            }
-//        }
         if (arg instanceof Boolean) {
+            Color baseColor;
             if (((Tile) tile).isHighlighted()) {
-                updateBaseColor(HIGHLIGHTED_COLOR);
+                baseColor = HIGHLIGHTED_COLOR;
             } else {
-                if (hasLightBaseColor) {
-                    updateBaseColor(DEFAULT_LIGHT_BASE_COLOR);
-                } else {
-                    updateBaseColor(DEFAULT_DARK_BASE_COLOR);
-                }
+                baseColor = hasLightBaseColor ? DEFAULT_LIGHT_BASE_COLOR : DEFAULT_DARK_BASE_COLOR;
             }
-        } else if (arg instanceof GameObject) {
-            if (arg != null) {
-                Avatar gameObjAvatar = ((GameObject) arg).getAvatar();
-                if (gameObjAvatar != null) {
-                    setGameObjAvatar(gameObjAvatar);
-                }
-            }
+            updateBaseColor(baseColor);
+        } else if (arg instanceof Avatar) {
+            setGameObjAvatar((Avatar) arg);
         }
     }
-
-	public PieceView getPieceView() {
-        for (Node node : getChildren()) {
-            if (node instanceof PieceView) {
-                return (PieceView) node;
-            }
-        }
-		return null;
-	}
-
-//	@Requires("pieceView != null")
-//	public void setPieceView(PieceView pieceView) {
-//        getChildren().add(pieceView);
-//	}
 
     @Requires("avatar != null")
 	public void setGameObjAvatar(Avatar avatar) {

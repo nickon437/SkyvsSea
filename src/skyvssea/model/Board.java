@@ -12,12 +12,12 @@ public class Board {
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile currentTile;
 
-	public Board(Controller controller) {
+	public Board() {
 		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
 
 		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
 			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
-				tiles[x][y] = new Tile(x, y, controller);
+				tiles[x][y] = new Tile(x, y);
 			}
 		}
 	}

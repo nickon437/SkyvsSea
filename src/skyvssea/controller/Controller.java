@@ -32,14 +32,8 @@ public class Controller {
 
                     // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
                     if (!selectedTile.equals(previousSelectedTile)) {
-                        // Configure model objects
                         AbstractPiece currentPiece = pieceManager.getCurrentPiece();
                         selectedTile.setGameObject(currentPiece);
-
-//                        // Configure view objects
-//                        PieceView pieceView = boardPane.getTileView(previousSelectedTile.getX(), previousSelectedTile.getY()).getPieceView();
-//                        tileView.setPieceView(pieceView);
-
                         previousSelectedTile.removeGameObject();
                     }
 
@@ -196,7 +190,7 @@ public class Controller {
     	this.infoPane = infoPane;
 
     	this.game = new Game(actionPane);
-    	this.board = new Board(this);
+    	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
@@ -208,9 +202,8 @@ public class Controller {
     }
 
     private void setTiles() {
-        // Set up tiles on board
         Tile[][] tiles = board.getTiles();
-        List<TileView> tileViews = this.boardPane.getTileViewGroup();
+        List<TileView> tileViews = boardPane.getTileViewGroup();
         for (TileView tileView : tileViews) {
             int x = tileView.getX();
             int y = tileView.getY();
@@ -221,12 +214,11 @@ public class Controller {
     }
 
     private void setPieces() {
-        //Initialize PieceView objects and assign to the corresponding TileView objects
         List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         for (Tile tile : startingPositions) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.checkSide(piece);
-            PieceView pieceView = this.boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
+            PieceView pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }
     }

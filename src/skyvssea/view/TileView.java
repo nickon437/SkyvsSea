@@ -75,7 +75,7 @@ public class TileView extends Avatar implements Observer {
         base.setFill(modifiedColor);
     }
 
-    @Requires("arg instanceof Boolean && arg instanceof Avatar")
+    @Requires("arg instanceof Boolean || arg instanceof Avatar")
 	@Override
 	public void update(Observable tile, Object arg) {
         if (arg instanceof Boolean) {

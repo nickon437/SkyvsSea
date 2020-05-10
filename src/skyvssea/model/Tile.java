@@ -30,8 +30,10 @@ public class Tile extends Observable implements AvatarCore {
 
     public void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
-        setChanged();
-        notifyObservers(gameObject.getAvatar());
+        if (gameObject.getAvatar() != null) {
+            setChanged();
+            notifyObservers(gameObject.getAvatar());
+        }
     }
 
     public void removeGameObject() { this.gameObject = null; }

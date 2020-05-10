@@ -1,8 +1,10 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.controller.Controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Board {
 	public static final int NUM_SIDE_CELL = 10;
@@ -21,6 +23,13 @@ public class Board {
 	}
 
 	public Tile[][] getTiles() { return tiles; }
+	public ArrayList<Tile> getTileList() {
+		ArrayList<Tile> tileList = new ArrayList<>();
+		for (Tile[] tiles : tiles) {
+			tileList.addAll(Arrays.asList(tiles));
+		}
+		return tileList;
+	}
 
 	@Requires("rootTile != null && distance >= 0")
 	public Tile getTile(Tile rootTile, Direction dir, int distance) {

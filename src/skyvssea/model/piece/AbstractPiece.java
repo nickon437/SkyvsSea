@@ -4,7 +4,7 @@ import com.google.java.contract.Ensures;
 import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
 
-public abstract class AbstractPiece {
+public abstract class AbstractPiece extends GameObject {
     private String name;
     private Hierarchy attackLevel;
 	private Hierarchy defenceLevel;

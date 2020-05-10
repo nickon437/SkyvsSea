@@ -1,13 +1,14 @@
 package skyvssea.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ObstacleManager {
 
     private static final double OBSTACLE_APPEARANCE_PROBABLITY = 0.1;
 
-    public ArrayList<Tile> setObstacleOnBoard(Board board) {
-        ArrayList<Tile> obstacleTiles = new ArrayList<>();
+    public List<Tile> setObstacleOnBoard(Board board) {
+        List<Tile> obstacleTiles = new ArrayList<>();
         int numCol = Board.NUM_SIDE_CELL;
         int numRow = Board.NUM_SIDE_CELL;
 

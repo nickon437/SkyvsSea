@@ -8,7 +8,7 @@ public class ObstacleView extends Avatar {
     private static final String volcanoURL = "resources/icons/volcano.png";
     private static final String volcanoURL2 = "resources/icons/volcano-2.png";
     private ImageView imageView;
-    
+
     public ObstacleView() {
         imageView = Math.random() < 0.5 ? new ImageView(volcanoURL) : new ImageView(volcanoURL2);
         imageView.setPreserveRatio(true);

@@ -2,7 +2,6 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
@@ -200,34 +199,44 @@ public class Controller {
     	this.board = new Board(this);
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-        this.obstacleManager = new ObstacleManager();
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
-        // Set up tiles on board
-    	Tile[][] tiles = board.getTiles();
-    	Group tileViews = this.boardPane.getTileGroup();
-    	tileViews.getChildren().forEach((tileView) -> {
-    		int x = ((TileView) tileView).getX();
-    		int y = ((TileView) tileView).getY();
-    		tiles[x][y].addObserver((Observer) tileView);
-    		tiles[x][y].addAvatar((Avatar) tileView);
-    	});
-    	board.setBaseColours();
+        setTiles();
+        setPieces();
+        setObstacles();
+    }
 
+    private void setTiles() {
+        // Set up tiles on board
+        Tile[][] tiles = board.getTiles();
+        List<TileView> tileViews = this.boardPane.getTileViewGroup();
+        for (TileView tileView : tileViews) {
+            int x = tileView.getX();
+            int y = tileView.getY();
+            tiles[x][y].addObserver(tileView);
+            tiles[x][y].addAvatar(tileView);
+        }
+        board.setBaseColours();
+    }
+
+    private void setPieces() {
         //Initialize PieceView objects and assign to the corresponding TileView objects
-        ArrayList<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
-        startingPositions.forEach(tile -> {
+        List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
+        for (Tile tile : startingPositions) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.checkSide(piece);
             PieceView pieceView = this.boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
-        });
+        }
+    }
 
-        ArrayList<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+    private void setObstacles() {
+        this.obstacleManager = new ObstacleManager();
+        List<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
         for (Tile tile : obstacleTiles) {
             Obstacle obstacle = (Obstacle) tile.getGameObject();
-            ObstacleView obstacleView = this.boardPane.instantiateObstacleView(tile.getX(), tile.getY());
+            ObstacleView obstacleView = boardPane.instantiateObstacleView(tile.getX(), tile.getY());
             obstacle.addAvatar(obstacleView);
         }
     }

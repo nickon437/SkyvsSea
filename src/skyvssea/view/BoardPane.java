@@ -2,20 +2,20 @@ package skyvssea.view;
 
 import com.google.java.contract.Requires;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardPane extends Pane {
 
     public static final int NUM_SIDE_CELL = 10;
-    private Group tileGroup = new Group();
-    private ArrayList<PieceView> pieceViewGroup = new ArrayList<>();
-    private ArrayList<ObstacleView> obstacleViewGroup = new ArrayList<>();
+    private List<TileView> tileViewGroup = new ArrayList<>();
+    private List<PieceView> pieceViewGroup = new ArrayList<>();
+    private List<ObstacleView> obstacleViewGroup = new ArrayList<>();
     private double tileSize;
 
     @Requires("controller != null")
@@ -23,10 +23,10 @@ public class BoardPane extends Pane {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
             for (int x = 0; x < NUM_SIDE_CELL; x++) {
                 TileView tileView = new TileView(x, y, tileSize, controller);
-                tileGroup.getChildren().add(tileView);
+                tileViewGroup.add(tileView);
             }
         }
-        this.getChildren().add(getTileGroup());
+        this.getChildren().addAll(tileViewGroup);
 
         setDynamicTileSize();
     }
@@ -51,8 +51,7 @@ public class BoardPane extends Pane {
         double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
         double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
 
-        for (Node node : getTileGroup().getChildren()) {
-            TileView tileView = (TileView) node;
+        for (TileView tileView : getTileViewGroup()) {
             tileView.updateSize(tileSize);
             tileView.updatePosition(tileSize, mostLeftX, mostTopY);
         }
@@ -71,18 +70,18 @@ public class BoardPane extends Pane {
         }
     }
 
-    public void setTileGroup(Group tileGroup) { this.tileGroup = tileGroup; }
-    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
-        this.pieceViewGroup = pieceViews;
-    }
+//    public void setTileGroup(Group tileViewGroup) { this.tileViewGroup = tileViewGroup; }
+//    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
+//        this.pieceViewGroup = pieceViews;
+//    }
 
-    public Group getTileGroup() {
-        return tileGroup;
+    public List<TileView> getTileViewGroup() {
+        return tileViewGroup;
     }
 
 	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
 	public TileView getTileView(int x, int y) {
-		for (Node node : tileGroup.getChildren()) {
+		for (Node node : tileViewGroup) {
 			if (((TileView) node).getX() == x && ((TileView) node).getY() == y) {
 				return (TileView) node;
 			}
@@ -103,6 +102,4 @@ public class BoardPane extends Pane {
         obstacleViewGroup.add(obstacleView);
         return obstacleView;
     }
-
-
 }

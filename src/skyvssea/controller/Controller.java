@@ -27,20 +27,20 @@ public class Controller {
         }
     	
         final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
-        Tile previousSelectedTile = board.getCurrentTile();
-        board.setCurrentTile(selectedTile);
-
-        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
+        AbstractPiece selectedPiece = pieceManager.getCurrentPiece();
+        
         if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
             if (selectedTile.isHighlighted()) {
             	board.clearHighlightedTiles();
+            	Tile currentLocationOfSelectedPiece = board.getCurrentTile();
                 // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
-                if (!selectedTile.equals(previousSelectedTile)) {
-                    selectedTile.setGameObject(currentPiece);
-                    previousSelectedTile.removeGameObject();
+                if (!selectedTile.equals(currentLocationOfSelectedPiece)) {
+                    selectedTile.setGameObject(selectedPiece);
+                    currentLocationOfSelectedPiece.removeGameObject();
                 }
 
                 switchToAttackMode();
+                
             } else {
             	board.clearHighlightedTiles();
                 if (selectedTile.hasPiece()) {
@@ -51,14 +51,17 @@ public class Controller {
                     }
                 }
             }
+            
+            board.setCurrentTile(selectedTile);
+            
         } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
             if (selectedTile.isHighlighted()) {
-                currentPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
+                selectedPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
                 endTurn();
             }
+            
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
-        		//TODO: Jiang: currently does not alter pieceManager to kill, if necessary i will implement it later 
         		selectedTile.removeGameObject();
         		endTurn();
             }

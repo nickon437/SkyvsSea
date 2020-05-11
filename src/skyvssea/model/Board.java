@@ -124,14 +124,12 @@ public class Board {
 	            if (currentTile == null) {
 	            	//out of bound, so ignore other tiles in this direction
 	            	blockedDirections.add(direction);
-	            	System.out.println("out of bound");
 	            	continue;
 	            }
 	            
 	            if (currentTile.hasGameObject()) {
 	            	if (!tempDirections.contains(Direction.JUMP_OVER)) {
 	            		blockedDirections.add(direction);
-		            	System.out.println("can't jump over");
 	            	}
 	            } else {
 	            	highlightTile(currentTile);

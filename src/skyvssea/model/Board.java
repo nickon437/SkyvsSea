@@ -116,9 +116,13 @@ public class Board {
 	    for (int count = 1; count <= moveRange; count++) {
 	        ArrayList<Direction> blockedDirections = new ArrayList<>();
 	        for (Direction direction : tempDirections) {
+	        	if (direction == Direction.JUMP_OVER) {
+	        		continue;
+	        	}
+	        	
 	            Tile currentTile = getTile(selectedTile, direction, count);
 	            if (currentTile == null) {
-	            	//out of bound
+	            	//out of bound, so ignore other tiles in this direction
 	            	blockedDirections.add(direction);
 	            	System.out.println("out of bound");
 	            	continue;

@@ -10,7 +10,7 @@ public enum Hierarchy {
 	
 	public final int magnitude;
 	
-	private Hierarchy(int magnitude) {
+	Hierarchy(int magnitude) {
 		this.magnitude = magnitude;
 	}
 	

@@ -50,7 +50,7 @@ public abstract class AbstractPiece extends GameObject {
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
 
-    public int getSpecialEffectCounter() { return specialEffectCounter; }
+    private int getSpecialEffectCounter() { return specialEffectCounter; }
 
 	public void performSpecialEffect(AbstractPiece target) {
 	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
@@ -60,14 +60,14 @@ public abstract class AbstractPiece extends GameObject {
     	}
 	}
     
-    public void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+    private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
 
 	public boolean isSpecialEffectAvailable() {
-		return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
+		return specialEffect != null && specialEffectCounter <= 0;
     }
 
     @Ensures("specialEffectManagerProxy != null")
-	public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
+    private SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }
@@ -111,5 +111,5 @@ public abstract class AbstractPiece extends GameObject {
 
 	public Direction[] getAttackDirections() {
 		return attackDirections;
-	};
+	}
 }

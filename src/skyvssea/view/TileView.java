@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
-import skyvssea.model.Tile;
 import skyvssea.util.ColorUtil;
 
 import java.util.Observable;
@@ -100,7 +99,7 @@ public class TileView extends Avatar implements Observer {
         getChildren().add(avatar);
     }
     
-    public void removeGameObjAvatar() {
+    private void removeGameObjAvatar() {
 		for (Node node : getChildren()) {
             if (node instanceof Avatar) {
             	getChildren().remove(node);

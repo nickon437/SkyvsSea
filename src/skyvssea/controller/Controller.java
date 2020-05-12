@@ -14,8 +14,6 @@ public class Controller {
     private Board board;
     private PieceManager pieceManager;
     private PlayerManager playerManager;
-    private ObstacleManager obstacleManager;
-    private BoardPane boardPane;
     private ActionPane actionPane;
     private InfoPane infoPane;
 
@@ -47,7 +45,7 @@ public class Controller {
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
-                        pieceManager.setCurrentPiece(newSelectedPiece);
+                        pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
                     }
                 }
@@ -67,6 +65,7 @@ public class Controller {
         }   
     }
 
+    @Requires("tileView != null")
     public void handleMouseEnteredTile(TileView tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
         tileView.updateBaseColorAsHovered(true);
@@ -85,6 +84,8 @@ public class Controller {
             }
         }
     }
+
+    @Requires("tileView != null")
     public void handleMouseExitedTile(TileView tileView) {
         tileView.updateBaseColorAsHovered(false);
     }
@@ -149,7 +150,6 @@ public class Controller {
     }
 
     private void endTurn() {
-        actionPane.hideActionIndicator();
         pieceManager.updatePieceStatus();
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
@@ -159,7 +159,6 @@ public class Controller {
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
     public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-    	this.boardPane = boardPane;
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
@@ -170,12 +169,13 @@ public class Controller {
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
-        setTiles();
-        setPieces();
-        setObstacles();
+        setTiles(boardPane);
+        setPieces(boardPane);
+        setObstacles(boardPane);
     }
 
-    private void setTiles() {
+    @Requires("boardPane != null")
+    private void setTiles(BoardPane boardPane) {
         Tile[][] tiles = board.getTiles();
         List<TileView> tileViews = boardPane.getTileViewGroup();
         for (TileView tileView : tileViews) {
@@ -187,7 +187,8 @@ public class Controller {
         board.setBaseColours();
     }
 
-    private void setPieces() {
+    @Requires("boardPane != null")
+    private void setPieces(BoardPane boardPane) {
         List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         for (Tile tile : startingPositions) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
@@ -197,8 +198,9 @@ public class Controller {
         }
     }
 
-    private void setObstacles() {
-        this.obstacleManager = new ObstacleManager();
+    @Requires("boardPane != null")
+    private void setObstacles(BoardPane boardPane) {
+        ObstacleManager obstacleManager = new ObstacleManager();
         List<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
         for (Tile tile : obstacleTiles) {
             Obstacle obstacle = (Obstacle) tile.getGameObject();

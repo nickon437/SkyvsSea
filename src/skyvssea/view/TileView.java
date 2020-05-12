@@ -82,7 +82,7 @@ public class TileView extends Avatar implements Observer {
 	public void update(Observable tile, Object arg) {
         if (arg instanceof Boolean) {
             Color baseColor;
-            if (((Tile) tile).isHighlighted()) {
+            if ((Boolean) arg == true) {
                 baseColor = HIGHLIGHTED_COLOR;
             } else {
                 baseColor = hasLightBaseColor ? DEFAULT_LIGHT_BASE_COLOR : DEFAULT_DARK_BASE_COLOR;

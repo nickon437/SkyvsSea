@@ -70,17 +70,12 @@ public class BoardPane extends Pane {
         }
     }
 
-//    public void setTileGroup(Group tileViewGroup) { this.tileViewGroup = tileViewGroup; }
-//    public void setPieceGroup(ArrayList<PieceView> pieceViews) {
-//        this.pieceViewGroup = pieceViews;
-//    }
-
     public List<TileView> getTileViewGroup() {
         return tileViewGroup;
     }
 
 	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
-	public TileView getTileView(int x, int y) {
+    private TileView getTileView(int x, int y) {
 		for (Node node : tileViewGroup) {
 			if (((TileView) node).getX() == x && ((TileView) node).getY() == y) {
 				return (TileView) node;

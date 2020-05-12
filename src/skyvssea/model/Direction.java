@@ -9,5 +9,5 @@ public enum Direction {
     SOUTHWEST,
     WEST,
     NORTHWEST,
-    JUMP_OVER;
+    JUMP_OVER
 }

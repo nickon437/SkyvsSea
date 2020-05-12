@@ -38,7 +38,6 @@ public class InfoPane extends VBox {
         playerNameText.setStyle("-fx-font-weight: bold;");
     }
 
-    // Nick - TODO: This kinda belongs in the TextArea, review what lecturer talked about this situation (ActionPane also has sth similar)
     private void setTextAreaDisabled(TextArea textArea, boolean isDisabled) {
         textArea.setEditable(!isDisabled);
         textArea.setFocusTraversable(!isDisabled);
@@ -57,10 +56,5 @@ public class InfoPane extends VBox {
     public void setPieceInfo(AbstractPiece piece) {
         statusText.setText(piece.toString());
         specialEffectText.setText(piece.getSpecialEffectSummary());
-    }
-
-    public void clearPieceInfo() {
-        statusText.clear();
-        specialEffectText.clear();
     }
 }

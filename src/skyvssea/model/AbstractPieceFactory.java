@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
 import skyvssea.model.piece.*;
 
 public abstract class AbstractPieceFactory {

@@ -6,9 +6,10 @@ import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SpecialEffectManager implements SpecialEffectManagerInterface {
-    private ArrayList<SpecialEffect> appliedSpecialEffects = new ArrayList<>();
+    private List<SpecialEffect> appliedSpecialEffects = new ArrayList<>();
     private AbstractPiece target;
 
     public SpecialEffectManager(AbstractPiece piece) {
@@ -26,7 +27,7 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
     @Override
     @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration() {
-        ArrayList<SpecialEffect> toRemove = new ArrayList<>();
+        List<SpecialEffect> toRemove = new ArrayList<>();
         for (SpecialEffect specialEffect : appliedSpecialEffects) {
             boolean isActive = specialEffect.updateEffectiveDuration();
             if (!isActive) {

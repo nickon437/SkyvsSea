@@ -5,12 +5,13 @@ import skyvssea.model.piece.AbstractPiece;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PieceManager {
-    private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new HashMap<>();
-    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
-    private AbstractPiece currentPiece;
+    private Map<Hierarchy, List<AbstractPiece>> sharkPieces = new HashMap<>();
+    private Map<Hierarchy, List<AbstractPiece>> eaglePieces = new HashMap<>();
+    private AbstractPiece registeredPiece;
 
 	public PieceManager(Map<Hierarchy, Integer> lineup) {
         initializePieces(lineup);
@@ -21,7 +22,7 @@ public class PieceManager {
      */
 	//The precondition checks if the lineup numbers are not all zeroes
 	@Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
-    public void initializePieces(Map<Hierarchy, Integer> lineup) {
+    private void initializePieces(Map<Hierarchy, Integer> lineup) {
         AbstractPieceFactory sharkFactory = SharkFactory.getInstance();
         AbstractPieceFactory eagleFactory = EagleFactory.getInstance();
 
@@ -31,7 +32,7 @@ public class PieceManager {
         }
     }
 
-	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
+	private void createPiecesByHierarchy(Map<Hierarchy, List<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
 		Hierarchy level = creationInfo.getKey();    
 		int numPiecesToCreate = creationInfo.getValue();
 		pieces.put(level, new ArrayList<>());
@@ -40,48 +41,32 @@ public class PieceManager {
 		}
 	}
 
-    public AbstractPiece getRegisteredPiece() { return currentPiece; }
+    public AbstractPiece getRegisteredPiece() { return registeredPiece; }
 
-    @Requires("currentPiece != null")
-    public void setCurrentPiece(AbstractPiece currentPiece) { this.currentPiece = currentPiece; }
+    @Requires("registeredPiece != null")
+    public void setRegisteredPiece(AbstractPiece registeredPiece) { this.registeredPiece = registeredPiece; }
 
-    public void clearCurrentPiece() { currentPiece = null; }
+    public void clearCurrentPiece() { registeredPiece = null; }
 
-    public Map<Hierarchy, ArrayList<AbstractPiece>> getSharkPieces() { return sharkPieces; }
-    public Map<Hierarchy, ArrayList<AbstractPiece>> getEaglePieces() { return eaglePieces; }
+    public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }
+    public Map<Hierarchy, List<AbstractPiece>> getEaglePieces() { return eaglePieces; }
 
-    public ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> getAllPiecesList() {
-        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = new ArrayList<>();
+    private ArrayList<Map<Hierarchy, List<AbstractPiece>>> getAllPiecesList() {
+        ArrayList<Map<Hierarchy, List<AbstractPiece>>> piecesList = new ArrayList<>();
         piecesList.add(sharkPieces);
         piecesList.add(eaglePieces);
         return piecesList;
     }
 
-    public ArrayList<AbstractPiece> getSharkPiecesList() {
-        ArrayList<AbstractPiece> sharkPiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : getSharkPieces().entrySet()) {
-            sharkPiecesList.addAll(entry.getValue());
-        }
-        return sharkPiecesList;
-    }
-
-    public ArrayList<AbstractPiece> getEaglePiecesList() {
-        ArrayList<AbstractPiece> eaglePiecesList = new ArrayList<>();
-        for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : getEaglePieces().entrySet()) {
-            eaglePiecesList.addAll(entry.getValue());
-        }
-        return eaglePiecesList;
-    }
-
     @Requires("board != null")
-    public ArrayList<Tile> setPiecesOnBoard(Board board) {
-        ArrayList<Tile> startingPositions = new ArrayList<>();
+    public List<Tile> setPiecesOnBoard(Board board) {
+        List<Tile> startingPositions = new ArrayList<>();
         int midPoint = Board.NUM_SIDE_CELL / 2;
 
         // Use ArrayList to reduce code duplication when traverse through HashMap
-        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = getAllPiecesList();
+        List<Map<Hierarchy, List<AbstractPiece>>> piecesList = getAllPiecesList();
 
-        for (Map<Hierarchy, ArrayList<AbstractPiece>> pieces : piecesList) {
+        for (Map<Hierarchy, List<AbstractPiece>> pieces : piecesList) {
             int pieceXCoord = 0;
             int pieceYCoord = midPoint;
             int pieceIndex = 0;
@@ -89,7 +74,7 @@ public class PieceManager {
 
             if (piecesList.indexOf(pieces) != 0) { pieceXCoord = Board.NUM_SIDE_CELL - 1; }
 
-            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : pieces.entrySet()) {
+            for (Map.Entry<Hierarchy, List<AbstractPiece>> entry : pieces.entrySet()) {
                 for (AbstractPiece piece : entry.getValue()) {
                     pieceYCoord = pieceYCoord + (flip * pieceIndex);
                     flip = flip * -1;
@@ -106,8 +91,8 @@ public class PieceManager {
     }
 
     public void updatePieceStatus() {
-        for (Map<Hierarchy, ArrayList<AbstractPiece>> playerPieces : getAllPiecesList()) {
-            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> pieces : playerPieces.entrySet()) {
+        for (Map<Hierarchy, List<AbstractPiece>> playerPieces : getAllPiecesList()) {
+            for (Map.Entry<Hierarchy, List<AbstractPiece>> pieces : playerPieces.entrySet()) {
                 for (AbstractPiece piece : pieces.getValue()) {
                     piece.updateStatus();
                 }

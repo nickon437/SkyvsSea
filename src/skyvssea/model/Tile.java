@@ -36,7 +36,11 @@ public class Tile extends Observable implements AvatarCore {
         }
     }
 
-    public void removeGameObject() { this.gameObject = null; }
+    public void removeGameObject() { 
+    	this.gameObject = null; 
+    	setChanged();
+        notifyObservers(null);
+    }
 
     public boolean isHighlighted() { return isHighlighted; }
 

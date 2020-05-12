@@ -3,13 +3,15 @@ package skyvssea.model.piece;
 import com.google.java.contract.Ensures;
 import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.TargetType;
 
 public abstract class AbstractPiece extends GameObject {
     private String name;
     private Hierarchy attackLevel;
 	private Hierarchy defenceLevel;
     private int moveRange;
-    private Direction[] moveDirection;
+    private Direction[] moveDirections;
+    private Direction[] attackDirections;
     private int attackRange;
     private SpecialEffect specialEffect;
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
@@ -24,7 +26,8 @@ public abstract class AbstractPiece extends GameObject {
     	this.attackLevel = attackLevel;
     	this.defenceLevel = defenceLevel;
     	this.moveRange = moveRange;
-    	this.moveDirection = moveDirection;
+    	this.moveDirections = moveDirection;
+    	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
     	this.attackRange = attackRange;
     	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
@@ -42,7 +45,7 @@ public abstract class AbstractPiece extends GameObject {
     public int getMoveRange() { return moveRange; }
     public void setMoveRange(int moveRange) { this.moveRange = moveRange; }
 
-    public Direction[] getMoveDirection() { return moveDirection; }
+    public Direction[] getMoveDirections() { return moveDirections; }
 
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
@@ -78,7 +81,7 @@ public abstract class AbstractPiece extends GameObject {
                 "DefenceLevel: " + getDefenceLevel() + "\n" +
                 "Move range: " + getMoveRange() + "\n" +
                 "Movable directions: ";
-        for (Direction direction : getMoveDirection()) {
+        for (Direction direction : getMoveDirections()) {
             summary += direction.toString() + " ";
         }
         summary += "\nAttack range: " + getAttackRange();
@@ -101,4 +104,12 @@ public abstract class AbstractPiece extends GameObject {
         if (specialEffectCounter > 0) { specialEffectCounter--; }
         getSpecialEffectManagerProxy().updateEffectiveDuration();
     }
+
+	public TargetType getSpecialEffectTargetType() {
+		return specialEffect.getTargetType();
+	}
+
+	public Direction[] getAttackDirections() {
+		return attackDirections;
+	};
 }

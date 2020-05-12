@@ -1,6 +1,8 @@
 package skyvssea.view;
 
 import com.google.java.contract.Requires;
+
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
@@ -75,12 +77,12 @@ public class TileView extends Avatar implements Observer {
         base.setFill(modifiedColor);
     }
 
-    @Requires("arg instanceof Boolean || arg instanceof Avatar")
+    @Requires("arg instanceof Boolean || arg instanceof Avatar || arg == null")
 	@Override
 	public void update(Observable tile, Object arg) {
         if (arg instanceof Boolean) {
             Color baseColor;
-            if (((Tile) tile).isHighlighted()) {
+            if ((Boolean) arg == true) {
                 baseColor = HIGHLIGHTED_COLOR;
             } else {
                 baseColor = hasLightBaseColor ? DEFAULT_LIGHT_BASE_COLOR : DEFAULT_DARK_BASE_COLOR;
@@ -88,6 +90,8 @@ public class TileView extends Avatar implements Observer {
             updateBaseColor(baseColor);
         } else if (arg instanceof Avatar) {
             setGameObjAvatar((Avatar) arg);
+        } else if (arg == null) {
+        	removeGameObjAvatar();
         }
     }
 
@@ -95,4 +99,13 @@ public class TileView extends Avatar implements Observer {
 	public void setGameObjAvatar(Avatar avatar) {
         getChildren().add(avatar);
     }
+    
+    public void removeGameObjAvatar() {
+		for (Node node : getChildren()) {
+            if (node instanceof Avatar) {
+            	getChildren().remove(node);
+            	return;
+            }
+        }
+	}
 }

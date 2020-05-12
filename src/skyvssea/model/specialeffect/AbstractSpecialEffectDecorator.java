@@ -26,6 +26,9 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 
 	@Override
 	public String getName() { return specialEffect.getName(); }
+	
+	@Override
+	public TargetType getTargetType() { return specialEffect.getTargetType(); }
 
 	public SpecialEffect getSpecialEffect() { return specialEffect; }
 }

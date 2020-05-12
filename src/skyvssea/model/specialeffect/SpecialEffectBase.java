@@ -1,13 +1,22 @@
 package skyvssea.model.specialeffect;
 
+import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public class SpecialEffectBase implements SpecialEffect {
 	private int effectiveDuration;
 	private String name;
+	private TargetType targetType;
 	
-	public SpecialEffectBase(String name, int effectiveDuration) {
+	public SpecialEffectBase(String name, TargetType targetType) {
 		this.name = name;
+		this.targetType = targetType;
+		this.effectiveDuration = SpecialEffect.DEFAULT_CASTER_TURN; 
+	}
+	
+	public SpecialEffectBase(String name, int effectiveDuration, TargetType targetType) {
+		this.name = name;
+		this.targetType = targetType;
 		this.effectiveDuration = effectiveDuration; 
 	}
 	
@@ -43,7 +52,12 @@ public class SpecialEffectBase implements SpecialEffect {
 
 	@Override
 	public SpecialEffect copy() {
-		return new SpecialEffectBase(name, effectiveDuration);
+		return new SpecialEffectBase(name, effectiveDuration, targetType);
+	}
+
+	@Override
+	public TargetType getTargetType() {
+		return targetType;
 	}
 
 }

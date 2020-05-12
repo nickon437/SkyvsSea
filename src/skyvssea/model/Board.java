@@ -1,16 +1,19 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-import skyvssea.controller.Controller;
+
+import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
 	public static final int NUM_SIDE_CELL = 10;
 	private Tile[][] tiles;
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
-	private Tile currentTile;
+	private Tile registeredTile;
 
 	public Board() {
 		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
@@ -23,8 +26,8 @@ public class Board {
 	}
 
 	public Tile[][] getTiles() { return tiles; }
-	public ArrayList<Tile> getTileList() {
-		ArrayList<Tile> tileList = new ArrayList<>();
+	public List<Tile> getTileList() {
+		List<Tile> tileList = new ArrayList<>();
 		for (Tile[] tiles : tiles) {
 			tileList.addAll(Arrays.asList(tiles));
 		}
@@ -79,15 +82,15 @@ public class Board {
 		highlightedTiles.clear();
 	}
 
-	public Tile getCurrentTile() { return currentTile; }
+	public Tile getRegisteredTile() { return registeredTile; }
 
-	@Requires("currentTile != null")
-	public void setCurrentTile(Tile currentTile) {
-		this.currentTile = currentTile;
+	@Requires("tile != null")
+	public void setRegisteredTile(Tile tile) {
+		this.registeredTile = tile;
 	}
 
 	public void clearCurrentTile() {
-		this.currentTile = null;
+		this.registeredTile = null;
 	}
 
 	public Tile getTile(int x, int y) {
@@ -103,5 +106,106 @@ public class Board {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
+	}
+
+	@Requires("registeredTile != null")
+	public void highlightPossibleMoveTiles() {
+		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
+		int moveRange = selectedPiece.getMoveRange();	
+		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getMoveDirections()));
+	
+	    for (int count = 1; count <= moveRange; count++) {
+	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        for (Direction direction : tempDirections) {
+	        	if (direction == Direction.JUMP_OVER) {
+	        		continue;
+	        	}
+	        	
+	            Tile currentTile = getTile(registeredTile, direction, count);
+	            if (currentTile == null) {
+	            	//out of bound, so ignore other tiles in this direction
+	            	blockedDirections.add(direction);
+	            	continue;
+	            }
+	            
+	            if (currentTile.hasGameObject()) {
+	            	if (!tempDirections.contains(Direction.JUMP_OVER)) {
+	            		blockedDirections.add(direction);
+	            	}
+	            } else {
+	            	highlightTile(currentTile);
+	            }
+	        }
+	        tempDirections.removeAll(blockedDirections);
+	    }
+	    
+	    highlightTile(registeredTile);
+	}
+
+	@Requires("playerManager != null && registeredTile != null")
+	public void highlightPossibleKillTiles(PlayerManager playerManager) {
+		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
+
+		for (Tile currentTile : getDetectableTilesWithPiece(selectedPiece)) {
+			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
+			if (!playerManager.isCurrentPlayerPiece(currentPiece)) {
+				Hierarchy enemyDefenceLevel = currentPiece.getDefenceLevel();
+				Hierarchy selectedPieceAttackLevel = selectedPiece.getAttackLevel();
+				//Only able to kill an enemy with strictly lower defense level
+				if (selectedPieceAttackLevel.compareTo(enemyDefenceLevel) > 0) {
+					highlightTile(currentTile);
+				}
+			}
+		}
+	}
+
+	@Requires("playerManager != null && registeredTile != null")
+	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
+		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
+	    TargetType targetType = selectedPiece.getSpecialEffectTargetType();
+	    
+	    if (targetType == TargetType.SELF) {
+	    	highlightTile(registeredTile);
+	    	return;
+	    }
+
+	    boolean isComrades = targetType == TargetType.ENEMIES ? false : true;
+
+	    for (Tile currentTile : getDetectableTilesWithPiece(selectedPiece)) {
+			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
+			boolean currentPlayerHasPiece = playerManager.isCurrentPlayerPiece(currentPiece);
+			if (isComrades == currentPlayerHasPiece) {
+				highlightTile(currentTile);
+			}
+		}
+	}
+
+	@Requires("selectedPiece != null")
+	private List<Tile> getDetectableTilesWithPiece(AbstractPiece selectedPiece) {
+		List<Tile> detectableTilesWithPiece = new ArrayList<>();
+
+		int attackRange = selectedPiece.getAttackRange();
+		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getAttackDirections()));
+
+		for (int count = 1; count <= attackRange; count++) {
+			List<Direction> blockedDirections = new ArrayList<>();
+			for (Direction direction : tempDirections) {
+				Tile currentTile = getTile(registeredTile, direction, count);
+				if (currentTile == null) {
+					//out of bound
+					blockedDirections.add(direction);
+					continue;
+				}
+
+				if (currentTile.hasGameObject()) {
+					if (currentTile.hasPiece()) {
+						detectableTilesWithPiece.add(currentTile);
+					}
+					blockedDirections.add(direction);
+				}
+			}
+			tempDirections.removeAll(blockedDirections);
+		}
+		return detectableTilesWithPiece;
 	}
 }

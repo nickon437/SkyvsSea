@@ -40,7 +40,7 @@ public class PieceManager {
 		}
 	}
 
-    public AbstractPiece getCurrentPiece() { return currentPiece; }
+    public AbstractPiece getRegisteredPiece() { return currentPiece; }
 
     @Requires("currentPiece != null")
     public void setCurrentPiece(AbstractPiece currentPiece) { this.currentPiece = currentPiece; }

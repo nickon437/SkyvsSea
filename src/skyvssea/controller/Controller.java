@@ -2,7 +2,6 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
@@ -27,36 +26,36 @@ public class Controller {
         }
     	
         final Tile selectedTile = board.getTile(tileView.getX(), tileView.getY());
-        AbstractPiece selectedPiece = pieceManager.getCurrentPiece();
-        
+        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
+
         if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            Tile previousRegisteredTile = board.getRegisteredTile();
+            board.setRegisteredTile(selectedTile);
+
             if (selectedTile.isHighlighted()) {
             	board.clearHighlightedTiles();
-            	Tile currentLocationOfSelectedPiece = board.getCurrentTile();
-                // Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
-                if (!selectedTile.equals(currentLocationOfSelectedPiece)) {
-                    selectedTile.setGameObject(selectedPiece);
-                    currentLocationOfSelectedPiece.removeGameObject();
+            	// Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
+                if (!selectedTile.equals(previousRegisteredTile)) {
+                    selectedTile.setGameObject(registeredPiece);
+                    previousRegisteredTile.removeGameObject();
                 }
 
                 switchToAttackMode();
-                
+
             } else {
             	board.clearHighlightedTiles();
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
-                    if (playerManager.returnSide(newSelectedPiece).equals(playerManager.getCurrentPlayer())) {
+                    if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
                         pieceManager.setCurrentPiece(newSelectedPiece);
-                        board.highlightPossibleMoveTiles(selectedTile);
+                        board.highlightPossibleMoveTiles();
                     }
                 }
             }
             
-            board.setCurrentTile(selectedTile);
-            
         } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
             if (selectedTile.isHighlighted()) {
-                selectedPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
+                registeredPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
                 endTurn();
             }
             
@@ -92,7 +91,7 @@ public class Controller {
 
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
-        AbstractPiece currentPiece = pieceManager.getCurrentPiece();
+        AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
 
@@ -192,7 +191,7 @@ public class Controller {
         List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
         for (Tile tile : startingPositions) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
-            Player player = playerManager.returnSide(piece);
+            Player player = playerManager.getPlayer(piece);
             PieceView pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }

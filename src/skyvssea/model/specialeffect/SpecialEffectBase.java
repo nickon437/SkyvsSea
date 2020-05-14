@@ -1,6 +1,5 @@
 package skyvssea.model.specialeffect;
 
-import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public class SpecialEffectBase implements SpecialEffect {
@@ -43,6 +42,10 @@ public class SpecialEffectBase implements SpecialEffect {
 	@Override
 	public int getEffectiveDuration() {
 		return effectiveDuration;
+	}
+
+	public void setEffectiveDuration(int effectiveDuration) {
+		this.effectiveDuration = effectiveDuration;
 	}
 
 	@Override

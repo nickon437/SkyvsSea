@@ -3,6 +3,7 @@ package skyvssea.controller;
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
 import skyvssea.model.*;
+import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
@@ -14,6 +15,7 @@ public class Controller {
     private Board board;
     private PieceManager pieceManager;
     private PlayerManager playerManager;
+    private HistoryManager historyManager;
     private ActionPane actionPane;
     private InfoPane infoPane;
 
@@ -166,6 +168,7 @@ public class Controller {
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
+        this.historyManager = new HistoryManager();
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 

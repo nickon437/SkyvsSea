@@ -24,6 +24,13 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
         appliedSpecialEffects.add(specialEffect);
     }
 
+    @Requires("specialEffect != null")
+    @Ensures("!appliedSpecialEffects.contains(specialEffect) && appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) - 1")
+    public void remove(SpecialEffect specialEffect) {
+        specialEffect.remove(target);
+        appliedSpecialEffects.remove(target);
+    }
+
     @Override
     @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration() {

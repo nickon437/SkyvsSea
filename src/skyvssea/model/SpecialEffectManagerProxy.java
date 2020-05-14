@@ -24,6 +24,14 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
         specialEffectManager.add(specialEffect);
     }
 
+    @Requires("specialEffect != null")
+    @Override
+    public void remove(SpecialEffect specialEffect) {
+        if (specialEffect != null) {
+            specialEffectManager.remove(specialEffect);
+        }
+    }
+
     @Override
     public void updateEffectiveDuration() {
         if (specialEffectManager != null) {

@@ -18,6 +18,7 @@ public class ActionPane extends VBox {
     private Button killBtn = new Button("Kill");
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
+    private Button undoBtn = new Button("Undo");
 
     private static final double BUTTON_HEIGHT = 50;
     private static final double SPACING = 20;
@@ -26,13 +27,14 @@ public class ActionPane extends VBox {
         this.getChildren().addAll(actionIndicator, buttonHolder);
         this.setSpacing(5);
 
-        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
+        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn, undoBtn);
         buttonHolder.setSpacing(SPACING);
 
         formatActionIndicator();
         formatKillBtn(killBtn, controller);
         formatSpecialEffectBtn(specialEffectBtn, controller);
         formatEndBtn(endBtn, controller);
+        formatUndoBtn(undoBtn, controller);
     }
 
     private void formatActionIndicator() {
@@ -88,6 +90,10 @@ public class ActionPane extends VBox {
             shiftActionIndicator(button);
             controller.handleEndButton();
         });
+    }
+
+    private void formatUndoBtn(Button button, Controller controller) {
+        button.setOnMouseClicked(e -> controller.handleUndoButton());
     }
 
     private void maximizeControlSize(Control control) {

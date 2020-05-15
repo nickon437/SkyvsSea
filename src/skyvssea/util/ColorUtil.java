@@ -5,18 +5,18 @@ import javafx.scene.paint.Color;
 public class ColorUtil {
 
     public static Color STANDARD_BUTTON_COLOR = Color.valueOf("#1E88E5");
-    public static Color SECONDARY_BUTTON_COLOR = Color.valueOf("#E0E0E0");
-    private static double DARKER_BRIGHTER_FACTOR = 0.9;
 
-    public static Color getTextContrastColor(Color bgColor) {
-        Color textColor = bgColor.getRed()*255*0.299 + bgColor.getGreen()*255*0.587 + bgColor.getBlue()*255*0.114 > 186 ?
-                Color.BLACK : Color.WHITE;
-        return textColor;
+    public static Color getTextContrastColor(Color backgroundColor) {
+        if (backgroundColor.getRed()*0.299 + backgroundColor.getGreen()*0.587 + backgroundColor.getBlue()*0.114 > 186) {
+            return Color.BLACK;
+        } else {
+            return Color.WHITE;
+        }
     }
 
-    public static Color getHoveringColor(boolean isHovered, Color bgColor) {
-        bgColor = isHovered ? bgColor.deriveColor(0, 1, DARKER_BRIGHTER_FACTOR, 1) :
-                bgColor.deriveColor(0, 1, 1/DARKER_BRIGHTER_FACTOR, 1);
-        return bgColor;
+    public static Color getHoveringColor(boolean isHovered, Color backgroundColor) {
+        backgroundColor = isHovered ? Color.color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), .5) :
+                Color.color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), 1);
+        return backgroundColor;
     }
 }

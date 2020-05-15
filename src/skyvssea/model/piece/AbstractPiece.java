@@ -1,115 +1,100 @@
 package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
 import skyvssea.model.*;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.TargetType;
+import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
-public abstract class AbstractPiece extends GameObject {
+public abstract class AbstractPiece {
     private String name;
-    private Hierarchy attackLevel;
-	private Hierarchy defenceLevel;
-    private int moveRange;
-    private Direction[] moveDirections;
-    private Direction[] attackDirections;
-    private int attackRange;
-    private SpecialEffect specialEffect;
-    private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
+    private Stat<Hierarchy> level;
+    private Stat<Integer> moveRange;
+    private Direction[] moveDirection;
+    private Stat<Integer> attackRange;
+    private AbstractSpecialEffect specialEffect;
+    private final Stat<Integer> DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
+    private SpecialEffectManager specialEffectManager;
 
-	private SpecialEffectManagerInterface specialEffectManagerProxy;
-
-    protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
-                            Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
-                            int specialEffectCooldown) {
+    protected AbstractPiece(String name, Hierarchy level, int moveRange, Direction[] moveDirection, int attackRange,
+                            SpecialEffectCode specialEffectCode, int specialEffectCooldown) {
     	this.name = name;
-    	this.attackLevel = attackLevel;
-    	this.defenceLevel = defenceLevel;
-    	this.moveRange = moveRange;
-    	this.moveDirections = moveDirection;
-    	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
-    	this.attackRange = attackRange;
-    	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
-        DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
-        specialEffectCounter = 0;
+        this.level = new Stat(level);
+    	this.moveRange = new Stat(Integer.valueOf(moveRange));
+    	this.moveDirection = moveDirection;
+    	this.attackRange = new Stat(Integer.valueOf(attackRange));
+    	this.specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
+        this.DEFAULT_SPECIAL_EFFECT_COOLDOWN = new Stat(Integer.valueOf(specialEffectCooldown));
+        this.specialEffectCounter = 0;
     }
 
     public String getName() { return name; }
 
-    public Hierarchy getAttackLevel() { return attackLevel; }
-    public void setAttackLevel(Hierarchy attackLevel) { this.attackLevel = attackLevel; }
+    public Hierarchy getLevel() { return level.getValue(); }
+    public Stat<Hierarchy> getLevelStat() { return level; }
 
-    public Hierarchy getDefenceLevel() { return defenceLevel; }
-    public void setDefenceLevel(Hierarchy defenceLevel) { this.defenceLevel = defenceLevel; }
+    public int getMoveRange() { return moveRange.getValue(); }
+    public Stat<Integer> getNumMoveStat() { return moveRange; }
 
-    public int getMoveRange() { return moveRange; }
-    public void setMoveRange(int moveRange) { this.moveRange = moveRange; }
+    public Direction[] getMoveDirection() { return moveDirection; }
 
-    public Direction[] getMoveDirections() { return moveDirections; }
+    public int getAttackRange() { return attackRange.getValue(); }
+    public Stat<Integer> getAttackRangeStat() { return attackRange; }
 
-    public int getAttackRange() { return attackRange; }
-    public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
-
-    public int getSpecialEffectCounter() { return specialEffectCounter; }
-
-	public void performSpecialEffect(AbstractPiece target) {
-	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
-	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
-			target.getSpecialEffectManagerProxy().add(specialEffect);
-    		resetSpecialEffectCounter();    		
-    	}
-	}
-    
-    public void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+    @Requires("specialEffectCounter <= 0")
+    public void performSpecialEffect(AbstractPiece target) {
+        target.getSpecialEffectManager().add(specialEffect.clone());
+        specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue();
+    }
+    //Idea: Use prototype creation pattern to create a clone of self specialEffect and pass it to target
 
 	public boolean isSpecialEffectAvailable() {
-		return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
+        return (specialEffect != null && specialEffectCounter <= 0) ? true : false;
     }
 
-    @Ensures("specialEffectManagerProxy != null")
-	public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
-        if (specialEffectManagerProxy == null) {
-            specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
+	public SpecialEffectManager getSpecialEffectManager() {
+        if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(this);
         }
-        return specialEffectManagerProxy;
+        return specialEffectManager;
     }
 
     @Override
     public String toString() {
         String summary = "Name: " + getName() + "\n" +
-                "AttackLevel: " + getAttackLevel() + "\n" +
-                "DefenceLevel: " + getDefenceLevel() + "\n" +
+                "Level: " + getLevel() + "\n" +
                 "Move range: " + getMoveRange() + "\n" +
                 "Movable directions: ";
-        for (Direction direction : getMoveDirections()) {
+        for (Direction direction : getMoveDirection()) {
             summary += direction.toString() + " ";
         }
         summary += "\nAttack range: " + getAttackRange();
         return summary;
     }
-	
+
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
         if (specialEffect == null) { return "Not applicable"; }
+        specialEffect.getName();
+        specialEffect.getEffectiveDuration();
+        DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue().intValue();
+        specialEffect.toString();
         String summary = "Special effect's name (SE): " +  specialEffect.getName() + "\n" +
                 "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
-                "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
+                "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN.getValue().intValue() + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
                 "SE description: " + specialEffect.toString();
         return summary;
     }
-    
+
+    // Nick - TODO: Show the current applied specialeffect info
+
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus() {
+        if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(this);
+        }
         if (specialEffectCounter > 0) { specialEffectCounter--; }
-        getSpecialEffectManagerProxy().updateEffectiveDuration();
+        specialEffectManager.updateEffectiveDuration();
     }
-
-	public TargetType getSpecialEffectTargetType() {
-		return specialEffect.getTargetType();
-	}
-
-	public Direction[] getAttackDirections() {
-		return attackDirections;
-	};
 }

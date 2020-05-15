@@ -7,31 +7,28 @@ import skyvssea.controller.Controller;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        buildView(primaryStage);
-    }
+	ChangeBoardSizePane changeBoardSizePane;
+	Controller controller;
 
-    private void buildView(Stage stage) {
-        Controller controller = new Controller();
-        stage.setTitle("Sky vs. Sea");
-
-        BoardPane boardPane = new BoardPane(controller);
-        ActionPane actionPane = new ActionPane(controller);
-        MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
-
-        InfoPane infoPane = new InfoPane();
-        MainView root = new MainView(primaryPane, infoPane);
-
-        // Nick - There should be a better way to the models and views for controller
-        controller.setViewsAndModels(boardPane, actionPane, infoPane);
-
-        Scene scene = new Scene(root, 800, 600);
-        stage.setScene(scene);
-        stage.show();
-    }
-
+	public BoardGameApplication() {
+		this.controller = new Controller();
+		this.changeBoardSizePane = new ChangeBoardSizePane(controller);
+	}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		Scene scene = new Scene(changeBoardSizePane.gridPane);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle(" Design Your Game ");
+		primaryStage.setHeight(400);
+		primaryStage.setWidth(400);
+		primaryStage.setResizable(false);
+		primaryStage.show();
+		changeBoardSizePane.getConfirmButton().setOnAction(e -> controller.handleConfirmBtn(changeBoardSizePane,primaryStage));
+	}
+	
     public static void main(String[] args) {
         launch(args);
     }
 }
+

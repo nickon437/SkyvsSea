@@ -1,14 +1,9 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.ChangeAttackLevelDecorator;
-import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
-import skyvssea.model.specialeffect.ChangeDefenceLevelDecorator;
-import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectBase;
-import skyvssea.model.specialeffect.TargetType;
+import skyvssea.model.specialeffect.*;
 
 public class SpecialEffectFactory {
+
     private static SpecialEffectFactory specialEffectFactory;
 
     private SpecialEffectFactory() {}
@@ -20,26 +15,20 @@ public class SpecialEffectFactory {
         return specialEffectFactory;
     }
 
-    private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2", TargetType.SELF));
+    private AbstractSpecialEffect createDoubleAttackRange() {
+        return new DoubleAttackRange();
     }
-    private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", TargetType.SELF));
+    private AbstractSpecialEffect createDoubleMoveRange() {
+        return new DoubleMoveRange();
     }
-    private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding", TargetType.ENEMIES));
+    private AbstractSpecialEffect createRetarding() {
+        return new Retarding();
     }
-    private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase("Freezing", TargetType.ENEMIES)));
-	}
-    private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening", TargetType.COMRADES)));
-    }
-    private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", TargetType.ENEMIES)));
-    }
+    private AbstractSpecialEffect createFreezing() { return new Freezing(); }
+    private AbstractSpecialEffect createStrengthening() { return new Strengthening(); }
+    private AbstractSpecialEffect createWeakening() { return new Weakening(); }
 
-    public SpecialEffect createSpecialEffect(SpecialEffectCode code) {
+    public AbstractSpecialEffect createSpecialEffect(SpecialEffectCode code) {
         switch (code) {
             case DOUBLE_ATTACK_RANGE:
                 return createDoubleAttackRange();
@@ -52,13 +41,9 @@ public class SpecialEffectFactory {
             case STRENGTHENING:
                 return createStrengthening();
             case WEAKENING:
-            	return createWeakening();
+                return createWeakening();
             default:
                 return null;
         }
-    }
-    
-    public SpecialEffect copy(SpecialEffect specialEffect) {
-    	return specialEffect.copy();
     }
 }

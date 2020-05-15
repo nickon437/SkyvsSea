@@ -1,38 +1,32 @@
 package skyvssea.model;
 
-import com.google.java.contract.Ensures;
-import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.AbstractSpecialEffect;
 
 import java.util.ArrayList;
 
-public class SpecialEffectManager implements SpecialEffectManagerInterface {
-    private ArrayList<SpecialEffect> appliedSpecialEffects = new ArrayList<>();
-    private AbstractPiece target;
+public class SpecialEffectManager {
+    private ArrayList<AbstractSpecialEffect> appliedSpecialEffects = new ArrayList<>();
+    private AbstractPiece receiver;
 
     public SpecialEffectManager(AbstractPiece piece) {
-        this.target = piece;
+        this.receiver = piece;
     }
 
-    @Requires("specialEffect != null")
-    @Ensures("appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) + 1 && appliedSpecialEffects.contains(specialEffect)")
-    @Override
-    public void add(SpecialEffect specialEffect) {
-        specialEffect.apply(target);
-        appliedSpecialEffects.add(specialEffect);
+    public void add(AbstractSpecialEffect specialEffect) {
+        try {
+            specialEffect.apply(receiver);
+            appliedSpecialEffects.add(specialEffect);
+        } catch (CloneNotSupportedException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
-    @Override
-    @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration() {
-        ArrayList<SpecialEffect> toRemove = new ArrayList<>();
-        for (SpecialEffect specialEffect : appliedSpecialEffects) {
+        ArrayList<AbstractSpecialEffect> toRemove = new ArrayList<>();
+        for (AbstractSpecialEffect specialEffect : appliedSpecialEffects) {
             boolean isActive = specialEffect.updateEffectiveDuration();
-            if (!isActive) {
-                specialEffect.remove(target);
-                toRemove.add(specialEffect);
-            }
+            if (!isActive) { toRemove.add(specialEffect); }
         }
         appliedSpecialEffects.removeAll(toRemove);
     }

@@ -1,35 +1,26 @@
 package skyvssea.model;
 
-import com.google.java.contract.Ensures;
-
 public enum Hierarchy {
-	BABY(0),
-    SMALL(1),
-    MEDIUM(2),
-    BIG(3);
-	
-	public final int magnitude;
-	
-	private Hierarchy(int magnitude) {
-		this.magnitude = magnitude;
-	}
-	
-	public static Hierarchy valueOfMagnitude(int magnitude) {
-	    for (Hierarchy lvl : values()) {
-	        if (lvl.magnitude == magnitude) {
-	            return lvl;
-	        }
-	    }
-	    return null;
-	}
-	
-	@Ensures("values().length - 1 == result.magnitude")
-	public static Hierarchy maxLevel() {
-		return Hierarchy.BIG;
-	}
+	BABY,
+    SMALL,
+    MEDIUM,
+    BIG;
 
-	@Ensures("result.magnitude == 0")
-	public static Hierarchy minLevel() {
-		return Hierarchy.BABY;
-	}
+    private Hierarchy upgrade;
+    private Hierarchy downgrade;
+
+    static {
+        BABY.upgrade = SMALL;
+        SMALL.upgrade = MEDIUM;
+        MEDIUM.upgrade = BIG;
+        BIG.upgrade = BIG;
+
+        BABY.downgrade = BABY;
+        SMALL.downgrade = BABY;
+        MEDIUM.downgrade = SMALL;
+        BIG.downgrade = MEDIUM;
+    }
+
+    public Hierarchy upgrade() { return upgrade; }
+    public Hierarchy downgrade() { return downgrade; }
 }

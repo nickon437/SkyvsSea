@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+
 import skyvssea.model.piece.AbstractPiece;
 
 import java.util.ArrayList;
@@ -12,35 +13,41 @@ public class PieceManager {
     private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
     private AbstractPiece currentPiece;
 
-	public PieceManager(Map<Hierarchy, Integer> lineup) {
-        initializePieces(lineup);
+	public PieceManager(Map<Hierarchy, Integer> lineup,int babyNumber, int smallNumber, int midNumber, int bigNumber) {
+        initializePieces(lineup, babyNumber,smallNumber, midNumber, bigNumber);
     }
-
     /**
      * Create initial lineup of pieces for both sides
+     * based on the input number for each kind of piece
      */
 	//The precondition checks if the lineup numbers are not all zeroes
 	@Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
-    public void initializePieces(Map<Hierarchy, Integer> lineup) {
+    public void initializePieces(Map<Hierarchy, Integer> lineup , int babyNumber, int smallNumber, int midNumber, int bigNumber) {
         AbstractPieceFactory sharkFactory = SharkFactory.getInstance();
         AbstractPieceFactory eagleFactory = EagleFactory.getInstance();
-
+        lineup.replace(Hierarchy.BABY, 1, babyNumber);
+        lineup.replace(Hierarchy.SMALL, 1, smallNumber);
+        lineup.replace(Hierarchy.MEDIUM, 1, midNumber);
+        lineup.replace(Hierarchy.BIG, 1, bigNumber);
+      
         for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
             createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
             createPiecesByHierarchy(sharkPieces, sharkFactory, entry);
         }
     }
-
+		
 	private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
-		Hierarchy level = creationInfo.getKey();    
+		Hierarchy level = creationInfo.getKey(); 
+		
 		int numPiecesToCreate = creationInfo.getValue();
 		pieces.put(level, new ArrayList<>());
 		for (int i = 0; i < numPiecesToCreate; i++) {
-			pieces.get(level).add(factory.createPiece(level));        		
+			pieces.get(level).add(factory.createPiece(level));   
 		}
+
 	}
 
-    public AbstractPiece getRegisteredPiece() { return currentPiece; }
+    public AbstractPiece getCurrentPiece() { return currentPiece; }
 
     @Requires("currentPiece != null")
     public void setCurrentPiece(AbstractPiece currentPiece) { this.currentPiece = currentPiece; }
@@ -73,10 +80,12 @@ public class PieceManager {
         return eaglePiecesList;
     }
 
+    /////////////////
+    ////////////////
     @Requires("board != null")
     public ArrayList<Tile> setPiecesOnBoard(Board board) {
         ArrayList<Tile> startingPositions = new ArrayList<>();
-        int midPoint = Board.NUM_SIDE_CELL / 2;
+        int midPoint = board.getCol() / 2;
 
         // Use ArrayList to reduce code duplication when traverse through HashMap
         ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = getAllPiecesList();
@@ -87,7 +96,7 @@ public class PieceManager {
             int pieceIndex = 0;
             int flip = 1;
 
-            if (piecesList.indexOf(pieces) != 0) { pieceXCoord = Board.NUM_SIDE_CELL - 1; }
+            if (piecesList.indexOf(pieces) != 0) { pieceXCoord = board.getCol() - 1; }
 
             for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : pieces.entrySet()) {
                 for (AbstractPiece piece : entry.getValue()) {
@@ -95,7 +104,7 @@ public class PieceManager {
                     flip = flip * -1;
     
                     Tile tile = board.getTile(pieceXCoord, pieceYCoord);
-                    tile.setGameObject(piece);
+                    tile.setPiece(piece);
                     startingPositions.add(tile);
 
                     pieceIndex++;

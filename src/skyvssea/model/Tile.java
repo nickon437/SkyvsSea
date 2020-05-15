@@ -5,42 +5,29 @@ import skyvssea.model.piece.AbstractPiece;
 
 import java.util.Observable;
 
-public class Tile extends Observable implements AvatarCore {
-    private Avatar avatar;
+public class Tile extends Observable {
     private int x;
 	private int y;
-    private GameObject gameObject;
+    private AbstractPiece piece;
     private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
-    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
+    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.boardCol && y < skyvssea.view.BoardPane.boardRow")
 	public Tile(int x, int y) {
-        this.x = x;
+		this.x = x;
 		this.y = y;
-        this.gameObject = null;
+        this.piece = null;
     }
-
-    public boolean hasGameObject() { return gameObject != null; }
 
     public boolean hasPiece() {
-        return gameObject != null && gameObject instanceof AbstractPiece;
+        return piece != null;
     }
 
-    public GameObject getGameObject() { return gameObject; }
+    public AbstractPiece getPiece() { return piece; }
 
-    public void setGameObject(GameObject gameObject) {
-        this.gameObject = gameObject;
-        if (gameObject.getAvatar() != null) {
-            setChanged();
-            notifyObservers(gameObject.getAvatar());
-        }
-    }
+    public void setPiece(AbstractPiece piece) { this.piece = piece; }
 
-    public void removeGameObject() { 
-    	this.gameObject = null; 
-    	setChanged();
-        notifyObservers(null);
-    }
+    public void removePiece() { this.piece = null; }
 
     public boolean isHighlighted() { return isHighlighted; }
 
@@ -51,11 +38,6 @@ public class Tile extends Observable implements AvatarCore {
     }
 
 	public int getX() { return x; }
+
 	public int getY() { return y; }
-
-    @Override
-    public void addAvatar(Avatar avatar) { this.avatar = avatar; }
-
-    @Override
-    public Avatar getAvatar() { return avatar; }
 }

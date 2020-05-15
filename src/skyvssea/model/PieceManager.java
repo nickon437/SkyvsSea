@@ -1,6 +1,7 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
 
 import java.util.ArrayList;
@@ -90,11 +91,11 @@ public class PieceManager {
         return startingPositions;
     }
 
-    public void updatePieceStatus() {
+    public void updatePieceStatus(HistoryManager historyManager) {
         for (Map<Hierarchy, List<AbstractPiece>> playerPieces : getAllPiecesList()) {
             for (Map.Entry<Hierarchy, List<AbstractPiece>> pieces : playerPieces.entrySet()) {
                 for (AbstractPiece piece : pieces.getValue()) {
-                    piece.updateStatus();
+                    piece.updateStatus(historyManager);
                 }
             }
         }

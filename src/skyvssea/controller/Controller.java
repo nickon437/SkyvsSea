@@ -3,7 +3,7 @@ package skyvssea.controller;
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
 import skyvssea.model.*;
-import skyvssea.model.command.HistoryManager;
+import skyvssea.model.command.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
@@ -35,10 +35,12 @@ public class Controller {
             if (selectedTile.isHighlighted()) {
             	board.clearHighlightedTiles();
             	// Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
-                if (!selectedTile.equals(previousRegisteredTile)) {
-                    selectedTile.setGameObject(registeredPiece);
-                    previousRegisteredTile.removeGameObject();
-                }
+                Command moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile);
+                historyManager.storeAndExecute(moveCommand);
+//                if (!selectedTile.equals(previousRegisteredTile)) {
+//                    selectedTile.setGameObject(registeredPiece);
+//                    previousRegisteredTile.removeGameObject();
+//                }
 
                 switchToAttackMode();
 
@@ -55,13 +57,19 @@ public class Controller {
             
         } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
             if (selectedTile.isHighlighted()) {
-                registeredPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
+//                registeredPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
+                AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
+                Command performSpecialEffectCommand = new PerformSpecialEffectCommand(registeredPiece, target);
+                historyManager.storeAndExecute(performSpecialEffectCommand);
                 endTurn();
             }
             
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
-        		selectedTile.removeGameObject();
+                AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
+        	    Command killCommand = new KillCommand(target, selectedTile);
+        	    historyManager.storeAndExecute(killCommand);
+//        		selectedTile.removeGameObject();
         		endTurn();
             }
         }   
@@ -142,6 +150,11 @@ public class Controller {
 
     public void handleEndButton() { endTurn(); }
 
+    public void handleUndoButton() {
+        historyManager.undoMyTurn();
+        game.setCurrentGameState(GameState.READY_TO_MOVE);
+    }
+
     private void changeTurn() {
         Player player = playerManager.changeTurn();
         infoPane.setPlayerInfo(player);
@@ -152,8 +165,9 @@ public class Controller {
     }
 
     private void endTurn() {
-        pieceManager.updatePieceStatus();
+        pieceManager.updatePieceStatus(historyManager);
         changeTurn();
+        historyManager.startNewTurnCommand();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
 
         // TODO: Add save for undo here

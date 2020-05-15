@@ -26,6 +26,7 @@ public class MoveCommand extends AbstractCommand {
     @Override
     public void undo() {
         if (!newTile.equals(currentTile)) {
+            System.out.println("undo move");
             currentTile.setGameObject(piece);
             newTile.removeGameObject();
         }

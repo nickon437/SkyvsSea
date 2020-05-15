@@ -10,20 +10,27 @@ public class UpdateEffectiveDurationCommand extends AbstractCommand {
     private SpecialEffectManagerInterface specialEffectManager;
     private SpecialEffect specialEffect;
     private Class specialEffectClass;
-//    private int effectiveDuration;
+    private int currentEffectiveDuration;
+    private int newEffectiveDuration;
 
     public UpdateEffectiveDurationCommand(AbstractPiece target, SpecialEffectManagerInterface specialEffectManager,
-                                          SpecialEffect specialEffect, int effectiveDuration) {
+                                          SpecialEffect specialEffect, int newEffectiveDuration) {
         this.target = target;
         this.specialEffectManager = specialEffectManager;
         this.specialEffect = specialEffect;
         this.specialEffectClass = specialEffect.getClass();
-//        this.effectiveDuration = effectiveDuration;
+        this.currentEffectiveDuration = specialEffect.getEffectiveDuration();
+        this.newEffectiveDuration = newEffectiveDuration;
     }
 
     @Override
     public void execute() {
-        int newEffectiveDuration = specialEffect.getEffectiveDuration() - 1;
+//        int newEffectiveDuration = specialEffect.getEffectiveDuration() - 1;
+//        specialEffect.setEffectiveDuration(newEffectiveDuration);
+//        if (newEffectiveDuration <= 0) {
+//            specialEffectManager.remove(specialEffect);
+//        }
+
         specialEffect.setEffectiveDuration(newEffectiveDuration);
         if (newEffectiveDuration <= 0) {
             specialEffectManager.remove(specialEffect);
@@ -32,10 +39,9 @@ public class UpdateEffectiveDurationCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        int oldEffectiveDuration = specialEffect.getEffectiveDuration() + 1;
         if (specialEffect.getEffectiveDuration() <= 0) {
             specialEffectManager.add(specialEffect);
         }
-        specialEffect.setEffectiveDuration(oldEffectiveDuration);
+        specialEffect.setEffectiveDuration(currentEffectiveDuration);
     }
 }

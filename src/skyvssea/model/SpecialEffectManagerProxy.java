@@ -2,6 +2,7 @@ package skyvssea.model;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
+import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
@@ -32,10 +33,11 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
         }
     }
 
+    @Requires("historyManager != null")
     @Override
-    public void updateEffectiveDuration() {
+    public void updateEffectiveDuration(HistoryManager historyManager) {
         if (specialEffectManager != null) {
-            specialEffectManager.updateEffectiveDuration();
+            specialEffectManager.updateEffectiveDuration(historyManager);
         }
     }
 }

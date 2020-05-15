@@ -2,6 +2,9 @@ package skyvssea.model;
 
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
+import skyvssea.model.command.Command;
+import skyvssea.model.command.HistoryManager;
+import skyvssea.model.command.UpdateEffectiveDurationCommand;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
@@ -33,15 +36,22 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 
     @Override
     @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
-    public void updateEffectiveDuration() {
-        List<SpecialEffect> toRemove = new ArrayList<>();
+    public void updateEffectiveDuration(HistoryManager historyManager) {
+//        List<SpecialEffect> toRemove = new ArrayList<>();
         for (SpecialEffect specialEffect : appliedSpecialEffects) {
-            boolean isActive = specialEffect.updateEffectiveDuration();
-            if (!isActive) {
-                specialEffect.remove(target);
-                toRemove.add(specialEffect);
-            }
+//            boolean isActive = specialEffect.updateEffectiveDuration();
+//            if (!isActive) {
+//                specialEffect.remove(target);
+//                toRemove.add(specialEffect);
+//            }
+
+            int currentEffectiveDuration = specialEffect.getEffectiveDuration();
+            int newEffectiveDuration = currentEffectiveDuration - 1;
+            Command updateEffectiveDurationCommand = new UpdateEffectiveDurationCommand(target, this, specialEffect, newEffectiveDuration);
+            historyManager.storeAndExecute(updateEffectiveDurationCommand);
+            // Nick - TODO: Add command to historymanager
         }
-        appliedSpecialEffects.removeAll(toRemove);
+//        appliedSpecialEffects.removeAll(toRemove);
+
     }
 }

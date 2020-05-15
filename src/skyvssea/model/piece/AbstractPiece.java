@@ -2,6 +2,9 @@ package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
 import skyvssea.model.*;
+import skyvssea.model.command.Command;
+import skyvssea.model.command.HistoryManager;
+import skyvssea.model.command.UpdateCounterCommand;
 import skyvssea.model.specialeffect.SpecialEffect;
 import skyvssea.model.specialeffect.TargetType;
 
@@ -50,7 +53,7 @@ public abstract class AbstractPiece extends GameObject {
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
 
-    private int getSpecialEffectCounter() { return specialEffectCounter; }
+    public int getSpecialEffectCounter() { return specialEffectCounter; }
     public void setSpecialEffectCounter(int specialEffectCounter) { this.specialEffectCounter = specialEffectCounter; }
 
 	public SpecialEffect performSpecialEffect(AbstractPiece target) {
@@ -106,9 +109,16 @@ public abstract class AbstractPiece extends GameObject {
     }
     
     @Ensures("specialEffectCounter >= 0")
-    public void updateStatus() {
-        if (specialEffectCounter > 0) { specialEffectCounter--; }
-        getSpecialEffectManagerProxy().updateEffectiveDuration();
+    public void updateStatus(HistoryManager historyManager) {
+        if (specialEffectCounter > 0) {
+            int newSpecialEffectCounter = specialEffectCounter--;
+            Command updateCounterCommand = new UpdateCounterCommand(this, newSpecialEffectCounter);
+            historyManager.storeAndExecute(updateCounterCommand);
+        }
+//        if (specialEffectCounter > 0) {
+//            specialEffectCounter--;
+//        }
+        getSpecialEffectManagerProxy().updateEffectiveDuration(historyManager);
     }
 
 	public TargetType getSpecialEffectTargetType() {

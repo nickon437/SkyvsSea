@@ -14,10 +14,10 @@ public class Game {
     public void setCurrentGameState(GameState newState) {
         this.currentGameState = newState;
         if (newState == GameState.READY_TO_MOVE) {
-            actionPane.setDisable(true);
+            actionPane.setRegularActionPaneDisable(true);
             actionPane.hideActionIndicator();
         } else {
-            actionPane.setDisable(false);
+            actionPane.setRegularActionPaneDisable(false);
         }
     }
 

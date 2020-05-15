@@ -18,23 +18,21 @@ public class ActionPane extends VBox {
     private Button killBtn = new Button("Kill");
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
-    private Button undoBtn = new Button("Undo");
 
-    private static final double BUTTON_HEIGHT = 50;
-    private static final double SPACING = 20;
+    private AdvancedActionPane advancedActionPane;
 
     public ActionPane(Controller controller) {
-        this.getChildren().addAll(actionIndicator, buttonHolder);
+        this.advancedActionPane = new AdvancedActionPane(controller);
+        this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
         this.setSpacing(5);
 
-        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn, undoBtn);
-        buttonHolder.setSpacing(SPACING);
+        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
+        buttonHolder.setSpacing(ButtonUtil.BUTTON_SPACING);
 
         formatActionIndicator();
         formatKillBtn(killBtn, controller);
         formatSpecialEffectBtn(specialEffectBtn, controller);
         formatEndBtn(endBtn, controller);
-        formatUndoBtn(undoBtn, controller);
     }
 
     private void formatActionIndicator() {
@@ -44,7 +42,7 @@ public class ActionPane extends VBox {
     }
 
     private void formatKillBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "resources/icons/kill.png");
         button.setOnMouseEntered(e -> {
@@ -62,7 +60,7 @@ public class ActionPane extends VBox {
     }
 
     private void formatSpecialEffectBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
@@ -80,7 +78,7 @@ public class ActionPane extends VBox {
     }
 
     private void formatEndBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "resources/icons/end-turn.png");
         button.setCancelButton(true);
@@ -92,21 +90,13 @@ public class ActionPane extends VBox {
         });
     }
 
-    private void formatUndoBtn(Button button, Controller controller) {
-        button.setOnMouseClicked(e -> controller.handleUndoButton());
-    }
 
-    private void maximizeControlSize(Control control) {
-        control.setPrefHeight(BUTTON_HEIGHT);
-        HBox.setHgrow(control, Priority.ALWAYS);
-        control.setMaxWidth(Double.MAX_VALUE);
-    }
 
     private void shiftActionIndicator(Button button) {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);
         double xCoord = 0;
         for (int i = 0; i < buttonIndex; i++) {
-            xCoord += ((Button) buttonHolder.getChildren().get(i)).getWidth() + SPACING;
+            xCoord += ((Button) buttonHolder.getChildren().get(i)).getWidth() + ButtonUtil.BUTTON_SPACING;
         }
         double width = ((Button) buttonHolder.getChildren().get(buttonIndex)).getWidth();
         setActionIndicatorPosition(xCoord, width);
@@ -124,6 +114,10 @@ public class ActionPane extends VBox {
         KeyFrame kfWidth = new KeyFrame(Duration.seconds(0.5), kvWidth);
         timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
         timeline.play();
+    }
+
+    public void setRegularActionPaneDisable(boolean isDisabled) {
+        buttonHolder.setDisable(isDisabled);
     }
 
     public void setSpecialEffectBtnDisable(boolean isDisabled) {

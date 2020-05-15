@@ -1,8 +1,5 @@
 package skyvssea.model.command;
 
-import skyvssea.model.Game;
-import skyvssea.model.GameState;
-
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -19,8 +16,6 @@ public class HistoryManager {
     }
 
     public void storeAndExecute(Command cmd) {
-//        history.add(cmd);
-//        cmd.execute();
         turnCommands.add(cmd);
         cmd.execute();
     }
@@ -40,11 +35,8 @@ public class HistoryManager {
 
 
     public void undoTurn(List<Command> currentTurnCommands) {
-//        history.removeLast().undo();
-
         for (Command command : currentTurnCommands) {
             command.undo();
         }
-
     }
 }

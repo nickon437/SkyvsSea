@@ -4,13 +4,16 @@ import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class ButtonUtil {
+
+    public static final double STANDARD_BUTTON_HEIGHT = 50;
+    public static final double BUTTON_SPACING = 20;
+
     @Requires("button != null && color != null")
     public static void formatStandardButton(Button button, Color color) {
         button.setStyle("-fx-font-weight: bold;");
@@ -36,5 +39,11 @@ public class ButtonUtil {
         imageView.setFitHeight(24);
         button.setGraphic(imageView);
         button.setGraphicTextGap(4);
+    }
+
+    public static void maximizeHBoxControlSize(Control control) {
+        control.setPrefHeight(STANDARD_BUTTON_HEIGHT);
+        HBox.setHgrow(control, Priority.ALWAYS);
+        control.setMaxWidth(Double.MAX_VALUE);
     }
 }

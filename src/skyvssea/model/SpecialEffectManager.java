@@ -31,27 +31,19 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
     @Ensures("!appliedSpecialEffects.contains(specialEffect) && appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) - 1")
     public void remove(SpecialEffect specialEffect) {
         specialEffect.remove(target);
-        appliedSpecialEffects.remove(target);
+        appliedSpecialEffects.remove(specialEffect);
     }
 
     @Override
     @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration(HistoryManager historyManager) {
-//        List<SpecialEffect> toRemove = new ArrayList<>();
-        for (SpecialEffect specialEffect : appliedSpecialEffects) {
-//            boolean isActive = specialEffect.updateEffectiveDuration();
-//            if (!isActive) {
-//                specialEffect.remove(target);
-//                toRemove.add(specialEffect);
-//            }
+        for (int i = appliedSpecialEffects.size() - 1; i >= 0; i--) {
+            SpecialEffect specialEffect = appliedSpecialEffects.get(i);
 
             int currentEffectiveDuration = specialEffect.getEffectiveDuration();
             int newEffectiveDuration = currentEffectiveDuration - 1;
             Command updateEffectiveDurationCommand = new UpdateEffectiveDurationCommand(target, this, specialEffect, newEffectiveDuration);
             historyManager.storeAndExecute(updateEffectiveDurationCommand);
-            // Nick - TODO: Add command to historymanager
         }
-//        appliedSpecialEffects.removeAll(toRemove);
-
     }
 }

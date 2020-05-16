@@ -1,9 +1,6 @@
 package skyvssea.view;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -36,8 +33,8 @@ public class AdvancedActionPane extends SplitPane {
         this.getItems().addAll(paneOpenerBtn, buttonHolder);
         buttonHolder.getChildren().addAll(undoBtn, saveBtn, loadBtn, restartBtn);
 
-        formatPaneOpenerBtn(paneOpenerBtn, controller);
-        formatButtonHolder(buttonHolder, controller);
+        formatPaneOpenerBtn(paneOpenerBtn);
+        formatButtonHolder(buttonHolder);
         formatUndoButton(undoBtn, controller);
         formatSaveButton(saveBtn, controller);
         formatLoadButton(loadBtn, controller);
@@ -47,7 +44,7 @@ public class AdvancedActionPane extends SplitPane {
         formatGraphic(arrowDownImage);
     }
 
-    private void formatPaneOpenerBtn(Button button, Controller controller) {
+    private void formatPaneOpenerBtn(Button button) {
         button.setMaxWidth(Double.MAX_VALUE);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         button.setGraphic(arrowUpImage);
@@ -57,7 +54,7 @@ public class AdvancedActionPane extends SplitPane {
         button.setOnMouseClicked(e -> collapseButtonHolder());
     }
 
-    private void formatButtonHolder(HBox holder, Controller controller) {
+    private void formatButtonHolder(HBox holder) {
         holder.setSpacing(ButtonUtil.BUTTON_SPACING);
         double buttonHeight = isCollapsed ? 0 : ButtonUtil.STANDARD_BUTTON_HEIGHT;
 

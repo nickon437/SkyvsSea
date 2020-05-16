@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class ButtonUtil {
 
-    public static final double STANDARD_BUTTON_HEIGHT = 50;
+    public static final double STANDARD_BUTTON_HEIGHT = 40;
     public static final double BUTTON_SPACING = 20;
 
     @Requires("button != null && color != null")

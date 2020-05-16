@@ -5,7 +5,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
@@ -19,26 +18,24 @@ public class ActionPane extends VBox {
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
 
-    private AdvancedActionPane advancedActionPane;
-
     public ActionPane(Controller controller) {
-        this.advancedActionPane = new AdvancedActionPane(controller);
+        AdvancedActionPane advancedActionPane = new AdvancedActionPane(controller);
         this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
         this.setSpacing(5);
 
         buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
         buttonHolder.setSpacing(ButtonUtil.BUTTON_SPACING);
 
-        formatActionIndicator();
+        formatActionIndicator(actionIndicator);
         formatKillBtn(killBtn, controller);
         formatSpecialEffectBtn(specialEffectBtn, controller);
         formatEndBtn(endBtn, controller);
     }
 
-    private void formatActionIndicator() {
-        actionIndicator.setPrefHeight(3);
-        actionIndicator.setMaxWidth(0);
-        actionIndicator.setBackground(new Background(new BackgroundFill(ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null)));
+    private void formatActionIndicator(Pane indicator) {
+        indicator.setPrefHeight(3);
+        indicator.setMaxWidth(0);
+        indicator.setBackground(new Background(new BackgroundFill(ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null)));
     }
 
     private void formatKillBtn(Button button, Controller controller) {
@@ -89,8 +86,6 @@ public class ActionPane extends VBox {
             controller.handleEndButton();
         });
     }
-
-
 
     private void shiftActionIndicator(Button button) {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);

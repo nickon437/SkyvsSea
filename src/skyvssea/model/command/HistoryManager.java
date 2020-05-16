@@ -18,19 +18,25 @@ public class HistoryManager {
     public void storeAndExecute(Command cmd) {
         turnCommands.add(cmd);
         cmd.execute();
+        System.out.println("After store and execute | turnCommands isEmpty: " + turnCommands.isEmpty());
     }
 
     public void undoMyTurn() {
+        System.out.println("Before undo | turnCommands size: " + turnCommands.size() + " | history size: " + history.size());
         if (turnCommands.isEmpty()) {
+            System.out.println("turnCommands is empty");
             List<Command> currentTurnCommands = history.removeLast();
             undoTurn(currentTurnCommands);
         } else {
+            System.out.println("turnCommands is not empty");
             undoTurn(turnCommands);
         }
 
         if (!history.isEmpty()) {
+            System.out.println("history is not empty");
             undoTurn(history.removeLast());
         }
+        System.out.println("After undo | turnCommands size: " + turnCommands.size() + " | history size: " + history.size());
     }
 
 
@@ -38,5 +44,6 @@ public class HistoryManager {
         for (Command command : currentTurnCommands) {
             command.undo();
         }
+        turnCommands.clear();
     }
 }

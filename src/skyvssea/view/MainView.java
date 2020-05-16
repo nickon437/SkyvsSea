@@ -5,8 +5,7 @@ import javafx.scene.layout.Pane;
 
 public class MainView extends SplitPane {
 
-    public MainView(Pane mainControlPane, Pane infoPane) {
-        // Nick - Should I have this practice ie. having panes in constructor instead of separating them.
+    public MainView(MainControlPane mainControlPane, InfoPane infoPane) {
         this.getItems().addAll(mainControlPane, infoPane);
         this.setDividerPositions(0.8d);
     }

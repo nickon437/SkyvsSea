@@ -1,32 +1,39 @@
 package skyvssea.model;
 
+import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.AbstractSpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffect;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SpecialEffectManager {
-    private ArrayList<AbstractSpecialEffect> appliedSpecialEffects = new ArrayList<>();
-    private AbstractPiece receiver;
+public class SpecialEffectManager implements SpecialEffectManagerInterface {
+    private List<SpecialEffect> appliedSpecialEffects = new ArrayList<>();
+    private AbstractPiece target;
 
     public SpecialEffectManager(AbstractPiece piece) {
-        this.receiver = piece;
+        this.target = piece;
     }
 
-    public void add(AbstractSpecialEffect specialEffect) {
-        try {
-            specialEffect.apply(receiver);
-            appliedSpecialEffects.add(specialEffect);
-        } catch (CloneNotSupportedException e) {
-            System.err.println(e.getMessage());
-        }
+    @Requires("specialEffect != null")
+    @Ensures("appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) + 1 && appliedSpecialEffects.contains(specialEffect)")
+    @Override
+    public void add(SpecialEffect specialEffect) {
+        specialEffect.apply(target);
+        appliedSpecialEffects.add(specialEffect);
     }
 
+    @Override
+    @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration() {
-        ArrayList<AbstractSpecialEffect> toRemove = new ArrayList<>();
-        for (AbstractSpecialEffect specialEffect : appliedSpecialEffects) {
+        List<SpecialEffect> toRemove = new ArrayList<>();
+        for (SpecialEffect specialEffect : appliedSpecialEffects) {
             boolean isActive = specialEffect.updateEffectiveDuration();
-            if (!isActive) { toRemove.add(specialEffect); }
+            if (!isActive) {
+                specialEffect.remove(target);
+                toRemove.add(specialEffect);
+            }
         }
         appliedSpecialEffects.removeAll(toRemove);
     }

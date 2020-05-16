@@ -15,6 +15,7 @@ public class Game {
         this.currentGameState = newState;
         if (newState == GameState.READY_TO_MOVE) {
             actionPane.setDisable(true);
+            actionPane.hideActionIndicator();
         } else {
             actionPane.setDisable(false);
         }

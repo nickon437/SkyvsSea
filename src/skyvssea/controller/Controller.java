@@ -158,10 +158,14 @@ public class Controller {
     private void changeTurn() {
         Player player = playerManager.changeTurn();
         infoPane.setPlayerInfo(player);
+    }
 
-        board.clearHighlightedTiles();
-        board.clearCurrentTile();
-        pieceManager.clearCurrentPiece();
+    public void clearCache() {
+        try {
+            board.clearHighlightedTiles();
+            board.clearCurrentTile();
+            pieceManager.clearCurrentPiece();
+        } catch (NullPointerException ignore) {}
     }
 
     private void endTurn() {
@@ -178,7 +182,7 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game(actionPane);
+    	this.game = new Game(this, actionPane);
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());

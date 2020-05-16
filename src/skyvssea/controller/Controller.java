@@ -33,14 +33,9 @@ public class Controller {
             board.setRegisteredTile(selectedTile);
 
             if (selectedTile.isHighlighted()) {
-            	board.clearHighlightedTiles();
             	// Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
                 Command moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile);
                 historyManager.storeAndExecute(moveCommand);
-//                if (!selectedTile.equals(previousRegisteredTile)) {
-//                    selectedTile.setGameObject(registeredPiece);
-//                    previousRegisteredTile.removeGameObject();
-//                }
 
                 switchToAttackMode();
 
@@ -57,9 +52,8 @@ public class Controller {
             
         } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
             if (selectedTile.isHighlighted()) {
-//                registeredPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-                Command performSpecialEffectCommand = new PerformSpecialEffectCommand(registeredPiece, target);
+                Command performSpecialEffectCommand = new PerformSpecialEffectCommand(registeredPiece, target, historyManager);
                 historyManager.storeAndExecute(performSpecialEffectCommand);
                 endTurn();
             }
@@ -69,7 +63,6 @@ public class Controller {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
         	    Command killCommand = new KillCommand(target, selectedTile);
         	    historyManager.storeAndExecute(killCommand);
-//        		selectedTile.removeGameObject();
         		endTurn();
             }
         }   
@@ -102,6 +95,7 @@ public class Controller {
 
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
+        board.clearHighlightedTiles();
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
         actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
     }
@@ -131,7 +125,8 @@ public class Controller {
     public void handleSpecialEffectButton() { 
     	game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT); 
 	}
-    public void handleMouseEnteredSpecialEffectBtn() { 
+
+	public void handleMouseEnteredSpecialEffectBtn() {
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
     		board.highlightPossibleSpecialEffectTiles(playerManager);     		
     	} else if (game.getCurrentGameState() == GameState.KILLING) {
@@ -139,6 +134,7 @@ public class Controller {
     		board.highlightPossibleSpecialEffectTiles(playerManager);
     	}
 	}
+
     public void handleMouseExitedSpecialEffectBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
@@ -173,8 +169,6 @@ public class Controller {
         changeTurn();
         historyManager.startNewTurnCommand();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
-
-        // TODO: Add save for undo here
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")

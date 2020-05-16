@@ -53,23 +53,12 @@ public abstract class AbstractPiece extends GameObject {
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
 
+    public SpecialEffect getSpecialEffect() { return specialEffect; }
+
+    public int getDefaultSpecialEffectCooldown() { return DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+
     public int getSpecialEffectCounter() { return specialEffectCounter; }
     public void setSpecialEffectCounter(int specialEffectCounter) { this.specialEffectCounter = specialEffectCounter; }
-
-	public SpecialEffect performSpecialEffect(AbstractPiece target) {
-	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
-	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
-			target.getSpecialEffectManagerProxy().add(specialEffect);
-    		resetSpecialEffectCounter();    		
-    	}
-	    return specialEffect;
-	}
-
-	public void removeAppliedSpecialEffect(SpecialEffect specialEffect) {
-        getSpecialEffectManagerProxy().remove(specialEffect);
-    }
-    
-    private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
 
 	public boolean isSpecialEffectAvailable() {
 		return specialEffect != null && specialEffectCounter <= 0;

@@ -4,7 +4,7 @@ import skyvssea.model.SpecialEffectManagerInterface;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
-public class UpdateEffectiveDurationCommand extends AbstractCommand {
+public class UpdateEffectiveDurationCommand implements Command {
 
     private AbstractPiece target;
     private SpecialEffectManagerInterface specialEffectManager;

@@ -3,7 +3,7 @@ package skyvssea.model.command;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
-public class KillCommand extends AbstractCommand {
+public class KillCommand implements Command {
 
     private AbstractPiece target;
     private Tile targetTile;

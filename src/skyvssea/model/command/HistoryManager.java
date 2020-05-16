@@ -18,12 +18,13 @@ public class HistoryManager {
         cmd.execute();
     }
 
-    public void undoMyTurn() {
-        if (turnCommands.isEmpty() && !history.isEmpty()) {
-            Stack<Command> currentTurnCommands = history.pop();
-            undoTurn(currentTurnCommands);
-        } else {
-            undoTurn(turnCommands);
+    public void undoToMyTurn() {
+        if (!history.isEmpty()) {
+            if (turnCommands.isEmpty()) {
+                undoTurn(history.pop());
+            } else {
+                undoTurn(turnCommands);
+            }
         }
 
         if (!history.isEmpty()) {
@@ -31,7 +32,7 @@ public class HistoryManager {
         }
     }
 
-    public void undoTurn(Stack<Command> currentTurnCommands) {
+    private void undoTurn(Stack<Command> currentTurnCommands) {
         while(currentTurnCommands.size() > 0) {
             currentTurnCommands.pop().undo();
         }

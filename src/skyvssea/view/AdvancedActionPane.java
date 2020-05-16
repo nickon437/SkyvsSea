@@ -42,6 +42,8 @@ public class AdvancedActionPane extends SplitPane {
 
         formatGraphic(arrowUpImage);
         formatGraphic(arrowDownImage);
+
+        this.setOnMouseExited(e -> { if (!isCollapsed) collapseButtonHolder(); });
     }
 
     private void formatPaneOpenerBtn(Button button) {
@@ -118,5 +120,9 @@ public class AdvancedActionPane extends SplitPane {
         timeline.getKeyFrames().addAll(kfButtonHeights);
         timeline.getKeyFrames().add(kfGraphic);
         timeline.play();
+    }
+
+    public void setUndoBtnDisable(boolean isDisabled) {
+        undoBtn.setDisable(isDisabled);
     }
 }

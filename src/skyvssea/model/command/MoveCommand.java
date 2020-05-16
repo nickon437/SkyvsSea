@@ -3,7 +3,7 @@ package skyvssea.model.command;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
-public class MoveCommand extends AbstractCommand {
+public class MoveCommand implements Command {
 
     private Tile currentTile;
     private Tile newTile;

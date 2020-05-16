@@ -2,7 +2,7 @@ package skyvssea.model.command;
 
 import skyvssea.model.piece.AbstractPiece;
 
-public class UpdateCounterCommand extends AbstractCommand {
+public class UpdateCounterCommand implements Command {
 
     private AbstractPiece piece;
     private int currentCounter;

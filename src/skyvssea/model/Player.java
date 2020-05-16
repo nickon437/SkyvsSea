@@ -11,6 +11,9 @@ public class Player {
     private String name;
     private Color color;
     private Map<Hierarchy, List<AbstractPiece>> pieces;
+    private int numUndos = STANDARD_NUM_UNDOS;
+
+    private static final int STANDARD_NUM_UNDOS = 3;
 
     @Requires("name !=  null && color != null")
     public Player(String name, Color color, Map<Hierarchy, List<AbstractPiece>> pieces) {
@@ -35,4 +38,14 @@ public class Player {
         }
         return false;
     }
+
+    public void reduceNumUndos() { numUndos--; }
+
+    public void validateUndoAvailability() {
+        if (numUndos <= STANDARD_NUM_UNDOS) {
+            numUndos = 0;
+        }
+    }
+
+    public boolean isUndoAvailabile() { return numUndos > 0 ? true : false; }
 }

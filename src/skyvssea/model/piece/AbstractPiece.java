@@ -1,6 +1,7 @@
 package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
 import skyvssea.model.*;
 import skyvssea.model.command.Command;
 import skyvssea.model.command.HistoryManager;
@@ -96,17 +97,15 @@ public abstract class AbstractPiece extends GameObject {
                 "SE description: " + specialEffect.toString();
         return summary;
     }
-    
+
+    @Requires("historyManager != null")
     @Ensures("specialEffectCounter >= 0")
     public void updateStatus(HistoryManager historyManager) {
         if (specialEffectCounter > 0) {
-            int newSpecialEffectCounter = specialEffectCounter--;
+            int newSpecialEffectCounter = specialEffectCounter - 1;
             Command updateCounterCommand = new UpdateCounterCommand(this, newSpecialEffectCounter);
             historyManager.storeAndExecute(updateCounterCommand);
         }
-//        if (specialEffectCounter > 0) {
-//            specialEffectCounter--;
-//        }
         getSpecialEffectManagerProxy().updateEffectiveDuration(historyManager);
     }
 

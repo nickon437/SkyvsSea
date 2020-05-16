@@ -7,7 +7,9 @@ import skyvssea.model.command.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -147,8 +149,13 @@ public class Controller {
     public void handleEndButton() { endTurn(); }
 
     public void handleUndoButton() {
-        historyManager.undoMyTurn();
+        playerManager.getCurrentPlayer().reduceNumUndos();
+        historyManager.undoToMyTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
+
+        if (!playerManager.getCurrentPlayer().isUndoAvailabile()) {
+            actionPane.setUndoBtnDisable(true);
+        }
     }
 
     private void changeTurn() {
@@ -157,14 +164,13 @@ public class Controller {
     }
 
     public void clearCache() {
-        try {
-            board.clearHighlightedTiles();
-            board.clearCurrentTile();
-            pieceManager.clearCurrentPiece();
-        } catch (NullPointerException ignore) {}
+        board.clearHighlightedTiles();
+        board.clearCurrentTile();
+        pieceManager.clearCurrentPiece();
     }
 
     private void endTurn() {
+        playerManager.getCurrentPlayer().validateUndoAvailability();
         pieceManager.updatePieceStatus(historyManager);
         changeTurn();
         historyManager.startNewTurnCommand();
@@ -176,11 +182,11 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game(this, actionPane);
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
         this.historyManager = new HistoryManager();
+        this.game = new Game(this, actionPane);
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
@@ -232,4 +238,6 @@ public class Controller {
 		lineup.put(Hierarchy.BABY, 1);
 		return lineup;
 	}
+
+	public PlayerManager getPlayerManager() { return playerManager; }
 }

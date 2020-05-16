@@ -18,8 +18,10 @@ public class ActionPane extends VBox {
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
 
+    private AdvancedActionPane advancedActionPane;
+
     public ActionPane(Controller controller) {
-        AdvancedActionPane advancedActionPane = new AdvancedActionPane(controller);
+        advancedActionPane = new AdvancedActionPane(controller);
         this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
         this.setSpacing(5);
 
@@ -117,5 +119,9 @@ public class ActionPane extends VBox {
 
     public void setSpecialEffectBtnDisable(boolean isDisabled) {
         specialEffectBtn.setDisable(isDisabled);
+    }
+
+    public void setUndoBtnDisable(boolean isDisabled) {
+        advancedActionPane.setUndoBtnDisable(isDisabled);
     }
 }

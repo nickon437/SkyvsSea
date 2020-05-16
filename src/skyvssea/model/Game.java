@@ -19,6 +19,10 @@ public class Game {
         if (newState == GameState.READY_TO_MOVE) {
             actionPane.setRegularActionPaneDisable(true);
             actionPane.hideActionIndicator();
+
+            boolean isUndoAvailable = controller.getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+            actionPane.setUndoBtnDisable(!isUndoAvailable);
+
             controller.clearCache();
         } else {
             actionPane.setRegularActionPaneDisable(false);

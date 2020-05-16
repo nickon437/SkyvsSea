@@ -4,7 +4,7 @@ import skyvssea.model.SpecialEffectFactory;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
-public class PerformSpecialEffectCommand extends AbstractCommand {
+public class PerformSpecialEffectCommand implements Command {
 
     private SpecialEffect specialEffect;
     private AbstractPiece attacker;

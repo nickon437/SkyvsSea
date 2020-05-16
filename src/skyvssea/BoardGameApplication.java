@@ -27,6 +27,8 @@ public class BoardGameApplication extends Application {
 		changeBoardSizePane.getConfirmButton().setOnAction(e -> controller.handleConfirmBtn(changeBoardSizePane,primaryStage));
 	}
 	
+	
+
     public static void main(String[] args) {
         launch(args);
     }

@@ -19,7 +19,6 @@ public class ChangeBoardSizePane {
 	public FlowPane tipFlowPane = new FlowPane();
 	
 	public Text tip = new Text("The total number of pieces \n should be less than board rows");
-//	public Text tip2 = new Text("n");
 	
 	public Label boardRowLabel = new Label("Board Row ");
 	public Label boardColLabel = new Label("Board Column");
@@ -37,12 +36,12 @@ public class ChangeBoardSizePane {
 	public TextField babyPieceTextField = new TextField();
 	
 	public Label tips = new Label("The input cannot be invailed ");
-	public Label limitColLabel = new Label(" >= 4 ");
-	public Label limitRowLabel = new Label(" >= 4 ");
-	public Label limitBigLabel = new Label(" >= 1 ");
-	public Label limitMidLabel = new Label(" >= 1 ");
-	public Label limitSmallLabel = new Label(" >= 1 ");
-	public Label limitBabyLabel = new Label(" >= 1 ");
+	public Label limit1Label = new Label(" >= 4 ");
+	public Label limit2Label = new Label(" >= 4 ");
+	public Label limit3Label = new Label(" >= 1 ");
+	public Label limit4Label = new Label(" >= 1 ");
+	public Label limit5Label = new Label(" >= 1 ");
+	public Label limit6Label = new Label(" >= 1 ");
 	
 	public Button confirmButton = new Button("confirm");
 	public Button clearButton = new Button(" clear ");
@@ -82,17 +81,20 @@ public class ChangeBoardSizePane {
 		gridPane.add(babyPieceTextField, 1, 6);
 		gridPane.add(clearButton, 1, 8);
 		
-		gridPane.add(limitColLabel, 2, 0);
-		gridPane.add(limitRowLabel, 2, 1);
-		gridPane.add(limitBigLabel, 2, 3);
-		gridPane.add(limitMidLabel, 2, 4);
-		gridPane.add(limitSmallLabel, 2, 5);
-		gridPane.add(limitBabyLabel, 2, 6);
+		gridPane.add(limit1Label, 2, 0);
+		gridPane.add(limit2Label, 2, 1);
+		gridPane.add(limit3Label, 2, 3);
+		gridPane.add(limit4Label, 2, 4);
+		gridPane.add(limit5Label, 2, 5);
+		gridPane.add(limit6Label, 2, 6);
 		
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		
 		gridPane.setAlignment(Pos.CENTER);
+		
+		
+//		gridPane.add(tip2, 1, 8);
 		
 		GridPane.setMargin(confirmButton, new Insets(0, 0, 0, 30));
 		GridPane.setMargin(clearButton, new Insets(0, 0, 0, 60));

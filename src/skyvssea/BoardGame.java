@@ -14,9 +14,11 @@ public class BoardGame{
 	
 	public Stage stage = new Stage();
 	public BoardGame(ChangeBoardSizePane changeBoardSizePane) {
+
 		// TODO Auto-generated constructor stub
         Controller controller = new Controller();
         stage.setTitle("Sky vs. Sea");
+        
         
         BoardPane boardPane = new BoardPane(controller,changeBoardSizePane);
         ActionPane actionPane = new ActionPane(controller);
@@ -26,6 +28,7 @@ public class BoardGame{
         MainView root = new MainView(primaryPane, infoPane);
         
         //Phil - add a new pane like changeBoardSizePane
+        
         // Nick - There should be a better way to the models and views for controller
         controller.setViewsAndModels(changeBoardSizePane,boardPane, actionPane, infoPane);
 

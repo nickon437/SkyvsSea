@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-public class ButtonUtil {
+public class ButtonUtil extends RegionUtil {
 
     public static final double STANDARD_BUTTON_HEIGHT = 40;
     public static final double BUTTON_SPACING = 20;
@@ -30,16 +30,6 @@ public class ButtonUtil {
         button.setBackground(new Background(new BackgroundFill(modifiedColor, getCornerRadii(button), null)));
     }
 
-    private static CornerRadii getCornerRadii(Button button) {
-        return button.getBackground().getFills().get(0).getRadii();
-    }
-
-    public static void setCornerRadii(Button button, CornerRadii cornerRadii) {
-        BackgroundFill backgroundFill = button.getBackground().getFills().get(0);
-        backgroundFill = new BackgroundFill(backgroundFill.getFill(), cornerRadii, backgroundFill.getInsets());
-        button.setBackground(new Background(backgroundFill));
-    }
-
     @Requires("button != null && url.length() > 0 && url.contains(\".\")")
     @Ensures("button.getGraphic() != null")
     public static void formatGraphic(Button button, String url) {
@@ -49,6 +39,7 @@ public class ButtonUtil {
         imageView.setFitHeight(button.getFont().getSize() + 10);
         button.setGraphic(imageView);
         button.setGraphicTextGap(4);
+
     }
 
     public static void maximizeHBoxControlSize(Control control) {

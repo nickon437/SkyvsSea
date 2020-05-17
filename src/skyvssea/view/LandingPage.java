@@ -73,6 +73,5 @@ public class LandingPage extends AnchorPane {
 
     private void formatLoadBtn(Button button) {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
-    }
+        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");    }
 }

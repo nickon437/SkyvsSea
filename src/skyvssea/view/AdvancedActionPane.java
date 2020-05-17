@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 
@@ -109,17 +110,14 @@ public class AdvancedActionPane extends SplitPane {
         List<KeyFrame> kfButtonHeights = new ArrayList<>();
         for (Node node : buttonHolder.getChildren()) {
             Button button = (Button) node;
-            KeyValue kvButtonHeight = new KeyValue(button.prefHeightProperty(), newButtonHeight, Interpolator.EASE_IN);
-            KeyFrame kfButtonHeight = new KeyFrame(animationDuration, kvButtonHeight);
+            KeyFrame kfButtonHeight = AnimationUtil.formatKeyFrame(button.prefHeightProperty(), newButtonHeight, animationDuration);
             kfButtonHeights.add(kfButtonHeight);
         }
 
-        KeyValue kvGraphic = new KeyValue(paneOpenerBtn.graphicProperty(), newGraphic, Interpolator.EASE_IN);
-        KeyFrame kfGraphic = new KeyFrame(animationDuration, kvGraphic);
-
         timeline.getKeyFrames().addAll(kfButtonHeights);
-        timeline.getKeyFrames().add(kfGraphic);
         timeline.play();
+
+        paneOpenerBtn.setGraphic(newGraphic);
     }
 
     public void setUndoBtnDisable(boolean isDisabled) {

@@ -27,7 +27,17 @@ public class ButtonUtil {
     public static void formatHoveringEffect(Button button, boolean isHovered) {
         Color curColor = (Color) button.getBackground().getFills().get(0).getFill();
         Color modifiedColor = ColorUtil.getHoveringColor(isHovered, curColor);
-        button.setBackground(new Background(new BackgroundFill(modifiedColor, new CornerRadii(5), null)));
+        button.setBackground(new Background(new BackgroundFill(modifiedColor, getCornerRadii(button), null)));
+    }
+
+    private static CornerRadii getCornerRadii(Button button) {
+        return button.getBackground().getFills().get(0).getRadii();
+    }
+
+    public static void setCornerRadii(Button button, CornerRadii cornerRadii) {
+        BackgroundFill backgroundFill = button.getBackground().getFills().get(0);
+        backgroundFill = new BackgroundFill(backgroundFill.getFill(), cornerRadii, backgroundFill.getInsets());
+        button.setBackground(new Background(backgroundFill));
     }
 
     @Requires("button != null && url.length() > 0 && url.contains(\".\")")

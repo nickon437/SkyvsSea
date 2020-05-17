@@ -5,8 +5,8 @@ import skyvssea.model.Avatar;
 
 public class ObstacleView extends Avatar {
 
-    private static final String volcanoURL = "resources/icons/volcano.png";
-    private static final String volcanoURL2 = "resources/icons/volcano-2.png";
+    private static final String volcanoURL = "file:resources/icons/volcano.png";
+    private static final String volcanoURL2 = "file:resources/icons/volcano-2.png";
     private ImageView imageView;
 
     public ObstacleView() {

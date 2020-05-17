@@ -46,7 +46,7 @@ public class ButtonUtil {
         ImageView imageView = new ImageView(url);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
-        imageView.setFitHeight(24);
+        imageView.setFitHeight(button.getFont().getSize() + 10);
         button.setGraphic(imageView);
         button.setGraphicTextGap(4);
     }

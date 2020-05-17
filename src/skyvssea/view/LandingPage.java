@@ -17,7 +17,7 @@ public class LandingPage extends AnchorPane {
     public static final int LANDING_PAGE_WIDTH = 1100;
 
     public LandingPage() {
-        ImageView backgroundImage = new ImageView("resources/images/landing-page-background.jpg");
+        ImageView backgroundImage = new ImageView("file:resources/images/landing-page-background.jpg");
         Label titleLable = new Label("Sky vs. Sea");
         Button startBtn = new Button("Start");
         Button loadBtn = new Button("Load");
@@ -51,8 +51,7 @@ public class LandingPage extends AnchorPane {
     }
 
     private void formatTitleLabel(Label label) {
-        label.setFont(Font.font(50));
-//        label.setStyle("-fx-font-weight: bold;");
+        label.setFont(Font.loadFont("file:resources/fonts/Roboto/Roboto-Bold.ttf", 50));
     }
 
     private void formatButtons(Button... buttons) {
@@ -69,9 +68,11 @@ public class LandingPage extends AnchorPane {
     private void formatStartBtn(Button button) {
         button.setDefaultButton(true);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+        ButtonUtil.formatGraphic(button, "file:resources/icons/play.png");
     }
 
     private void formatLoadBtn(Button button) {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
+        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
     }
 }

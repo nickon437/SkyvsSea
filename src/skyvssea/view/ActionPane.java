@@ -43,7 +43,7 @@ public class ActionPane extends VBox {
     private void formatKillBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/kill.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/kill.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredKillBtn();
@@ -61,7 +61,7 @@ public class ActionPane extends VBox {
     private void formatSpecialEffectBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredSpecialEffectBtn();
@@ -79,7 +79,7 @@ public class ActionPane extends VBox {
     private void formatEndBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/end-turn.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/end-turn.png");
         button.setCancelButton(true);
         button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
         button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));

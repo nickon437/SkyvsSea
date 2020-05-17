@@ -168,11 +168,17 @@ public class ActionPane extends VBox {
         timeline.play();
     }
 
-    public void setSpecialEffectBtnDisable(boolean isDisabled) {
-        specialEffectBtn.setDisable(isDisabled);
+    public void enableSpecialEffectBtn() {
+        specialEffectBtn.setDisable(false);
+    }
+    public void disableSpecialEffectBtn() {
+    	specialEffectBtn.setDisable(true);
     }
     
-    public void setKillBtnDisable(boolean isDisabled) {
-    	killBtn.setDisable(isDisabled);
+    public void disableKillBtn() {
+    	killBtn.setDisable(true);
+    }
+    public void enableKillBtn() {
+    	killBtn.setDisable(false);
     }
 }

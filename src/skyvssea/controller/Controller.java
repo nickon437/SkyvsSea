@@ -96,7 +96,11 @@ public class Controller {
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
-        actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
+        if (currentPiece.isSpecialEffectAvailable()) {
+        	actionPane.enableSpecialEffectBtn();
+        } else {
+        	actionPane.disableSpecialEffectBtn();
+        }
     }
 
     public void handleKillButton() { 

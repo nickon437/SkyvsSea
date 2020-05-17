@@ -15,14 +15,14 @@ public class Game {
         this.currentGameState = newState;
         if (newState == GameState.READY_TO_MOVE) {
 //            actionPane.setDisable(true);
-            actionPane.setSpecialEffectBtnDisable(true);
+            actionPane.disableSpecialEffectBtn();
             actionPane.disablePassiveEffectBtn();
-            actionPane.setKillBtnDisable(true);
+            actionPane.disableKillBtn();
             actionPane.hideActionIndicator();
         } else if (newState == GameState.READY_TO_ATTACK) {
-            actionPane.setKillBtnDisable(false);
+            actionPane.enableKillBtn();
         } else if (newState == GameState.PASSIVE_EFFECT) {
-        	actionPane.setSpecialEffectBtnDisable(true);;
+        	actionPane.disableSpecialEffectBtn();
         }
 //        else {
 //            actionPane.setDisable(false);

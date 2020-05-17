@@ -14,11 +14,19 @@ public class Game {
     public void setCurrentGameState(GameState newState) {
         this.currentGameState = newState;
         if (newState == GameState.READY_TO_MOVE) {
-            actionPane.setDisable(true);
+//            actionPane.setDisable(true);
+            actionPane.setSpecialEffectBtnDisable(true);
+            actionPane.disablePassiveEffectBtn();
+            actionPane.setKillBtnDisable(true);
             actionPane.hideActionIndicator();
-        } else {
-            actionPane.setDisable(false);
+        } else if (newState == GameState.READY_TO_ATTACK) {
+            actionPane.setKillBtnDisable(false);
+        } else if (newState == GameState.PASSIVE_EFFECT) {
+        	actionPane.setSpecialEffectBtnDisable(true);;
         }
+//        else {
+//            actionPane.setDisable(false);
+//        }
     }
 
     public GameState getCurrentGameState() { return currentGameState; }

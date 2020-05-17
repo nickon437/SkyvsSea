@@ -47,6 +47,9 @@ public class Controller {
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
                         pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
+                        actionPane.enablePassiveEffectBtn(true);
+                    } else {
+                    	actionPane.disablePassiveEffectBtn();
                     }
                 }
             }
@@ -216,5 +219,10 @@ public class Controller {
 		lineup.put(Hierarchy.SMALL, 1);
 		lineup.put(Hierarchy.BABY, 1);
 		return lineup;
+	}
+
+	public void handlePassiveEffectButton(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 }

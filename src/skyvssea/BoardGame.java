@@ -18,9 +18,10 @@ public class BoardGame{
 		// TODO Auto-generated constructor stub
         Controller controller = new Controller();
         stage.setTitle("Sky vs. Sea");
+        int col = Integer.valueOf(changeBoardSizePane.getBoardColTextField().getText());
+        int row = Integer.valueOf(changeBoardSizePane.getBoardRowTextField().getText());
         
-        
-        BoardPane boardPane = new BoardPane(controller,changeBoardSizePane);
+        BoardPane boardPane = new BoardPane(controller,col,row);
         ActionPane actionPane = new ActionPane(controller);
         MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
 

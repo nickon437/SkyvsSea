@@ -7,13 +7,13 @@ import java.util.Observable;
 
 public class Tile extends Observable implements AvatarCore {
     private Avatar avatar;
-    private int x;
-	private int y;
+    public int x;
+	public int y;
     private GameObject gameObject;
     private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
-    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.boardCol && y < skyvssea.view.BoardPane.boardRow")
+    @Requires("x >= 0 && y >= 0")
 	public Tile(int x, int y) {
         this.x = x;
 		this.y = y;

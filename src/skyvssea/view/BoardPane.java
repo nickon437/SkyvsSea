@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardPane extends Pane {
-	private int col;
-	private int row;
+	public int col;
+	public int row;
 	
     private List<TileView> tileViewGroup = new ArrayList<>();
     private List<PieceView> pieceViewGroup = new ArrayList<>();
@@ -20,10 +20,9 @@ public class BoardPane extends Pane {
     private double tileSize;
 
     @Requires("controller != null")
-    public BoardPane(Controller controller,ChangeBoardSizePane changeBoardSizePane) {
-    	this.col = Integer.valueOf(changeBoardSizePane.getBoardColTextField().getText());
-    	this.row = Integer.valueOf(changeBoardSizePane.getBoardRowTextField().getText());
-    	 
+    public BoardPane(Controller controller,int col, int row) {
+    	this.col = col;
+    	this.row = row;
     	for (int y = 0; y < this.row; y++) {
              for (int x = 0; x < this.col; x++) {
                  TileView tileView = new TileView(x, y, tileSize, controller);

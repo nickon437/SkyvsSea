@@ -26,11 +26,10 @@ public class BoardGameApplication extends Application {
 		primaryStage.show();
 		changeBoardSizePane.getConfirmButton().setOnAction(e -> controller.handleConfirmBtn(changeBoardSizePane,primaryStage));
 	}
-	
-	
 
     public static void main(String[] args) {
         launch(args);
-    }
-}
 
+    }
+
+}

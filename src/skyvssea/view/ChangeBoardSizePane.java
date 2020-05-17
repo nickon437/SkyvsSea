@@ -92,10 +92,6 @@ public class ChangeBoardSizePane {
 		gridPane.setVgap(10);
 		
 		gridPane.setAlignment(Pos.CENTER);
-		
-		
-//		gridPane.add(tip2, 1, 8);
-		
 		GridPane.setMargin(confirmButton, new Insets(0, 0, 0, 30));
 		GridPane.setMargin(clearButton, new Insets(0, 0, 0, 60));
 		

@@ -10,16 +10,25 @@ public abstract class AbstractPiece extends GameObject {
     private Hierarchy attackLevel;
 	private Hierarchy defenceLevel;
     private int moveRange;
+    private int attackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
-    private int attackRange;
     private SpecialEffect specialEffect;
+    private SpecialEffect passiveEffect;
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
-
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
+	private boolean passiveEffectActivated;
 
-    protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
+    public boolean isPassiveEffectActivated() {
+		return passiveEffectActivated;
+	}
+
+	public void togglePassiveEffectSwitch() {
+		passiveEffectActivated = !passiveEffectActivated;
+	}
+
+	protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
                             int specialEffectCooldown) {
     	this.name = name;
@@ -32,6 +41,7 @@ public abstract class AbstractPiece extends GameObject {
     	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
         specialEffectCounter = 0;
+        passiveEffectActivated = false;
     }
 
     public String getName() { return name; }
@@ -63,7 +73,7 @@ public abstract class AbstractPiece extends GameObject {
     private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
 
 	public boolean isSpecialEffectAvailable() {
-		return specialEffect != null && specialEffectCounter <= 0;
+		return specialEffect != null && specialEffectCounter <= 0 && !passiveEffectActivated;
     }
 
     @Ensures("specialEffectManagerProxy != null")

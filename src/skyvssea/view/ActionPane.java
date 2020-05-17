@@ -79,7 +79,7 @@ public class ActionPane extends VBox {
         	} else {
         		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         	}
-        	controller.handlePassiveEffectButton(button.isSelected());        		
+        	controller.handlePassiveEffectButton();        		
         });
     }
     
@@ -181,4 +181,12 @@ public class ActionPane extends VBox {
     public void enableKillBtn() {
     	killBtn.setDisable(false);
     }
+
+
+	public void disableAllButtons() {
+        disableSpecialEffectBtn();
+        disablePassiveEffectBtn();
+        disableKillBtn();
+        hideActionIndicator();		
+	}
 }

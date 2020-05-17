@@ -47,10 +47,15 @@ public class Controller {
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
                         pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
-                        actionPane.enablePassiveEffectBtn(true);
+                        boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
+                        actionPane.enablePassiveEffectBtn(isPassiveEffectActivated);
                     } else {
-                    	actionPane.disablePassiveEffectBtn();
+                    	// Click on an enemy piece
+                    	actionPane.disableAllButtons();
                     }
+                } else {
+                	// Click on a unhighlighted tile with no piece
+                	actionPane.disableAllButtons();
                 }
             }
             
@@ -95,6 +100,7 @@ public class Controller {
 
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
+        actionPane.enableKillBtn();
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
         if (currentPiece.isSpecialEffectAvailable()) {
         	actionPane.enableSpecialEffectBtn();
@@ -144,6 +150,10 @@ public class Controller {
     		board.highlightPossibleKillTiles(playerManager);
     	}
     }
+    
+	public void handlePassiveEffectButton() {
+		pieceManager.getRegisteredPiece().togglePassiveEffectSwitch();
+	}
 
     public void handleEndButton() { endTurn(); }
 
@@ -160,7 +170,7 @@ public class Controller {
         pieceManager.updatePieceStatus();
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
-
+        actionPane.disableAllButtons();
         // TODO: Add save for undo here
     }
 
@@ -169,7 +179,7 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game(actionPane);
+    	this.game = new Game();
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
@@ -223,10 +233,5 @@ public class Controller {
 		lineup.put(Hierarchy.SMALL, 1);
 		lineup.put(Hierarchy.BABY, 1);
 		return lineup;
-	}
-
-	public void handlePassiveEffectButton(boolean b) {
-		// TODO Auto-generated method stub
-		
 	}
 }

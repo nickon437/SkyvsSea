@@ -3,7 +3,6 @@ package skyvssea.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,7 +25,7 @@ public class BoardSetupView extends VBox {
 	private static final int DEFAULT_NUM_PIECE = 1;
 
 	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be \n less than number of board rows");
-	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE * 2, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> rowSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> bigPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 	private Spinner<Integer> mediumPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
@@ -48,8 +47,8 @@ public class BoardSetupView extends VBox {
 	}
 
 	private void formatInputPane(GridPane inputPane) {
-		inputPane.add(new Label("Rows:"), 0, 0);
-		inputPane.add(new Label("Columns:"), 0, 1);
+		inputPane.add(new Label("Columns:"), 0, 0);
+		inputPane.add(new Label("Rows:"), 0, 1);
 		inputPane.add(new Label("Big piece:"), 0, 3);
 		inputPane.add(new Label("Middle piece:"), 0, 4);
 		inputPane.add(new Label("Small piece:"), 0,5);
@@ -95,8 +94,8 @@ public class BoardSetupView extends VBox {
 
 	public int[] getBoardSize() {
 		int[] boardSize = new int[2]; // Nick - Is there any better value type for this?
-		boardSize[0] = rowSpinner.getValue().intValue();
-		boardSize[1] = colSpinner.getValue().intValue();
+		boardSize[0] = colSpinner.getValue().intValue();
+		boardSize[1] = rowSpinner.getValue().intValue();
 		return boardSize;
 	}
 
@@ -121,7 +120,7 @@ public class BoardSetupView extends VBox {
 	public void validateNumPiece() {
 		final int OFFSET = 7;
 
-		if (rowSpinner.getValue() <= getTotalPieces()) {
+		if (rowSpinner.getValue() < getTotalPieces()) {
 			pieceTip.show(rowSpinner,
 					NodeCoordinateUtil.getRightX(rowSpinner),
 					NodeCoordinateUtil.getY(rowSpinner) - OFFSET);

@@ -2,13 +2,12 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
+import javafx.stage.Stage;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
 
@@ -161,9 +160,9 @@ public class Controller {
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setViewsAndModels(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-        int boardRow = boardSetup.getBoardSize()[0];
-        int boardCol = boardSetup.getBoardSize()[1];
+    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+        int boardCol = boardSetup.getBoardSize()[0];
+        int boardRow = boardSetup.getBoardSize()[1];
 
 		this.boardPane = boardPane;
 		this.actionPane = actionPane;

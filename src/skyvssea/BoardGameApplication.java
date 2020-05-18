@@ -4,8 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.BoardSetupController;
-import skyvssea.controller.Controller;
-import skyvssea.view.*;
+import skyvssea.view.BoardSetupView;
 
 public class BoardGameApplication extends Application {
 	@Override

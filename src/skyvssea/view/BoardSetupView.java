@@ -36,7 +36,7 @@ public class BoardSetupView extends VBox {
 	private Spinner<Integer> smallPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 	private Spinner<Integer> babyPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 
-	private boolean isInputValid = true;
+	private Button confirmButton = new Button("Confirm");
 
 	public BoardSetupView(BoardSetupController controller) {
 		GridPane inputPane = new GridPane();
@@ -78,9 +78,7 @@ public class BoardSetupView extends VBox {
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
-		Button confirmButton = new Button("Confirm");
 		holder.getChildren().addAll(confirmButton);
-
 		holder.setAlignment(Pos.CENTER);
 		holder.setSpacing(20);
 		formatConfirmBtn(confirmButton, controller);
@@ -90,6 +88,8 @@ public class BoardSetupView extends VBox {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
 		button.setPrefSize(150, 50);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
+		button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
+		button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
 	}
 
 	public int[] getBoardSize() {
@@ -124,14 +124,10 @@ public class BoardSetupView extends VBox {
 			pieceTip.show(rowSpinner,
 					NodeCoordinateUtil.getRightX(rowSpinner),
 					NodeCoordinateUtil.getY(rowSpinner) - OFFSET);
-			isInputValid = false;
+			confirmButton.setDisable(true);
 		} else {
 			pieceTip.hide();
-			isInputValid = true;
+			confirmButton.setDisable(false);
 		}
-	}
-
-	public boolean isInputValid() {
-		return isInputValid;
 	}
 }

@@ -162,21 +162,16 @@ public class Controller {
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
     public void setViewsAndModels(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-    	int boardCol = Integer.valueOf(boardSetup.getBoardColTextField().getText());
-		int boardRow = Integer.valueOf(boardSetup.getBoardRowTextField().getText());
-		
-		int babyNumber = Integer.valueOf(boardSetup.getBabyPieceTextField().getText());
-		int smallNumber =Integer.valueOf(boardSetup.getSmallPieceTextField().getText());
-		int midNumber =Integer.valueOf(boardSetup.getMidPieceTextField().getText());
-		int bigNumber =Integer.valueOf(boardSetup.getBigPieceTextField().getText());
-		
+        int boardRow = boardSetup.getBoardSize()[0];
+        int boardCol = boardSetup.getBoardSize()[1];
+
 		this.boardPane = boardPane;
 		this.actionPane = actionPane;
 		this.infoPane = infoPane;
 
 		this.game = new Game(actionPane);
 		this.board = new Board(boardCol,boardRow);
-		this.pieceManager = new PieceManager(createInitialLineUp(),babyNumber,smallNumber,midNumber,bigNumber);
+		this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
 		this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 		 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
@@ -220,13 +215,4 @@ public class Controller {
             obstacle.addAvatar(obstacleView);
         }
     }
-    
-	private Map<Hierarchy, Integer> createInitialLineUp() {
-		Map<Hierarchy, Integer> lineup = new HashMap<>();
-		lineup.put(Hierarchy.BIG, 1);
-		lineup.put(Hierarchy.MEDIUM, 1);
-		lineup.put(Hierarchy.SMALL, 1);
-		lineup.put(Hierarchy.BABY, 1);
-		return lineup;
-	}
 }

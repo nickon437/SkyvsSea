@@ -12,8 +12,8 @@ public class PieceManager {
     private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
     private AbstractPiece currentPiece;
 
-    public PieceManager(Map<Hierarchy, Integer> lineup,int babyNumber, int smallNumber, int midNumber, int bigNumber) {
-        initializePieces(lineup, babyNumber,smallNumber, midNumber, bigNumber);
+    public PieceManager(Map<Hierarchy, Integer> lineup) {
+        initializePieces(lineup);
     }
 
     /**
@@ -21,13 +21,9 @@ public class PieceManager {
      */
 	//The precondition checks if the lineup numbers are not all zeroes
     @Requires("lineup.values().stream().mapToInt(Integer::intValue).sum() > 0")
-    public void initializePieces(Map<Hierarchy, Integer> lineup , int babyNumber, int smallNumber, int midNumber, int bigNumber) {
+    public void initializePieces(Map<Hierarchy, Integer> lineup) {
         AbstractPieceFactory sharkFactory = SharkFactory.getInstance();
         AbstractPieceFactory eagleFactory = EagleFactory.getInstance();
-        lineup.replace(Hierarchy.BABY, 1, babyNumber);
-        lineup.replace(Hierarchy.SMALL, 1, smallNumber);
-        lineup.replace(Hierarchy.MEDIUM, 1, midNumber);
-        lineup.replace(Hierarchy.BIG, 1, bigNumber);
       
         for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
             createPiecesByHierarchy(eaglePieces, eagleFactory, entry);

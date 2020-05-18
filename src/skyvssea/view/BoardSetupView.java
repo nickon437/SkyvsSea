@@ -1,18 +1,21 @@
 package skyvssea.view;
 
+import javafx.animation.Interpolator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import skyvssea.controller.BoardSetupController;
+import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardSetupView extends VBox {
 	private Stage stage = new Stage();
@@ -27,12 +30,19 @@ public class BoardSetupView extends VBox {
 	private Label smallPieceLabel = new Label("Small piece:");
 	private Label babyPieceLabel = new Label("Baby piece:");
 
-	private TextField boardColTextField = new TextField();
-	private TextField boardRowTextField = new TextField();
-	private TextField bigPieceTextField = new TextField();
-	private TextField midPieceTextField = new TextField();
-	private TextField smallPieceTextField = new TextField();
-	private TextField babyPieceTextField = new TextField();
+//	private TextField boardColTextField = new TextField();
+//	private TextField boardRowTextField = new TextField();
+//	private TextField bigPieceTextField = new TextField();
+//	private TextField midPieceTextField = new TextField();
+//	private TextField smallPieceTextField = new TextField();
+//	private TextField babyPieceTextField = new TextField();
+
+	private Spinner<Integer> colSpinner = new Spinner<>(boardSizeValues);
+	private Spinner<Integer> rowSpinner = new Spinner<>(boardSizeValues);
+	private Spinner<Integer> bigPieceSpinner = new Spinner<>(numPieceValues);
+	private Spinner<Integer> mediumPieceSpinner = new Spinner<>(numPieceValues);
+	private Spinner<Integer> smallPieceSpinner = new Spinner<>(numPieceValues);
+	private Spinner<Integer> babyPieceSpinner = new Spinner<>(numPieceValues);
 
 	private Label tips = new Label("The input cannot be invailed ");
 //	private Label limit1Label = new Label(" >= 4 ");
@@ -42,8 +52,13 @@ public class BoardSetupView extends VBox {
 //	private Label limit5Label = new Label(" >= 1 ");
 //	private Label limit6Label = new Label(" >= 1 ");
 
-	
+	private static final SpinnerValueFactory<Integer> boardSizeValues =
+			new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 20, 10);
+	private static final SpinnerValueFactory<Integer> numPieceValues =
+			new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1);
+
 	public BoardSetupView(BoardSetupController controller) {
+
 		tips.setTextFill(Color.RED);
 		tips.setVisible(false);
 
@@ -56,12 +71,12 @@ public class BoardSetupView extends VBox {
 		inputPane.add(babyPieceLabel, 0, 6);
 		inputPane.add(tips, 0, 7);
 		
-		inputPane.add(boardColTextField, 1, 0);
-		inputPane.add(boardRowTextField, 1, 1);
-		inputPane.add(bigPieceTextField, 1, 3);
-		inputPane.add(midPieceTextField, 1, 4);
-		inputPane.add(smallPieceTextField, 1, 5);
-		inputPane.add(babyPieceTextField, 1, 6);
+		inputPane.add(colSpinner, 1, 0);
+		inputPane.add(rowSpinner, 1, 1);
+		inputPane.add(bigPieceSpinner, 1, 3);
+		inputPane.add(mediumPieceSpinner, 1, 4);
+		inputPane.add(smallPieceSpinner, 1, 5);
+		inputPane.add(babyPieceSpinner, 1, 6);
 		
 //		inputPane.add(limit1Label, 2, 0);
 //		inputPane.add(limit2Label, 2, 1);
@@ -81,15 +96,17 @@ public class BoardSetupView extends VBox {
 		this.setPadding(new Insets(30));
 	}
 
+	private void formatSpinner(Spinner<Integer> spinner) {
+		spinner.setValueFactory(boardSizeValues);
+	}
+
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
 		Button confirmButton = new Button("Confirm");
-		Button clearButton = new Button("Clear");
-		holder.getChildren().addAll(confirmButton, clearButton);
+		holder.getChildren().addAll(confirmButton);
 
 		holder.setAlignment(Pos.CENTER);
 		holder.setSpacing(20);
 		formatConfirmBtn(confirmButton, controller,stage);
-		formatClearBtn(clearButton, controller);
 	}
 
 	private void formatConfirmBtn(Button button, BoardSetupController controller, Stage stage) {
@@ -97,30 +114,23 @@ public class BoardSetupView extends VBox {
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		stage.close();
 	}
-	
-	private void formatClearBtn(Button button, BoardSetupController controller) {
-		ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-		button.setOnAction(e -> controller.handleClearBtn(this));
+
+	public int[] getBoardSize() {
+		int[] boardSize = new int[2]; // Nick - Is there any better value type for this?
+		boardSize[0] = rowSpinner.getValue().intValue();
+		boardSize[1] = colSpinner.getValue().intValue();
+		return boardSize;
 	}
 
-	public TextField getBoardColTextField() {
-		return boardColTextField;
+	public Map<Hierarchy, Integer> getPieceLineup() {
+		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		lineup.put(Hierarchy.BIG, bigPieceSpinner.getValue());
+		lineup.put(Hierarchy.MEDIUM, mediumPieceSpinner.getValue());
+		lineup.put(Hierarchy.SMALL, smallPieceSpinner.getValue());
+		lineup.put(Hierarchy.BABY, babyPieceSpinner.getValue());
+		return lineup;
 	}
-	public TextField getBoardRowTextField() {
-		return boardRowTextField;
-	}
-	public TextField getBigPieceTextField() {
-		return bigPieceTextField;
-	}
-	public TextField getMidPieceTextField() {
-		return midPieceTextField;
-	}
-	public TextField getSmallPieceTextField() {
-		return smallPieceTextField;
-	}
-	public TextField getBabyPieceTextField() {
-		return babyPieceTextField;
-	}
+
 	public Label getTips() {
 		return tips;
 	}

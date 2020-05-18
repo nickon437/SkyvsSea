@@ -2,14 +2,11 @@ package skyvssea.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
@@ -63,6 +60,10 @@ public class BoardSetupView extends VBox {
 		inputPane.add(mediumPieceSpinner, 1, 4);
 		inputPane.add(smallPieceSpinner, 1, 5);
 		inputPane.add(babyPieceSpinner, 1, 6);
+
+		Separator separator = new Separator();
+		inputPane.add(separator, 0, 2);
+		GridPane.setColumnSpan(separator, 2);
 
 		inputPane.setHgap(10);
 		inputPane.setVgap(10);

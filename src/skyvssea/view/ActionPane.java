@@ -1,13 +1,11 @@
 package skyvssea.view;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 
@@ -105,10 +103,8 @@ public class ActionPane extends VBox {
 
     private void setActionIndicatorPosition(double xTranslate, double width) {
         Timeline timeline = new Timeline();
-        KeyValue kvXCoord = new KeyValue(actionIndicator.translateXProperty(), xTranslate, Interpolator.EASE_IN);
-        KeyFrame kfXCoord = new KeyFrame(Duration.seconds(0.5), kvXCoord);
-        KeyValue kvWidth = new KeyValue(actionIndicator.maxWidthProperty(), width, Interpolator.EASE_IN);
-        KeyFrame kfWidth = new KeyFrame(Duration.seconds(0.5), kvWidth);
+        KeyFrame kfXCoord = AnimationUtil.formatKeyFrame(actionIndicator.translateXProperty(), xTranslate, Duration.seconds(0.5));
+        KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
         timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
         timeline.play();
     }

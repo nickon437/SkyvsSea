@@ -5,10 +5,6 @@ import skyvssea.view.ActionPane;
 public class Game {
     private GameState currentGameState;
 
-    public Game() {
-        setCurrentGameState(GameState.READY_TO_MOVE);
-    }
-
     public void setCurrentGameState(GameState newState) {
         this.currentGameState = newState;
     }

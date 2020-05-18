@@ -7,13 +7,20 @@ import skyvssea.controller.Controller;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
+	Controller controller;
+	
     @Override
     public void start(Stage primaryStage) throws Exception {
+    	controller = new Controller();
         buildView(primaryStage);
+        startGame();
     }
 
-    private void buildView(Stage stage) {
-        Controller controller = new Controller();
+    private void startGame() {
+		controller.startGame();
+	}
+
+	private void buildView(Stage stage) {
         stage.setTitle("Sky vs. Sea");
 
         BoardPane boardPane = new BoardPane(controller);

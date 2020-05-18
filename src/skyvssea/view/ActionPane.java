@@ -95,7 +95,6 @@ public class ActionPane extends VBox {
     
     public void disablePassiveEffectBtn() {
     	passiveEffectBtn.setDisable(true);
-    	ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.SECONDARY_BUTTON_COLOR);
     }
     
     public void enablePassiveEffectBtn(boolean passiveEffectActivated) {

@@ -101,6 +101,7 @@ public class Controller {
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         actionPane.enableKillBtn();
+        actionPane.disablePassiveEffectBtn();
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
         if (currentPiece.isSpecialEffectAvailable()) {
         	actionPane.enableSpecialEffectBtn();
@@ -179,12 +180,9 @@ public class Controller {
     	this.actionPane = actionPane;
     	this.infoPane = infoPane;
 
-    	this.game = new Game();
     	this.board = new Board();
 		this.pieceManager = new PieceManager(createInitialLineUp());
-        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-
-        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+		this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
         setTiles(boardPane);
         setPieces(boardPane);
@@ -233,5 +231,12 @@ public class Controller {
 		lineup.put(Hierarchy.SMALL, 1);
 		lineup.put(Hierarchy.BABY, 1);
 		return lineup;
+	}
+
+	public void startGame() {
+		game = new Game();
+		game.setCurrentGameState(GameState.READY_TO_MOVE);
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        actionPane.disableAllButtons();
 	}
 }

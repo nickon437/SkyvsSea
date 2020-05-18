@@ -1,9 +1,11 @@
 package skyvssea.view;
 
-import javafx.animation.Interpolator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,6 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoardSetupView extends VBox {
+
+
+	private static final int MIN_BOARD_SIZE = 4;
+	private static final int MAX_BOARD_SIZE = 20;
+	private static final int DEFAULT_BOARD_SIZE = 10;
+	private static final int MIN_NUM_PIECE = 1;
+	private static final int MAX_NUM_PIECE = 5;
+	private static final int DEFAULT_NUM_PIECE = 1;
+
 	private Stage stage = new Stage();
 	public GridPane inputPane = new GridPane();
 	
@@ -30,35 +41,16 @@ public class BoardSetupView extends VBox {
 	private Label smallPieceLabel = new Label("Small piece:");
 	private Label babyPieceLabel = new Label("Baby piece:");
 
-//	private TextField boardColTextField = new TextField();
-//	private TextField boardRowTextField = new TextField();
-//	private TextField bigPieceTextField = new TextField();
-//	private TextField midPieceTextField = new TextField();
-//	private TextField smallPieceTextField = new TextField();
-//	private TextField babyPieceTextField = new TextField();
-
-	private Spinner<Integer> colSpinner = new Spinner<>(boardSizeValues);
-	private Spinner<Integer> rowSpinner = new Spinner<>(boardSizeValues);
-	private Spinner<Integer> bigPieceSpinner = new Spinner<>(numPieceValues);
-	private Spinner<Integer> mediumPieceSpinner = new Spinner<>(numPieceValues);
-	private Spinner<Integer> smallPieceSpinner = new Spinner<>(numPieceValues);
-	private Spinner<Integer> babyPieceSpinner = new Spinner<>(numPieceValues);
+	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+	private Spinner<Integer> rowSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+	private Spinner<Integer> bigPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
+	private Spinner<Integer> mediumPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
+	private Spinner<Integer> smallPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
+	private Spinner<Integer> babyPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 
 	private Label tips = new Label("The input cannot be invailed ");
-//	private Label limit1Label = new Label(" >= 4 ");
-//	private Label limit2Label = new Label(" >= 4 ");
-//	private Label limit3Label = new Label(" >= 1 ");
-//	private Label limit4Label = new Label(" >= 1 ");
-//	private Label limit5Label = new Label(" >= 1 ");
-//	private Label limit6Label = new Label(" >= 1 ");
-
-	private static final SpinnerValueFactory<Integer> boardSizeValues =
-			new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 20, 10);
-	private static final SpinnerValueFactory<Integer> numPieceValues =
-			new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 1);
 
 	public BoardSetupView(BoardSetupController controller) {
-
 		tips.setTextFill(Color.RED);
 		tips.setVisible(false);
 
@@ -78,13 +70,6 @@ public class BoardSetupView extends VBox {
 		inputPane.add(smallPieceSpinner, 1, 5);
 		inputPane.add(babyPieceSpinner, 1, 6);
 		
-//		inputPane.add(limit1Label, 2, 0);
-//		inputPane.add(limit2Label, 2, 1);
-//		inputPane.add(limit3Label, 2, 3);
-//		inputPane.add(limit4Label, 2, 4);
-//		inputPane.add(limit5Label, 2, 5);
-//		inputPane.add(limit6Label, 2, 6);
-		
 		inputPane.setHgap(10);
 		inputPane.setVgap(10);
 		inputPane.setAlignment(Pos.CENTER);
@@ -94,10 +79,6 @@ public class BoardSetupView extends VBox {
 
 		this.getChildren().addAll(inputPane, buttonHolder);
 		this.setPadding(new Insets(30));
-	}
-
-	private void formatSpinner(Spinner<Integer> spinner) {
-		spinner.setValueFactory(boardSizeValues);
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
@@ -111,6 +92,7 @@ public class BoardSetupView extends VBox {
 
 	private void formatConfirmBtn(Button button, BoardSetupController controller, Stage stage) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+		button.setPrefSize(250, 50);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		stage.close();
 	}

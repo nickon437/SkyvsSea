@@ -21,18 +21,12 @@ import java.util.Map;
 
 public class BoardSetupView extends VBox {
 
-
 	private static final int MIN_BOARD_SIZE = 4;
 	private static final int MAX_BOARD_SIZE = 20;
 	private static final int DEFAULT_BOARD_SIZE = 10;
 	private static final int MIN_NUM_PIECE = 1;
 	private static final int MAX_NUM_PIECE = 5;
 	private static final int DEFAULT_NUM_PIECE = 1;
-
-	private Stage stage = new Stage();
-	public GridPane inputPane = new GridPane();
-	
-//	private Text tip = new Text("The total number of pieces \n should be less than board rows");
 
 	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be \n less than number of board rows");
 	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
@@ -45,40 +39,34 @@ public class BoardSetupView extends VBox {
 	private boolean isInputValid = true;
 
 	public BoardSetupView(BoardSetupController controller) {
-		this.setSpacing(20);
-
-		Label rowLabel = new Label("Rows: ");
-		Label colLabel = new Label("Columns:");
-		Label bigPieceLabel = new Label("Big piece:");
-		Label midPieceLabel = new Label("Middle piece:");
-		Label smallPieceLabel = new Label("Small piece:");
-		Label babyPieceLabel = new Label("Baby piece:");
-
-		inputPane.add(colLabel, 0, 0);
-		inputPane.add(rowLabel, 0, 1);
-		inputPane.add(bigPieceLabel, 0, 3);
-		inputPane.add(midPieceLabel, 0, 4);
-		inputPane.add(smallPieceLabel, 0,5);
-		inputPane.add(babyPieceLabel, 0, 6);
-		
-		inputPane.add(colSpinner, 1, 0);
-		inputPane.add(rowSpinner, 1, 1);
-		inputPane.add(bigPieceSpinner, 1, 3);
-		inputPane.add(mediumPieceSpinner, 1, 4);
-		inputPane.add(smallPieceSpinner, 1, 5);
-		inputPane.add(babyPieceSpinner, 1, 6);
-		
-		inputPane.setHgap(10);
-		inputPane.setVgap(10);
-		inputPane.setAlignment(Pos.CENTER);
-
-		formatSpinnerTip();
+		GridPane inputPane = new GridPane();
+		formatInputPane(inputPane);
 
 		HBox buttonHolder = new HBox();
 		formatButtonHolder(buttonHolder, controller);
 
 		this.getChildren().addAll(inputPane, buttonHolder);
 		this.setPadding(new Insets(30));
+		this.setSpacing(20);
+	}
+
+	private void formatInputPane(GridPane inputPane) {
+		inputPane.add(new Label("Rows:"), 0, 0);
+		inputPane.add(new Label("Columns:"), 0, 1);
+		inputPane.add(new Label("Big piece:"), 0, 3);
+		inputPane.add(new Label("Middle piece:"), 0, 4);
+		inputPane.add(new Label("Small piece:"), 0,5);
+		inputPane.add(new Label("Baby piece:"), 0, 6);
+		inputPane.add(colSpinner, 1, 0);
+		inputPane.add(rowSpinner, 1, 1);
+		inputPane.add(bigPieceSpinner, 1, 3);
+		inputPane.add(mediumPieceSpinner, 1, 4);
+		inputPane.add(smallPieceSpinner, 1, 5);
+		inputPane.add(babyPieceSpinner, 1, 6);
+
+		inputPane.setHgap(10);
+		inputPane.setVgap(10);
+		formatSpinnerTip();
 	}
 
 	private void formatSpinnerTip() {
@@ -95,14 +83,13 @@ public class BoardSetupView extends VBox {
 
 		holder.setAlignment(Pos.CENTER);
 		holder.setSpacing(20);
-		formatConfirmBtn(confirmButton, controller,stage);
+		formatConfirmBtn(confirmButton, controller);
 	}
 
-	private void formatConfirmBtn(Button button, BoardSetupController controller, Stage stage) {
+	private void formatConfirmBtn(Button button, BoardSetupController controller) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
 		button.setPrefSize(150, 50);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
-		stage.close();
 	}
 
 	public int[] getBoardSize() {

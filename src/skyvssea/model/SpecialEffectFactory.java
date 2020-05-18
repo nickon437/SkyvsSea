@@ -4,8 +4,7 @@ import skyvssea.model.specialeffect.ChangeAttackLevelDecorator;
 import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
 import skyvssea.model.specialeffect.ChangeDefenceLevelDecorator;
 import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectBase;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 import skyvssea.model.specialeffect.TargetType;
 
 public class SpecialEffectFactory {
@@ -20,26 +19,36 @@ public class SpecialEffectFactory {
         return specialEffectFactory;
     }
 
-    private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2", TargetType.SELF));
+    private SpecialEffectContainer createDoubleAttackRange() {
+    	return new SpecialEffectContainer("Attack range x2", TargetType.SELF, 
+    			new ChangeAttackRangeDecorator(2, null));
     }
-    private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", TargetType.SELF));
+    
+    private SpecialEffectContainer createDoubleMoveRange() {
+    	return new SpecialEffectContainer("Move range x2", TargetType.SELF, 
+    			new ChangeMoveRangeDecorator(2, null));
     }
-    private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding", TargetType.ENEMIES));
+    
+    private SpecialEffectContainer createRetarding() {
+    	return new SpecialEffectContainer("Retarding", TargetType.ENEMIES, 
+    			new ChangeMoveRangeDecorator(0.5, null));
     }
-    private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase("Freezing", TargetType.ENEMIES)));
+    private SpecialEffectContainer createFreezing() { 
+    	return new SpecialEffectContainer("Freezing", TargetType.ENEMIES, 
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
 	}
-    private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening", TargetType.COMRADES)));
+    
+    private SpecialEffectContainer createStrengthening() { 
+    	return new SpecialEffectContainer("Strengthening", TargetType.COMRADES, 
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, null)));
     }
-    private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", TargetType.ENEMIES)));
+    
+    private SpecialEffectContainer createWeakening() { 
+    	return new SpecialEffectContainer("Weakening", TargetType.ENEMIES, 
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, null)));
     }
 
-    public SpecialEffect createSpecialEffect(SpecialEffectCode code) {
+    public SpecialEffectContainer createSpecialEffect(SpecialEffectCode code) {
         switch (code) {
             case DOUBLE_ATTACK_RANGE:
                 return createDoubleAttackRange();
@@ -58,7 +67,7 @@ public class SpecialEffectFactory {
         }
     }
     
-    public SpecialEffect copy(SpecialEffect specialEffect) {
+    public SpecialEffectContainer copy(SpecialEffectContainer specialEffect) {
     	return specialEffect.copy();
     }
 }

@@ -30,12 +30,18 @@ public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 	@Ensures("result != null")
 	@Override
 	public AbstractSpecialEffectDecorator copy() {
-		AbstractSpecialEffectDecorator copy = null;
-		if (change != null) {
-			copy = new ChangeAttackLevelDecorator(change, specialEffectWrappee.copy());
-		} else if (specificLevel != null) {
-			copy = new ChangeAttackLevelDecorator(specificLevel, specialEffectWrappee.copy());
+		AbstractSpecialEffectDecorator copiedDecorator = null;
+		AbstractSpecialEffectDecorator copiedWrappee = null;
+		if (specialEffectWrappee != null) {
+			copiedWrappee = specialEffectWrappee.copy();
 		}
-		return copy;
+		
+		if (change != null) {
+			copiedDecorator = new ChangeAttackLevelDecorator(change, copiedWrappee);
+		} else if (specificLevel != null) {
+			copiedDecorator = new ChangeAttackLevelDecorator(specificLevel, copiedWrappee);
+		}
+	
+		return copiedDecorator;
 	}
 }

@@ -26,5 +26,11 @@ public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 	}
 
 	@Override
-	public AbstractSpecialEffectDecorator copy() { return new ChangeMoveRangeDecorator(factor, specialEffectWrappee.copy()); }
+	public AbstractSpecialEffectDecorator copy() { 
+		if (specialEffectWrappee != null) {
+			return new ChangeMoveRangeDecorator(factor, specialEffectWrappee.copy());			
+		} else {
+			return new ChangeMoveRangeDecorator(factor, null);			
+		}
+	}
 }

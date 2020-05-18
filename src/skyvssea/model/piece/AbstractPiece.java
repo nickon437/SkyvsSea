@@ -56,8 +56,8 @@ public abstract class AbstractPiece extends GameObject {
     private int getSpecialEffectCounter() { return specialEffectCounter; }
 
 	public void performSpecialEffect(AbstractPiece target) {
-	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
-	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
+		SpecialEffectContainer specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
+	    if (specialEffect != null && getSpecialEffectCounter() <= 0 && !passiveEffectActivated) {
 			target.getSpecialEffectManagerProxy().add(specialEffect);
     		resetSpecialEffectCounter();    		
     	}

@@ -23,6 +23,10 @@ public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 
 	@Override
 	public AbstractSpecialEffectDecorator copy() {
-		return new ChangeAttackRangeDecorator(factor, specialEffectWrappee.copy());
+		if (specialEffectWrappee != null) {
+			return new ChangeAttackRangeDecorator(factor, specialEffectWrappee.copy());			
+		} else {
+			return new ChangeAttackRangeDecorator(factor, null);			
+		}
 	}
 }

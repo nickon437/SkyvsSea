@@ -1,8 +1,8 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 
 public interface SpecialEffectManagerInterface {
-    void add(SpecialEffect specialEffect);
+    void add(SpecialEffectContainer specialEffect);
     void updateEffectiveDuration();
 }

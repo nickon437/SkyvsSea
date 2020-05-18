@@ -3,13 +3,13 @@ package skyvssea.model;
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecialEffectManager implements SpecialEffectManagerInterface {
-    private List<SpecialEffect> appliedSpecialEffects = new ArrayList<>();
+    private List<SpecialEffectContainer> appliedSpecialEffects = new ArrayList<>();
     private AbstractPiece target;
 
     public SpecialEffectManager(AbstractPiece piece) {
@@ -19,7 +19,7 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
     @Requires("specialEffect != null")
     @Ensures("appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) + 1 && appliedSpecialEffects.contains(specialEffect)")
     @Override
-    public void add(SpecialEffect specialEffect) {
+    public void add(SpecialEffectContainer specialEffect) {
         specialEffect.apply(target);
         appliedSpecialEffects.add(specialEffect);
     }
@@ -27,8 +27,8 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
     @Override
     @Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
     public void updateEffectiveDuration() {
-        List<SpecialEffect> toRemove = new ArrayList<>();
-        for (SpecialEffect specialEffect : appliedSpecialEffects) {
+        List<SpecialEffectContainer> toRemove = new ArrayList<>();
+        for (SpecialEffectContainer specialEffect : appliedSpecialEffects) {
             boolean isActive = specialEffect.updateEffectiveDuration();
             if (!isActive) {
                 specialEffect.remove(target);

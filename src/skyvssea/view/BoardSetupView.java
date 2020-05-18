@@ -3,7 +3,6 @@ package skyvssea.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -11,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import skyvssea.controller.Controller;
+import skyvssea.controller.BoardSetupController;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 
@@ -44,7 +43,7 @@ public class BoardSetupView extends VBox {
 //	private Label limit6Label = new Label(" >= 1 ");
 
 	
-	public BoardSetupView(Controller controller) {
+	public BoardSetupView(BoardSetupController controller) {
 		tips.setTextFill(Color.RED);
 		tips.setVisible(false);
 
@@ -82,7 +81,7 @@ public class BoardSetupView extends VBox {
 		this.setPadding(new Insets(30));
 	}
 
-	private void formatButtonHolder(HBox holder, Controller controller) {
+	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
 		Button confirmButton = new Button("Confirm");
 		Button clearButton = new Button("Clear");
 		holder.getChildren().addAll(confirmButton, clearButton);
@@ -93,13 +92,13 @@ public class BoardSetupView extends VBox {
 		formatClearBtn(clearButton, controller);
 	}
 
-	private void formatConfirmBtn(Button button, Controller controller,Stage stage) {
+	private void formatConfirmBtn(Button button, BoardSetupController controller, Stage stage) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-		button.setOnAction(e -> controller.handleConfirmBtn(this, stage));
+		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		stage.close();
 	}
 	
-	private void formatClearBtn(Button button, Controller controller) {
+	private void formatClearBtn(Button button, BoardSetupController controller) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
 		button.setOnAction(e -> controller.handleClearBtn(this));
 	}

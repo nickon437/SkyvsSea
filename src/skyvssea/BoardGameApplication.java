@@ -3,13 +3,14 @@ package skyvssea;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import skyvssea.controller.BoardSetupController;
 import skyvssea.controller.Controller;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Controller controller = new Controller();
+		BoardSetupController controller = new BoardSetupController(primaryStage);
 		BoardSetupView boardSetup = new BoardSetupView(controller);
 
 		Scene scene = new Scene(boardSetup);

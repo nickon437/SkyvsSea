@@ -7,29 +7,19 @@ import skyvssea.controller.Controller;
 import skyvssea.view.*;
 
 public class BoardGameApplication extends Application {
-	ChangeBoardSizePane changeBoardSizePane;
-	Controller controller;
-
-	public BoardGameApplication() {
-		this.controller = new Controller();
-		this.changeBoardSizePane = new ChangeBoardSizePane(controller);
-	}
-	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Scene scene = new Scene(changeBoardSizePane.gridPane);
+		Controller controller = new Controller();
+		BoardSetupView boardSetup = new BoardSetupView(controller);
+
+		Scene scene = new Scene(boardSetup);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle(" Design Your Game ");
-		primaryStage.setHeight(400);
-		primaryStage.setWidth(400);
+		primaryStage.setTitle("Design Your Game");
 		primaryStage.setResizable(false);
 		primaryStage.show();
-		changeBoardSizePane.getConfirmButton().setOnAction(e -> controller.handleConfirmBtn(changeBoardSizePane,primaryStage));
 	}
 
     public static void main(String[] args) {
         launch(args);
-
     }
-
 }

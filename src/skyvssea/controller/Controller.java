@@ -2,14 +2,15 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.stage.Stage;
 import skyvssea.BoardGame;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -162,14 +163,14 @@ public class Controller {
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setViewsAndModels(ChangeBoardSizePane changeBoardSizePane,BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-    	int boardCol = Integer.valueOf(changeBoardSizePane.getBoardColTextField().getText());
-		int boardRow = Integer.valueOf(changeBoardSizePane.getBoardRowTextField().getText());
+    public void setViewsAndModels(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    	int boardCol = Integer.valueOf(boardSetup.getBoardColTextField().getText());
+		int boardRow = Integer.valueOf(boardSetup.getBoardRowTextField().getText());
 		
-		int babyNumber = Integer.valueOf(changeBoardSizePane.getBabyPieceTextField().getText());
-		int smallNumber =Integer.valueOf(changeBoardSizePane.getSmallPieceTextField().getText());
-		int midNumber =Integer.valueOf(changeBoardSizePane.getMidPieceTextField().getText());
-		int bigNumber =Integer.valueOf(changeBoardSizePane.getBigPieceTextField().getText());
+		int babyNumber = Integer.valueOf(boardSetup.getBabyPieceTextField().getText());
+		int smallNumber =Integer.valueOf(boardSetup.getSmallPieceTextField().getText());
+		int midNumber =Integer.valueOf(boardSetup.getMidPieceTextField().getText());
+		int bigNumber =Integer.valueOf(boardSetup.getBigPieceTextField().getText());
 		
 		this.boardPane = boardPane;
 		this.actionPane = actionPane;
@@ -231,52 +232,52 @@ public class Controller {
 		return lineup;
 	}
 
-	public void handleConfirmBtn(ChangeBoardSizePane changeBoardSizePane,Stage stage) {
-		String row = changeBoardSizePane.getBoardRowTextField().getText();
-		String col = changeBoardSizePane.getBabyPieceTextField().getText();
-		String big = changeBoardSizePane.getBigPieceTextField().getText();
-		String mid = changeBoardSizePane.getMidPieceTextField().getText();
-		String small = changeBoardSizePane.getSmallPieceTextField().getText();
-		String baby = changeBoardSizePane.getBabyPieceTextField().getText();
-		
+	public void handleConfirmBtn(BoardSetupView boardSetup, Stage stage) {
+		String row = boardSetup.getBoardRowTextField().getText();
+		String col = boardSetup.getBabyPieceTextField().getText();
+		String big = boardSetup.getBigPieceTextField().getText();
+		String mid = boardSetup.getMidPieceTextField().getText();
+		String small = boardSetup.getSmallPieceTextField().getText();
+		String baby = boardSetup.getBabyPieceTextField().getText();
+
 		int rowNumber = Integer.valueOf(row);
 		int colNumber = Integer.valueOf(row);
 		int bigNumber = Integer.valueOf(big);
 		int midNumber = Integer.valueOf(mid);
 		int smallNumber = Integer.valueOf(small);
 		int babyNumber = Integer.valueOf(baby);
-		
 
-		if (row.isEmpty() && col.isEmpty() && big.isEmpty() 
+
+		if (row.isEmpty() && col.isEmpty() && big.isEmpty()
 				&& mid.isEmpty() && small.isEmpty() && baby.isEmpty()) {
-			changeBoardSizePane.getTips().setVisible(true);
+			boardSetup.getTips().setVisible(true);
 			return;
 		}
 		else if ((colNumber < 4) || (rowNumber < 4)|| (bigNumber < 1)
 				|| (midNumber < 1) || (smallNumber < 1) || (babyNumber < 1)) {
-			changeBoardSizePane.getTips().setVisible(true);
+			boardSetup.getTips().setVisible(true);
 			return;
 		}
 		else if(rowNumber < (bigNumber + midNumber + smallNumber + babyNumber)) {
-			changeBoardSizePane.getTips().setVisible(true);
+			boardSetup.getTips().setVisible(true);
 			return;
 		}
 		else {
-			changeBoardSizePane.getTips().setVisible(false);
-			BoardGame boardGame = new BoardGame(changeBoardSizePane);
+			boardSetup.getTips().setVisible(false);
+			BoardGame boardGame = new BoardGame(boardSetup);
 			boardGame.stage.show();
 			stage.close();
 		}
-		
+
 	}
 
-	public void handleClearBtn(ChangeBoardSizePane changeBoardSizePane) {
-		changeBoardSizePane.getTips().setVisible(false);
-		changeBoardSizePane.getBoardColTextField().setText("");
-		changeBoardSizePane.getBoardRowTextField().setText("");
-		changeBoardSizePane.getBigPieceTextField().setText("");
-		changeBoardSizePane.getMidPieceTextField().setText("");
-		changeBoardSizePane.getSmallPieceTextField().setText("");
-		changeBoardSizePane.getBabyPieceTextField().setText("");
+	public void handleClearBtn(BoardSetupView boardSetup) {
+		boardSetup.getTips().setVisible(false);
+		boardSetup.getBoardColTextField().setText("");
+		boardSetup.getBoardRowTextField().setText("");
+		boardSetup.getBigPieceTextField().setText("");
+		boardSetup.getMidPieceTextField().setText("");
+		boardSetup.getSmallPieceTextField().setText("");
+		boardSetup.getBabyPieceTextField().setText("");
 	}
 }

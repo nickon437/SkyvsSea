@@ -3,6 +3,7 @@ package skyvssea.model.piece;
 import com.google.java.contract.Ensures;
 import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 import skyvssea.model.specialeffect.TargetType;
 
 public abstract class AbstractPiece extends GameObject {
@@ -13,20 +14,12 @@ public abstract class AbstractPiece extends GameObject {
     private int attackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
-    private SpecialEffect specialEffect;
-    private SpecialEffect passiveEffect;
+    private SpecialEffectContainer specialEffect;
+    private SpecialEffectContainer passiveEffect;
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 	private boolean passiveEffectActivated;
-
-    public boolean isPassiveEffectActivated() {
-		return passiveEffectActivated;
-	}
-
-	public void togglePassiveEffectSwitch() {
-		passiveEffectActivated = !passiveEffectActivated;
-	}
 
 	protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
@@ -121,5 +114,13 @@ public abstract class AbstractPiece extends GameObject {
 
 	public Direction[] getAttackDirections() {
 		return attackDirections;
+	}
+	
+    public boolean isPassiveEffectActivated() {
+		return passiveEffectActivated;
+	}
+
+	public void togglePassiveEffectSwitch() {
+		passiveEffectActivated = !passiveEffectActivated;
 	}
 }

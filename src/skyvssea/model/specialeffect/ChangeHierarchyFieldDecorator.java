@@ -8,13 +8,13 @@ public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffec
 	protected Integer change;
 	protected Hierarchy specificLevel;
 	
-	public ChangeHierarchyFieldDecorator(int change, SpecialEffect specialEffect) {
-		super(specialEffect);
+	public ChangeHierarchyFieldDecorator(int change, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(specialEffectWrappee);
 		this.change = change;
 	}
 	
-	public ChangeHierarchyFieldDecorator(Hierarchy level, SpecialEffect specialEffect) {
-		super(specialEffect);
+	public ChangeHierarchyFieldDecorator(Hierarchy level, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(specialEffectWrappee);
 		this.specificLevel = level;
 	}
 

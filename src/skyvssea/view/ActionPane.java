@@ -181,7 +181,6 @@ public class ActionPane extends VBox {
     	killBtn.setDisable(false);
     }
 
-
 	public void disableAllButtons() {
         disableSpecialEffectBtn();
         disablePassiveEffectBtn();

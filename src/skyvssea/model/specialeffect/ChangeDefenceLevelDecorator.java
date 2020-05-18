@@ -6,12 +6,12 @@ import skyvssea.model.Hierarchy;
 import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeDefenceLevelDecorator extends ChangeHierarchyFieldDecorator {
-	public ChangeDefenceLevelDecorator(int change, SpecialEffect specialEffect) {
-		super(change, specialEffect);
+	public ChangeDefenceLevelDecorator(int change, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(change, specialEffectWrappee);
 	}
 	
-	public ChangeDefenceLevelDecorator(Hierarchy level, SpecialEffect specialEffect) {
-		super(level, specialEffect);
+	public ChangeDefenceLevelDecorator(Hierarchy level, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(level, specialEffectWrappee);
 	}
 	
 	@Override
@@ -29,12 +29,12 @@ public class ChangeDefenceLevelDecorator extends ChangeHierarchyFieldDecorator {
 
 	@Ensures("result != null")
 	@Override
-	public SpecialEffect copy() {
-		SpecialEffect copy = null;
+	public AbstractSpecialEffectDecorator copy() {
+		AbstractSpecialEffectDecorator copy = null;
 		if (change != null) {
-			copy = new ChangeDefenceLevelDecorator(change, specialEffect.copy());
+			copy = new ChangeDefenceLevelDecorator(change, specialEffectWrappee.copy());
 		} else if (specificLevel != null) {
-			copy = new ChangeDefenceLevelDecorator(specificLevel, specialEffect.copy());
+			copy = new ChangeDefenceLevelDecorator(specificLevel, specialEffectWrappee.copy());
 		}
 		return copy;
 	}

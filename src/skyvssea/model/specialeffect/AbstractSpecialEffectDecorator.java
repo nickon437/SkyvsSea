@@ -5,30 +5,23 @@ import com.google.java.contract.Ensures;
 import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
-	protected SpecialEffect specialEffect;
+	protected AbstractSpecialEffectDecorator specialEffectWrappee;
 	
-	@Ensures("specialEffect != null")
-	public AbstractSpecialEffectDecorator(SpecialEffect specialEffect) {
-		this.specialEffect = specialEffect;
+	@Ensures("specialEffectWrappee != null")
+	public AbstractSpecialEffectDecorator(AbstractSpecialEffectDecorator specialEffectWrappee) {
+		this.specialEffectWrappee = specialEffectWrappee;
 	}
 
 	@Override
-	public void apply(AbstractPiece target) { specialEffect.apply(target); }
+	public void apply(AbstractPiece target) { specialEffectWrappee.apply(target); }
 	   
 	@Override
-	public void remove(AbstractPiece target) { specialEffect.remove(target); }
+	public void remove(AbstractPiece target) { specialEffectWrappee.remove(target); }
 	
 	@Override
-	public boolean updateEffectiveDuration() { return specialEffect.updateEffectiveDuration(); }
-	
-	@Override
-	public int getEffectiveDuration() { return specialEffect.getEffectiveDuration(); }
+	public AbstractSpecialEffectDecorator copy() {
+		return specialEffectWrappee.copy();
+	}
 
-	@Override
-	public String getName() { return specialEffect.getName(); }
-	
-	@Override
-	public TargetType getTargetType() { return specialEffect.getTargetType(); }
-
-	public SpecialEffect getSpecialEffect() { return specialEffect; }
+	public SpecialEffect getSpecialEffect() { return specialEffectWrappee; }
 }

@@ -4,8 +4,8 @@ import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 	
-	public ChangeAttackRangeDecorator(double factor, SpecialEffect specialEffect) {
-		super(factor, specialEffect);
+	public ChangeAttackRangeDecorator(double factor, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(factor, specialEffectWrappee);
 	}
 	
 	@Override
@@ -22,7 +22,7 @@ public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 	}
 
 	@Override
-	public SpecialEffect copy() {
-		return new ChangeAttackRangeDecorator(factor, specialEffect.copy());
+	public AbstractSpecialEffectDecorator copy() {
+		return new ChangeAttackRangeDecorator(factor, specialEffectWrappee.copy());
 	}
 }

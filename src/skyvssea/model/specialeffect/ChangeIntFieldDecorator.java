@@ -4,8 +4,8 @@ public abstract class ChangeIntFieldDecorator extends AbstractSpecialEffectDecor
 	protected int originalValue;
 	protected double factor;
 	
-	public ChangeIntFieldDecorator(double factor, SpecialEffect specialEffect) {
-		super(specialEffect);
+	public ChangeIntFieldDecorator(double factor, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(specialEffectWrappee);
 		this.factor = factor;
 	}
 }

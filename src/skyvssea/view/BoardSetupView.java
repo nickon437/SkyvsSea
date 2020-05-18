@@ -5,16 +5,16 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
+import skyvssea.util.NodeCoordinateUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,14 +33,8 @@ public class BoardSetupView extends VBox {
 	public GridPane inputPane = new GridPane();
 	
 //	private Text tip = new Text("The total number of pieces \n should be less than board rows");
-	
-	private Label rowLabel = new Label("Rows: ");
-	private Label colLabel = new Label("Columns:");
-	private Label bigPieceLabel = new Label("Big piece:");
-	private Label midPieceLabel = new Label("Middle piece:");
-	private Label smallPieceLabel = new Label("Small piece:");
-	private Label babyPieceLabel = new Label("Baby piece:");
 
+	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be \n less than number of board rows");
 	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> rowSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> bigPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
@@ -48,20 +42,24 @@ public class BoardSetupView extends VBox {
 	private Spinner<Integer> smallPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 	private Spinner<Integer> babyPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
 
-	private Label tips = new Label("The input cannot be invailed ");
+	private boolean isInputValid = true;
 
 	public BoardSetupView(BoardSetupController controller) {
-		tips.setTextFill(Color.RED);
-		tips.setVisible(false);
+		this.setSpacing(20);
+
+		Label rowLabel = new Label("Rows: ");
+		Label colLabel = new Label("Columns:");
+		Label bigPieceLabel = new Label("Big piece:");
+		Label midPieceLabel = new Label("Middle piece:");
+		Label smallPieceLabel = new Label("Small piece:");
+		Label babyPieceLabel = new Label("Baby piece:");
 
 		inputPane.add(colLabel, 0, 0);
 		inputPane.add(rowLabel, 0, 1);
-//		inputPane.add(tip, 0, 2);
 		inputPane.add(bigPieceLabel, 0, 3);
 		inputPane.add(midPieceLabel, 0, 4);
 		inputPane.add(smallPieceLabel, 0,5);
 		inputPane.add(babyPieceLabel, 0, 6);
-		inputPane.add(tips, 0, 7);
 		
 		inputPane.add(colSpinner, 1, 0);
 		inputPane.add(rowSpinner, 1, 1);
@@ -74,11 +72,21 @@ public class BoardSetupView extends VBox {
 		inputPane.setVgap(10);
 		inputPane.setAlignment(Pos.CENTER);
 
+		formatSpinnerTip();
+
 		HBox buttonHolder = new HBox();
 		formatButtonHolder(buttonHolder, controller);
 
 		this.getChildren().addAll(inputPane, buttonHolder);
 		this.setPadding(new Insets(30));
+	}
+
+	private void formatSpinnerTip() {
+		rowSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+		bigPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+		mediumPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+		smallPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+		babyPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
@@ -92,7 +100,7 @@ public class BoardSetupView extends VBox {
 
 	private void formatConfirmBtn(Button button, BoardSetupController controller, Stage stage) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-		button.setPrefSize(250, 50);
+		button.setPrefSize(150, 50);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		stage.close();
 	}
@@ -113,7 +121,30 @@ public class BoardSetupView extends VBox {
 		return lineup;
 	}
 
-	public Label getTips() {
-		return tips;
+	public int getTotalPieces() {
+		int total = 0;
+		total += bigPieceSpinner.getValue();
+		total += mediumPieceSpinner.getValue();
+		total += smallPieceSpinner.getValue();
+		total += babyPieceSpinner.getValue();
+		return total;
+	}
+
+	public void validateNumPiece() {
+		final int OFFSET = 7;
+
+		if (rowSpinner.getValue() <= getTotalPieces()) {
+			pieceTip.show(rowSpinner,
+					NodeCoordinateUtil.getRightX(rowSpinner),
+					NodeCoordinateUtil.getY(rowSpinner) - OFFSET);
+			isInputValid = false;
+		} else {
+			pieceTip.hide();
+			isInputValid = true;
+		}
+	}
+
+	public boolean isInputValid() {
+		return isInputValid;
 	}
 }

@@ -3,9 +3,7 @@ package skyvssea.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
@@ -67,6 +65,7 @@ public class BoardSetupView extends VBox {
 		inputPane.setHgap(10);
 		inputPane.setVgap(10);
 		formatSpinnerTip();
+		formatSpinners();
 	}
 
 	private void formatSpinnerTip() {
@@ -75,6 +74,15 @@ public class BoardSetupView extends VBox {
 		mediumPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
 		smallPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
 		babyPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+	}
+
+	private void formatSpinners() {
+		colSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+		rowSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+		bigPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+		mediumPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+		smallPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+		babyPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
@@ -121,9 +129,7 @@ public class BoardSetupView extends VBox {
 		final int OFFSET = 7;
 
 		if (rowSpinner.getValue() < getTotalPieces()) {
-			pieceTip.show(rowSpinner,
-					NodeCoordinateUtil.getRightX(rowSpinner),
-					NodeCoordinateUtil.getY(rowSpinner) - OFFSET);
+			pieceTip.show(rowSpinner, NodeCoordinateUtil.getRightX(rowSpinner), NodeCoordinateUtil.getY(rowSpinner) - OFFSET);
 			confirmButton.setDisable(true);
 		} else {
 			pieceTip.hide();

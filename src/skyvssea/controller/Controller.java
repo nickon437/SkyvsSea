@@ -171,7 +171,7 @@ public class Controller {
 		this.board = new Board(boardCol,boardRow);
 		this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
 		this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-		 
+
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
         setTiles(boardPane);

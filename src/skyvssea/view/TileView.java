@@ -41,7 +41,7 @@ public class TileView extends Avatar implements Observer {
 		return (x + y) % 2 == 0;
 	}
 
-    @Requires("x > 0 && y > 0 && tileSize >= 0")
+    @Requires("x >= 0 && y >= 0 && tileSize >= 0")
     private Rectangle createBase(int x, int y, double tileSize) {
         Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
         base.setStroke(DEFAULT_DARK_BASE_COLOR);

@@ -3,13 +3,12 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PieceManager {
-    private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new HashMap<>();
-    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
+
+	private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new TreeMap<>();
+    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new TreeMap<>();
     private AbstractPiece currentPiece;
 
     public PieceManager(Map<Hierarchy, Integer> lineup) {

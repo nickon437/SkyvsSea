@@ -39,13 +39,17 @@ public class Player {
         return false;
     }
 
-    public void reduceNumUndos() { numUndos--; }
+    public void reduceNumUndos() {
+        numUndos--;
+    }
 
     public void validateUndoAvailability() {
-        if (numUndos <= STANDARD_NUM_UNDOS) {
+        if (numUndos < STANDARD_NUM_UNDOS) {
             numUndos = 0;
         }
     }
 
-    public boolean isUndoAvailabile() { return numUndos > 0 ? true : false; }
+    public boolean isUndoAvailabile() {
+        return numUndos > 0 ? true : false;
+    }
 }

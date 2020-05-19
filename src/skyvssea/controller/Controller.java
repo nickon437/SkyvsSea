@@ -152,10 +152,6 @@ public class Controller {
         playerManager.getCurrentPlayer().reduceNumUndos();
         historyManager.undoToMyTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
-
-        if (!playerManager.getCurrentPlayer().isUndoAvailabile()) {
-            actionPane.setUndoBtnDisable(true);
-        }
     }
 
     private void changeTurn() {

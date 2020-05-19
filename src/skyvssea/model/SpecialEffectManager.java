@@ -42,7 +42,7 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 
             int currentEffectiveDuration = specialEffect.getEffectiveDuration();
             int newEffectiveDuration = currentEffectiveDuration - 1;
-            Command updateEffectiveDurationCommand = new UpdateEffectiveDurationCommand(target, this, specialEffect, newEffectiveDuration);
+            Command updateEffectiveDurationCommand = new UpdateEffectiveDurationCommand(this, specialEffect, newEffectiveDuration);
             historyManager.storeAndExecute(updateEffectiveDurationCommand);
         }
     }

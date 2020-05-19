@@ -42,8 +42,6 @@ public class AdvancedActionPane extends SplitPane {
 
         formatGraphic(arrowUpImage);
         formatGraphic(arrowDownImage);
-
-        this.setOnMouseExited(e -> { if (!isCollapsed) collapseButtonHolder(); });
     }
 
     private void formatPaneOpenerBtn(Button button) {

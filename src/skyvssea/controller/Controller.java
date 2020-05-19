@@ -179,7 +179,7 @@ public class Controller {
 		this.board = new Board(boardCol,boardRow);
 		this.pieceManager = new PieceManager(createInitialLineUp(),babyNumber,smallNumber,midNumber,bigNumber);
 		 this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-		 
+
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
         setTiles(boardPane);
@@ -223,11 +223,13 @@ public class Controller {
     }
     
 	private Map<Hierarchy, Integer> createInitialLineUp() {
-		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		Map<Hierarchy, Integer> lineup = new TreeMap<Hierarchy, Integer>();
 		lineup.put(Hierarchy.BIG, 1);
 		lineup.put(Hierarchy.MEDIUM, 1);
 		lineup.put(Hierarchy.SMALL, 1);
 		lineup.put(Hierarchy.BABY, 1);
+
+        System.out.println(lineup + " createInitialLineup");
 		return lineup;
 	}
 
@@ -238,36 +240,36 @@ public class Controller {
 		String mid = changeBoardSizePane.getMidPieceTextField().getText();
 		String small = changeBoardSizePane.getSmallPieceTextField().getText();
 		String baby = changeBoardSizePane.getBabyPieceTextField().getText();
-		
-		int rowNumber = Integer.valueOf(row);
-		int colNumber = Integer.valueOf(row);
-		int bigNumber = Integer.valueOf(big);
-		int midNumber = Integer.valueOf(mid);
-		int smallNumber = Integer.valueOf(small);
-		int babyNumber = Integer.valueOf(baby);
-		
 
-		if (row.isEmpty() && col.isEmpty() && big.isEmpty() 
-				&& mid.isEmpty() && small.isEmpty() && baby.isEmpty()) {
-			changeBoardSizePane.getTips().setVisible(true);
-			return;
-		}
-		else if ((colNumber < 4) || (rowNumber < 4)|| (bigNumber < 1)
-				|| (midNumber < 1) || (smallNumber < 1) || (babyNumber < 1)) {
-			changeBoardSizePane.getTips().setVisible(true);
-			return;
-		}
-		else if(rowNumber < (bigNumber + midNumber + smallNumber + babyNumber)) {
+		if (row.isEmpty() || col.isEmpty() ||  big.isEmpty()
+				|| mid.isEmpty() || small.isEmpty() || baby.isEmpty()) {
 			changeBoardSizePane.getTips().setVisible(true);
 			return;
 		}
 		else {
-			changeBoardSizePane.getTips().setVisible(false);
-			BoardGame boardGame = new BoardGame(changeBoardSizePane);
-			boardGame.stage.show();
-			stage.close();
-		}
-		
+            int rowNumber = Integer.valueOf(row);
+            int colNumber = Integer.valueOf(row);
+            int bigNumber = Integer.valueOf(big);
+            int midNumber = Integer.valueOf(mid);
+            int smallNumber = Integer.valueOf(small);
+            int babyNumber = Integer.valueOf(baby);
+
+            if ((colNumber < 4) || (rowNumber < 4)|| (bigNumber < 1)
+                    || (midNumber < 1) || (smallNumber < 1) || (babyNumber < 1)) {
+                changeBoardSizePane.getTips().setVisible(true);
+                return;
+            }
+            else if(rowNumber < (bigNumber + midNumber + smallNumber + babyNumber)) {
+                changeBoardSizePane.getTips().setVisible(true);
+                return;
+            }
+            else {
+                changeBoardSizePane.getTips().setVisible(false);
+                BoardGame boardGame = new BoardGame(changeBoardSizePane);
+                boardGame.stage.show();
+                stage.close();
+            }
+        }
 	}
 
 	public void handleClearBtn(ChangeBoardSizePane changeBoardSizePane) {

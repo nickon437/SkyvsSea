@@ -3,13 +3,11 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PieceManager {
-	private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new HashMap<>();
-    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new HashMap<>();
+	private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new TreeMap<>();
+    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new TreeMap<>();
     private AbstractPiece currentPiece;
 
     public PieceManager(Map<Hierarchy, Integer> lineup,int babyNumber, int smallNumber, int midNumber, int bigNumber) {
@@ -24,15 +22,20 @@ public class PieceManager {
     public void initializePieces(Map<Hierarchy, Integer> lineup , int babyNumber, int smallNumber, int midNumber, int bigNumber) {
         AbstractPieceFactory sharkFactory = SharkFactory.getInstance();
         AbstractPieceFactory eagleFactory = EagleFactory.getInstance();
+
         lineup.replace(Hierarchy.BABY, 1, babyNumber);
         lineup.replace(Hierarchy.SMALL, 1, smallNumber);
         lineup.replace(Hierarchy.MEDIUM, 1, midNumber);
         lineup.replace(Hierarchy.BIG, 1, bigNumber);
-      
         for (Map.Entry<Hierarchy, Integer> entry : lineup.entrySet()) {
             createPiecesByHierarchy(eaglePieces, eagleFactory, entry);
             createPiecesByHierarchy(sharkPieces, sharkFactory, entry);
+
         }
+
+
+        System.out.println( lineup.entrySet());
+        System.out.println(lineup);
     }
 
     private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
@@ -102,4 +105,5 @@ public class PieceManager {
             }
         }
     }
+
 }

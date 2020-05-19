@@ -12,6 +12,7 @@ import skyvssea.util.NodeCoordinateUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class BoardSetupView extends VBox {
 
@@ -108,7 +109,7 @@ public class BoardSetupView extends VBox {
 	}
 
 	public Map<Hierarchy, Integer> getPieceLineup() {
-		Map<Hierarchy, Integer> lineup = new HashMap<>();
+		Map<Hierarchy, Integer> lineup = new TreeMap<>();
 		lineup.put(Hierarchy.BIG, bigPieceSpinner.getValue());
 		lineup.put(Hierarchy.MEDIUM, mediumPieceSpinner.getValue());
 		lineup.put(Hierarchy.SMALL, smallPieceSpinner.getValue());

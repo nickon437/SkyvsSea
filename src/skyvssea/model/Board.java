@@ -1,7 +1,6 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.TargetType;
 
@@ -10,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Board {
-	public int col;
-	public int row;
+    private int col;
+    private int row;
 	private Tile[][] tiles;
 	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
 	private Tile registeredTile;
@@ -21,14 +20,16 @@ public class Board {
 		this.row = row;
 		tiles = new Tile[col][row];
 
-		for (int x = 0; x < col; x ++) {
-			for (int y = 0; y < row; y ++) {
+		for (int x = 0; x < col; x++) {
+			for (int y = 0; y < row; y++) {
 				tiles[x][y] = new Tile(x, y);
 			}
 		}
 	}
 
-	public Tile[][] getTiles() { return tiles; }
+    public Tile[][] getTiles() {
+        return tiles;
+    }
 
 	@Requires("rootTile != null && distance >= 0")
 	public Tile getTile(Tile rootTile, Direction dir, int distance) {
@@ -83,28 +84,8 @@ public class Board {
 		return col;
 	}
 
-	public void setCol(int col) {
-		this.col = col;
-	}
-
 	public int getRow() {
 		return row;
-	}
-
-	public void setRow(int row) {
-		this.row = row;
-	}
-
-	public ArrayList<Tile> getHighlightedTiles() {
-		return highlightedTiles;
-	}
-
-	public void setHighlightedTiles(ArrayList<Tile> highlightedTiles) {
-		this.highlightedTiles = highlightedTiles;
-	}
-
-	public void setTiles(Tile[][] tiles) {
-		this.tiles = tiles;
 	}
 
 	public Tile getRegisteredTile() { return registeredTile; }
@@ -126,8 +107,8 @@ public class Board {
 	}
 
 	public void setBaseColours() {
-		for (int x = 0; x < col; x ++) {
-			for (int y = 0; y < row; y ++) {
+		for (int x = 0; x < col; x++) {
+			for (int y = 0; y < row; y++) {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
@@ -234,6 +215,4 @@ public class Board {
 		}
 		return detectableTilesWithPiece;
 	}
-
-	
 }

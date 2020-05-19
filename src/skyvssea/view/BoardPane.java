@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardPane extends Pane {
-	public int col;
-	public int row;
+	private final int col;
+	private final int row;
 	
     private List<TileView> tileViewGroup = new ArrayList<>();
     private List<PieceView> pieceViewGroup = new ArrayList<>();
@@ -20,29 +20,36 @@ public class BoardPane extends Pane {
     private double tileSize;
 
     @Requires("controller != null")
-    public BoardPane(Controller controller,int col, int row) {
-    	this.col = col;
-    	this.row = row;
-    	for (int y = 0; y < this.row; y++) {
-             for (int x = 0; x < this.col; x++) {
-                 TileView tileView = new TileView(x, y, tileSize, controller);
-                 tileViewGroup.add(tileView);
-             }
-         }
-         this.getChildren().addAll(tileViewGroup);
+    public BoardPane(Controller controller, int col, int row) {
+        this.col = col;
+        this.row = row;
 
-         setDynamicTileSize();
-     }
+        for (int y = 0; y < row; y++) {
+            for (int x = 0; x < col; x++) {
+                TileView tileView = new TileView(x, y, tileSize, controller);
+                tileViewGroup.add(tileView);
+            }
+        }
+        this.getChildren().addAll(tileViewGroup);
+
+        setDynamicTileSize();
+    }
 
     private void setDynamicTileSize() {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             double paneWidth = getWidth();
             double paneHeight = getHeight();
-            double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
-            tileSize = boardSideSize / ((col + row) / 1.75);
-            updateTilesSize(tileSize, paneWidth, paneHeight);
-            updatePiecesSize(tileSize);
-            updateObstacleSize(tileSize);
+
+            double rowTileSize = paneHeight / row;
+            double colTileSize = paneWidth / col;
+            double newTileSize = rowTileSize < colTileSize ? rowTileSize : colTileSize;
+
+            if (this.tileSize != newTileSize) {
+                this.tileSize = newTileSize;
+                updateTilesSize(tileSize, paneWidth, paneHeight);
+                updatePiecesSize(tileSize);
+                updateObstacleSize(tileSize);
+            }
         };
 
         widthProperty().addListener(paneSizeListener);

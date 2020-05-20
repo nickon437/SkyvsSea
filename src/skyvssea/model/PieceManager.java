@@ -7,8 +7,8 @@ import java.util.*;
 
 public class PieceManager {
 
-	private Map<Hierarchy, ArrayList<AbstractPiece>> sharkPieces = new TreeMap<>();
-    private Map<Hierarchy, ArrayList<AbstractPiece>> eaglePieces = new TreeMap<>();
+	private Map<Hierarchy, List<AbstractPiece>> sharkPieces = new TreeMap<>();
+    private Map<Hierarchy, List<AbstractPiece>> eaglePieces = new TreeMap<>();
     private AbstractPiece currentPiece;
 
     public PieceManager(Map<Hierarchy, Integer> lineup) {
@@ -30,7 +30,7 @@ public class PieceManager {
         }
     }
 
-    private void createPiecesByHierarchy(Map<Hierarchy, ArrayList<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
+    private void createPiecesByHierarchy(Map<Hierarchy, List<AbstractPiece>> pieces, AbstractPieceFactory factory, Map.Entry<Hierarchy, Integer> creationInfo) {
         Hierarchy level = creationInfo.getKey();
         int numPiecesToCreate = creationInfo.getValue();
         pieces.put(level, new ArrayList<>());
@@ -52,30 +52,26 @@ public class PieceManager {
         currentPiece = null;
     }
 
-    public Map<Hierarchy, ArrayList<AbstractPiece>> getSharkPieces() {
-        return sharkPieces;
-    }
+    public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }
 
-    public Map<Hierarchy, ArrayList<AbstractPiece>> getEaglePieces() {
-        return eaglePieces;
-    }
+    public Map<Hierarchy, List<AbstractPiece>> getEaglePieces() { return eaglePieces; }
 
-    public ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> getAllPiecesList() {
-        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = new ArrayList<>();
-        piecesList.add(sharkPieces);
+    public List<Map<Hierarchy, List<AbstractPiece>>> getAllPiecesList() {
+        List<Map<Hierarchy, List<AbstractPiece>>> piecesList = new ArrayList<>();
         piecesList.add(eaglePieces);
+        piecesList.add(sharkPieces);
         return piecesList;
     }
 
     @Requires("board != null")
-    public ArrayList<Tile> setPiecesOnBoard(Board board) {
-        ArrayList<Tile> startingPositions = new ArrayList<>();
+    public List<Tile> setPiecesOnBoard(Board board) {
+        List<Tile> startingPositions = new ArrayList<>();
         int midPoint = board.getRow() / 2;
 
         // Use ArrayList to reduce code duplication when traverse through HashMap
-        ArrayList<Map<Hierarchy, ArrayList<AbstractPiece>>> piecesList = getAllPiecesList();
+        List<Map<Hierarchy, List<AbstractPiece>>> piecesList = getAllPiecesList();
 
-        for (Map<Hierarchy, ArrayList<AbstractPiece>> pieces : piecesList) {
+        for (Map<Hierarchy, List<AbstractPiece>> pieces : piecesList) {
             int pieceXCoord = 0;
             int pieceYCoord = midPoint;
             int pieceIndex = 0;
@@ -85,7 +81,7 @@ public class PieceManager {
                 pieceXCoord = board.getCol() - 1;
             }
 
-            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> entry : pieces.entrySet()) {
+            for (Map.Entry<Hierarchy, List<AbstractPiece>> entry : pieces.entrySet()) {
                 for (AbstractPiece piece : entry.getValue()) {
                     pieceYCoord = pieceYCoord + (flip * pieceIndex);
                     flip = flip * -1;
@@ -102,8 +98,8 @@ public class PieceManager {
     }
 
     public void updatePieceStatus() {
-        for (Map<Hierarchy, ArrayList<AbstractPiece>> playerPieces : getAllPiecesList()) {
-            for (Map.Entry<Hierarchy, ArrayList<AbstractPiece>> pieces : playerPieces.entrySet()) {
+        for (Map<Hierarchy, List<AbstractPiece>> playerPieces : getAllPiecesList()) {
+            for (Map.Entry<Hierarchy, List<AbstractPiece>> pieces : playerPieces.entrySet()) {
                 for (AbstractPiece piece : pieces.getValue()) {
                     piece.updateStatus();
                 }

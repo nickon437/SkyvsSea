@@ -12,7 +12,7 @@ public class Board {
     private int col;
     private int row;
 	private Tile[][] tiles;
-	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
+	private List<Tile> highlightedTiles = new ArrayList<>();
 	private Tile registeredTile;
 
 	public Board(int col, int row) {
@@ -121,7 +121,7 @@ public class Board {
 		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getMoveDirections()));
 	
 	    for (int count = 1; count <= moveRange; count++) {
-	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        List<Direction> blockedDirections = new ArrayList<>();
 	        for (Direction direction : tempDirections) {
 	        	if (direction == Direction.JUMP_OVER) {
 	        		continue;

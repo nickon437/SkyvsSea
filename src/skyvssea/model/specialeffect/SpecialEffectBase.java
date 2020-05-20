@@ -1,6 +1,5 @@
 package skyvssea.model.specialeffect;
 
-import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 
 public class SpecialEffectBase implements SpecialEffect {

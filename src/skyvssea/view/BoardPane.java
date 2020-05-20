@@ -3,9 +3,13 @@ package skyvssea.view;
 import com.google.java.contract.Requires;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
+import skyvssea.util.RegionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,8 @@ public class BoardPane extends Pane {
     private List<ObstacleView> obstacleViewGroup = new ArrayList<>();
     private double tileSize;
 
+    private static final double CORNER_RADIUS = 15;
+
     @Requires("controller != null")
     public BoardPane(Controller controller) {
         for (int y = 0; y < NUM_SIDE_CELL; y++) {
@@ -28,7 +34,27 @@ public class BoardPane extends Pane {
         }
         this.getChildren().addAll(tileViewGroup);
 
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setBlurType(BlurType.ONE_PASS_BOX);
+        this.setEffect(dropShadow);
+        RegionUtil.setCornerRadii(this, new CornerRadii(30));
+        roundUpCorners();
+
         setDynamicTileSize();
+    }
+
+    private void roundUpCorners() {
+        TileView topLeftTileView = getTileView(0, 0);
+        topLeftTileView.setCornerRadius(new CornerRadii(CORNER_RADIUS, 0, 0, 0, false));
+
+        TileView topRightTileView = getTileView(NUM_SIDE_CELL - 1, 0);
+        topRightTileView.setCornerRadius(new CornerRadii(0, CORNER_RADIUS, 0, 0, false));
+
+        TileView bottomRightTileView = getTileView(NUM_SIDE_CELL - 1, NUM_SIDE_CELL - 1);
+        bottomRightTileView.setCornerRadius(new CornerRadii(0, 0, CORNER_RADIUS, 0, false));
+
+        TileView bottomLeftTileView = getTileView(0, NUM_SIDE_CELL - 1);
+        bottomLeftTileView.setCornerRadius(new CornerRadii(0, 0, 0, CORNER_RADIUS, false));
     }
 
     private void setDynamicTileSize() {

@@ -1,13 +1,11 @@
 package skyvssea.view;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 
@@ -43,7 +41,7 @@ public class ActionPane extends VBox {
     private void formatKillBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/kill.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/kill.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredKillBtn();
@@ -61,7 +59,7 @@ public class ActionPane extends VBox {
     private void formatSpecialEffectBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredSpecialEffectBtn();
@@ -79,7 +77,7 @@ public class ActionPane extends VBox {
     private void formatEndBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/end-turn.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/end-turn.png");
         button.setCancelButton(true);
         button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
         button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
@@ -105,10 +103,8 @@ public class ActionPane extends VBox {
 
     private void setActionIndicatorPosition(double xTranslate, double width) {
         Timeline timeline = new Timeline();
-        KeyValue kvXCoord = new KeyValue(actionIndicator.translateXProperty(), xTranslate, Interpolator.EASE_IN);
-        KeyFrame kfXCoord = new KeyFrame(Duration.seconds(0.5), kvXCoord);
-        KeyValue kvWidth = new KeyValue(actionIndicator.maxWidthProperty(), width, Interpolator.EASE_IN);
-        KeyFrame kfWidth = new KeyFrame(Duration.seconds(0.5), kvWidth);
+        KeyFrame kfXCoord = AnimationUtil.formatKeyFrame(actionIndicator.translateXProperty(), xTranslate, Duration.seconds(0.5));
+        KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
         timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
         timeline.play();
     }

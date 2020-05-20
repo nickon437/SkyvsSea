@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-public class ButtonUtil {
+public class ButtonUtil extends RegionUtil {
 
     public static final double STANDARD_BUTTON_HEIGHT = 40;
     public static final double BUTTON_SPACING = 20;
@@ -27,7 +27,7 @@ public class ButtonUtil {
     public static void formatHoveringEffect(Button button, boolean isHovered) {
         Color curColor = (Color) button.getBackground().getFills().get(0).getFill();
         Color modifiedColor = ColorUtil.getHoveringColor(isHovered, curColor);
-        button.setBackground(new Background(new BackgroundFill(modifiedColor, new CornerRadii(5), null)));
+        button.setBackground(new Background(new BackgroundFill(modifiedColor, getCornerRadii(button), null)));
     }
 
     @Requires("button != null && url.length() > 0 && url.contains(\".\")")
@@ -36,9 +36,10 @@ public class ButtonUtil {
         ImageView imageView = new ImageView(url);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
-        imageView.setFitHeight(24);
+        imageView.setFitHeight(button.getFont().getSize() + 10);
         button.setGraphic(imageView);
         button.setGraphicTextGap(4);
+
     }
 
     public static void maximizeHBoxControlSize(Control control) {

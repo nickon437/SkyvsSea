@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 
@@ -23,8 +24,8 @@ public class AdvancedActionPane extends SplitPane {
     private Button loadBtn = new Button("Load");
     private Button restartBtn = new Button("Restart");
 
-    private ImageView arrowUpImage = new ImageView("resources/icons/arrow-up.png");
-    private ImageView arrowDownImage = new ImageView("resources/icons/arrow-down.png");
+    private ImageView arrowUpImage = new ImageView("file:resources/icons/arrow-up.png");
+    private ImageView arrowDownImage = new ImageView("file:resources/icons/arrow-down.png");
 
     private boolean isCollapsed = true;
 
@@ -71,22 +72,22 @@ public class AdvancedActionPane extends SplitPane {
     }
 
     private void formatUndoButton(Button button, Controller controller) {
-        ButtonUtil.formatGraphic(button, "resources/icons/undo.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/undo.png");
         button.setOnMouseClicked(e -> controller.handleUndoButton());
     }
 
     private void formatSaveButton(Button button, Controller controller) {
-        ButtonUtil.formatGraphic(button, "resources/icons/save.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/save.png");
         // TODO: Add handle click
     }
 
     private void formatLoadButton(Button button, Controller controller) {
-        ButtonUtil.formatGraphic(button, "resources/icons/load.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
         // TODO: Add handle click
     }
 
     private void formatRestartButton(Button button, Controller controller) {
-        ButtonUtil.formatGraphic(button, "resources/icons/restart.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/restart.png");
         // TODO: Add handle click
     }
 
@@ -107,17 +108,14 @@ public class AdvancedActionPane extends SplitPane {
         List<KeyFrame> kfButtonHeights = new ArrayList<>();
         for (Node node : buttonHolder.getChildren()) {
             Button button = (Button) node;
-            KeyValue kvButtonHeight = new KeyValue(button.prefHeightProperty(), newButtonHeight, Interpolator.EASE_IN);
-            KeyFrame kfButtonHeight = new KeyFrame(animationDuration, kvButtonHeight);
+            KeyFrame kfButtonHeight = AnimationUtil.formatKeyFrame(button.prefHeightProperty(), newButtonHeight, animationDuration);
             kfButtonHeights.add(kfButtonHeight);
         }
 
-        KeyValue kvGraphic = new KeyValue(paneOpenerBtn.graphicProperty(), newGraphic, Interpolator.EASE_IN);
-        KeyFrame kfGraphic = new KeyFrame(animationDuration, kvGraphic);
-
         timeline.getKeyFrames().addAll(kfButtonHeights);
-        timeline.getKeyFrames().add(kfGraphic);
         timeline.play();
+
+        paneOpenerBtn.setGraphic(newGraphic);
     }
 
     public void setUndoBtnDisable(boolean isDisabled) {

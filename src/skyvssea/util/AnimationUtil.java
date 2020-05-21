@@ -17,14 +17,14 @@ public class AnimationUtil {
 
     public static void fadeInTransition(Node node) {
         node.setVisible(true);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), node);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.3), node);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         fadeTransition.play();
     }
 
     public static void fadeOutTransition(Node node) {
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), node);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.3), node);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.setOnFinished(e -> node.setVisible(false));

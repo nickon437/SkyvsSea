@@ -3,14 +3,15 @@ package skyvssea.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.NodeCoordinateUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -103,8 +104,8 @@ public class BoardSetupView extends VBox {
 
 	public int[] getBoardSize() {
 		int[] boardSize = new int[2]; // Nick - Is there any better value type for this?
-		boardSize[0] = colSpinner.getValue().intValue();
-		boardSize[1] = rowSpinner.getValue().intValue();
+		boardSize[0] = colSpinner.getValue();
+		boardSize[1] = rowSpinner.getValue();
 		return boardSize;
 	}
 
@@ -117,7 +118,7 @@ public class BoardSetupView extends VBox {
 		return lineup;
 	}
 
-	public int getTotalPieces() {
+	private int getTotalPieces() {
 		int total = 0;
 		total += bigPieceSpinner.getValue();
 		total += mediumPieceSpinner.getValue();
@@ -126,7 +127,7 @@ public class BoardSetupView extends VBox {
 		return total;
 	}
 
-	public void validateNumPiece() {
+	private void validateNumPiece() {
 		final int OFFSET = 7;
 
 		if (rowSpinner.getValue() < getTotalPieces()) {

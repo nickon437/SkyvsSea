@@ -15,8 +15,8 @@ import skyvssea.util.RegionUtil;
 
 public class LandingPage extends AnchorPane {
 
-    public static final int LANDING_PAGE_HEIGHT = 500;
-    public static final int LANDING_PAGE_WIDTH = 1100;
+    private static final int LANDING_PAGE_HEIGHT = 500;
+    private static final int LANDING_PAGE_WIDTH = 1100;
 
     private StackPane boardSetupPane = new StackPane();
 
@@ -100,7 +100,6 @@ public class LandingPage extends AnchorPane {
     }
 
     private void setBoardSetupPaneVisible(boolean isVisible) {
-        boardSetupPane.setVisible(isVisible);
         if (isVisible) {
             AnimationUtil.fadeInTransition(boardSetupPane);
         } else {

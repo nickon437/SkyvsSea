@@ -37,7 +37,7 @@ public class LandingPage extends AnchorPane {
         formatStartBtn(startBtn);
         formatLoadBtn(loadBtn);
         formatButtons(startBtn, loadBtn);
-        formatBoardSetupView(boardSetupPane, boardSetupView);
+        formatBoardSetupPane(boardSetupPane, boardSetupView);
     }
 
     private void formatBackgroundImage(ImageView image) {
@@ -82,7 +82,7 @@ public class LandingPage extends AnchorPane {
         ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
     }
 
-    private void formatBoardSetupView(StackPane boardSetupPane, BoardSetupView boardSetupView) {
+    private void formatBoardSetupPane(StackPane boardSetupPane, BoardSetupView boardSetupView) {
         Pane overlayPane = new Pane();
         RegionUtil.setBackground(overlayPane, Color.BLACK, null, null);
         overlayPane.setOpacity(0.8);

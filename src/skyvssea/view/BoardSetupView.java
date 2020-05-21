@@ -2,6 +2,7 @@ package skyvssea.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -12,6 +13,8 @@ import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.NodeCoordinateUtil;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -47,6 +50,7 @@ public class BoardSetupView extends VBox {
 	}
 
 	private void formatInputPane(GridPane inputPane) {
+		// Content
 		inputPane.add(new Label("Columns:"), 0, 0);
 		inputPane.add(new Label("Rows:"), 0, 1);
 		inputPane.add(new Label("Big piece:"), 0, 3);
@@ -60,31 +64,27 @@ public class BoardSetupView extends VBox {
 		inputPane.add(smallPieceSpinner, 1, 5);
 		inputPane.add(babyPieceSpinner, 1, 6);
 
+		// Separator
 		Separator separator = new Separator();
 		inputPane.add(separator, 0, 2);
 		GridPane.setColumnSpan(separator, 2);
 
+		// Spinners
+		List<Spinner> spinners = Arrays.asList(colSpinner, rowSpinner, bigPieceSpinner, mediumPieceSpinner,
+				smallPieceSpinner, babyPieceSpinner);
+		formatSpinners(spinners);
+
+		// Input pane's properties
 		inputPane.setHgap(10);
 		inputPane.setVgap(10);
-		formatSpinnerTip();
-		formatSpinners();
 	}
 
-	private void formatSpinnerTip() {
-		rowSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		bigPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		mediumPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		smallPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		babyPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-	}
-
-	private void formatSpinners() {
-		colSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		rowSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		bigPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		mediumPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		smallPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		babyPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+	private void formatSpinners(List<Spinner> spinners) {
+		for (Spinner spinner : spinners) {
+			spinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+			spinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+			spinner.setCursor(Cursor.HAND);
+		}
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
@@ -96,6 +96,7 @@ public class BoardSetupView extends VBox {
 
 	private void formatConfirmBtn(Button button, BoardSetupController controller) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+		ButtonUtil.formatGraphic(button, "file:resources/icons/check.png");
 		button.setPrefSize(150, 50);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));

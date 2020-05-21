@@ -41,13 +41,14 @@ public class BoardPane extends Pane {
         DropShadow dropShadow = new DropShadow();
         dropShadow.setBlurType(BlurType.ONE_PASS_BOX);
         this.setEffect(dropShadow);
-        RegionUtil.setCornerRadii(this, new CornerRadii(30));
         roundUpCorners();
 
         setDynamicTileSize();
     }
 
     private void roundUpCorners() {
+        RegionUtil.setCornerRadii(this, new CornerRadii(30));
+
         TileView topLeftTileView = getTileView(0, 0);
         topLeftTileView.setCornerRadius(new CornerRadii(CORNER_RADIUS, 0, 0, 0, false));
 
@@ -70,12 +71,10 @@ public class BoardPane extends Pane {
             double colTileSize = paneWidth / col;
             double newTileSize = rowTileSize < colTileSize ? rowTileSize : colTileSize;
 
-            if (this.tileSize != newTileSize) {
-                this.tileSize = newTileSize;
-                updateTilesSize(tileSize, paneWidth, paneHeight);
-                updatePiecesSize(tileSize);
-                updateObstacleSize(tileSize);
-            }
+            this.tileSize = newTileSize;
+            updateTilesSize(tileSize, paneWidth, paneHeight);
+            updatePiecesSize(tileSize);
+            updateObstacleSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);

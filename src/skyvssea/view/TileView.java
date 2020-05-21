@@ -45,8 +45,8 @@ public class TileView extends Avatar implements Observer {
     private Region createBase(int x, int y, double tileSize) {
         Region base = new Region();
         base.setBorder(new Border(new BorderStroke(Color.SLATEGREY, BorderStrokeStyle.SOLID, null, new BorderWidths(0.5))));
-        base.setTranslateX(x * tileSize);// + x * TILE_SPACING);
-        base.setTranslateY(y * tileSize);// + y * TILE_SPACING);
+        base.setTranslateX(x * tileSize);
+        base.setTranslateY(y * tileSize);
         base.setPrefSize(tileSize, tileSize);
         return base;
     }
@@ -73,16 +73,6 @@ public class TileView extends Avatar implements Observer {
     @Requires("color != null")
     private void updateBaseColor(Color color) {
         RegionUtil.setFill(base, color);
-
-////        BackgroundFill bgFill = base.getBackground().getFills().get(0);
-////        Background newBg = new Background(new BackgroundFill(color, bgFill.getRadii(), bgFill.getInsets()));
-//        Background newBg = RegionUtil.getFilledBackground(base, color);
-////        bgFill = new BackgroundFill(paint, bgFill.getRadii(), bgFill.getInsets());
-//        KeyFrame kfColor = AnimationUtil.formatKeyFrame(base.backgroundProperty(), newBg, Duration.seconds(0.5));
-//        Timeline timeline = new Timeline(kfColor);
-//        timeline.play();
-
-
     }
 
     public void updateBaseColorAsHovered(boolean isHovered) {

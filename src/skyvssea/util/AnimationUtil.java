@@ -6,17 +6,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.beans.value.WritableValue;
 import javafx.scene.Node;
-import javafx.scene.layout.Background;
 import javafx.util.Duration;
 
 public class AnimationUtil {
     public static KeyFrame formatKeyFrame(WritableValue target, double endValue, Duration duration) {
-        KeyValue keyValue = new KeyValue(target, endValue, Interpolator.EASE_IN);
-        KeyFrame keyFrame = new KeyFrame(duration, keyValue);
-        return keyFrame;
-    }
-
-    public static KeyFrame formatKeyFrame(WritableValue target, boolean endValue, Duration duration) {
         KeyValue keyValue = new KeyValue(target, endValue, Interpolator.EASE_IN);
         KeyFrame keyFrame = new KeyFrame(duration, keyValue);
         return keyFrame;

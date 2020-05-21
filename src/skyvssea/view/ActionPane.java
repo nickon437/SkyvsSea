@@ -8,6 +8,7 @@ import skyvssea.controller.Controller;
 import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
+import skyvssea.util.RegionUtil;
 
 public class ActionPane extends VBox {
     private HBox buttonHolder = new HBox();
@@ -35,7 +36,7 @@ public class ActionPane extends VBox {
     private void formatActionIndicator(Pane indicator) {
         indicator.setPrefHeight(3);
         indicator.setMaxWidth(0);
-        indicator.setBackground(new Background(new BackgroundFill(ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null)));
+        RegionUtil.setBackground(indicator, ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null);
     }
 
     private void formatKillBtn(Button button, Controller controller) {

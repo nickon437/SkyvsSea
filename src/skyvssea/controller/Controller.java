@@ -46,7 +46,7 @@ public class Controller {
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
-                    	pieceManager.setCurrentPiece(newSelectedPiece);
+                    	pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
                     }
                 }
@@ -147,7 +147,7 @@ public class Controller {
 
         board.clearHighlightedTiles();
         board.clearCurrentTile();
-        pieceManager.clearCurrentPiece();
+        pieceManager.clearRegisteredPiece();
     }
 
     private void endTurn() {

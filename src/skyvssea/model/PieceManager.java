@@ -9,7 +9,7 @@ public class PieceManager {
 
 	private Map<Hierarchy, List<AbstractPiece>> sharkPieces = new TreeMap<>();
     private Map<Hierarchy, List<AbstractPiece>> eaglePieces = new TreeMap<>();
-    private AbstractPiece currentPiece;
+    private AbstractPiece registeredPiece;
 
     public PieceManager(Map<Hierarchy, Integer> lineup) {
         initializePieces(lineup);
@@ -40,16 +40,16 @@ public class PieceManager {
     }
 
     public AbstractPiece getRegisteredPiece() {
-        return currentPiece;
+        return registeredPiece;
     }
 
-    @Requires("currentPiece != null")
-    public void setCurrentPiece(AbstractPiece currentPiece) {
-        this.currentPiece = currentPiece;
+    @Requires("registeredPiece != null")
+    public void setRegisteredPiece(AbstractPiece registeredPiece) {
+        this.registeredPiece = registeredPiece;
     }
 
-    public void clearCurrentPiece() {
-        currentPiece = null;
+    public void clearRegisteredPiece() {
+        registeredPiece = null;
     }
 
     public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }

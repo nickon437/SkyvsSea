@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardPane extends Pane {
-
-    public static final int NUM_SIDE_CELL = 10;
+	private final int col;
+	private final int row;
+	
     private List<TileView> tileViewGroup = new ArrayList<>();
     private List<PieceView> pieceViewGroup = new ArrayList<>();
     private List<ObstacleView> obstacleViewGroup = new ArrayList<>();
@@ -25,9 +26,12 @@ public class BoardPane extends Pane {
     private static final double CORNER_RADIUS = 15;
 
     @Requires("controller != null")
-    public BoardPane(Controller controller) {
-        for (int y = 0; y < NUM_SIDE_CELL; y++) {
-            for (int x = 0; x < NUM_SIDE_CELL; x++) {
+    public BoardPane(Controller controller, int col, int row) {
+        this.col = col;
+        this.row = row;
+
+        for (int y = 0; y < row; y++) {
+            for (int x = 0; x < col; x++) {
                 TileView tileView = new TileView(x, y, tileSize, controller);
                 tileViewGroup.add(tileView);
             }
@@ -47,13 +51,13 @@ public class BoardPane extends Pane {
         TileView topLeftTileView = getTileView(0, 0);
         topLeftTileView.setCornerRadius(new CornerRadii(CORNER_RADIUS, 0, 0, 0, false));
 
-        TileView topRightTileView = getTileView(NUM_SIDE_CELL - 1, 0);
+        TileView topRightTileView = getTileView(col - 1, 0);
         topRightTileView.setCornerRadius(new CornerRadii(0, CORNER_RADIUS, 0, 0, false));
 
-        TileView bottomRightTileView = getTileView(NUM_SIDE_CELL - 1, NUM_SIDE_CELL - 1);
+        TileView bottomRightTileView = getTileView(col - 1, row - 1);
         bottomRightTileView.setCornerRadius(new CornerRadii(0, 0, CORNER_RADIUS, 0, false));
 
-        TileView bottomLeftTileView = getTileView(0, NUM_SIDE_CELL - 1);
+        TileView bottomLeftTileView = getTileView(0, row - 1);
         bottomLeftTileView.setCornerRadius(new CornerRadii(0, 0, 0, CORNER_RADIUS, false));
     }
 
@@ -61,11 +65,17 @@ public class BoardPane extends Pane {
         ChangeListener<Number> paneSizeListener = (observable, oldValue, newValue) -> {
             double paneWidth = getWidth();
             double paneHeight = getHeight();
-            double boardSideSize = paneWidth < paneHeight ? paneWidth : paneHeight;
-            tileSize = boardSideSize / NUM_SIDE_CELL;
-            updateTilesSize(tileSize, paneWidth, paneHeight);
-            updatePiecesSize(tileSize);
-            updateObstacleSize(tileSize);
+
+            double rowTileSize = paneHeight / row;
+            double colTileSize = paneWidth / col;
+            double newTileSize = rowTileSize < colTileSize ? rowTileSize : colTileSize;
+
+            if (this.tileSize != newTileSize) {
+                this.tileSize = newTileSize;
+                updateTilesSize(tileSize, paneWidth, paneHeight);
+                updatePiecesSize(tileSize);
+                updateObstacleSize(tileSize);
+            }
         };
 
         widthProperty().addListener(paneSizeListener);
@@ -74,8 +84,8 @@ public class BoardPane extends Pane {
 
     @Requires("tileSize >= 0 && width >= tileSize && height >= tileSize")
     private void updateTilesSize(double tileSize, double width, double height) {
-        double mostLeftX = (width - (tileSize * NUM_SIDE_CELL)) / 2;
-        double mostTopY = (height - (tileSize * NUM_SIDE_CELL)) / 2;
+        double mostLeftX = (width - (tileSize * col)) / 2;
+        double mostTopY = (height - (tileSize * row)) / 2;
 
         for (TileView tileView : getTileViewGroup()) {
             tileView.updateSize(tileSize);
@@ -100,7 +110,7 @@ public class BoardPane extends Pane {
         return tileViewGroup;
     }
 
-	@Requires("x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL")
+	@Requires("x >= 0 && y >= 0 && x < col && y < row")
     private TileView getTileView(int x, int y) {
 		for (Node node : tileViewGroup) {
 			if (((TileView) node).getX() == x && ((TileView) node).getY() == y) {

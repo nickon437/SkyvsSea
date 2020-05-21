@@ -3,33 +3,21 @@ package skyvssea;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import skyvssea.controller.Controller;
-import skyvssea.view.*;
+import skyvssea.controller.BoardSetupController;
+import skyvssea.view.BoardSetupView;
 
 public class BoardGameApplication extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        buildView(primaryStage);
-    }
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		BoardSetupController controller = new BoardSetupController(primaryStage);
+		BoardSetupView boardSetup = new BoardSetupView(controller);
 
-    private void buildView(Stage stage) {
-        Controller controller = new Controller();
-        stage.setTitle("Sky vs. Sea");
-
-        BoardPane boardPane = new BoardPane(controller);
-        ActionPane actionPane = new ActionPane(controller);
-        MainControlPane primaryPane = new MainControlPane(boardPane, actionPane);
-
-        InfoPane infoPane = new InfoPane();
-        MainView root = new MainView(primaryPane, infoPane);
-
-        // Nick - There should be a better way to the models and views for controller
-        controller.setViewsAndModels(boardPane, actionPane, infoPane);
-
-        Scene scene = new Scene(root, 800, 600);
-        stage.setScene(scene);
-        stage.show();
-    }
+		Scene scene = new Scene(boardSetup);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Design Your Game");
+		primaryStage.setResizable(false);
+		primaryStage.show();
+	}
 
     public static void main(String[] args) {
         launch(args);

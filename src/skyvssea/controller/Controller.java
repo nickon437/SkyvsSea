@@ -7,9 +7,7 @@ import skyvssea.model.command.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
 
@@ -19,6 +17,7 @@ public class Controller {
     private PlayerManager playerManager;
     private HistoryManager historyManager;
     private ActionPane actionPane;
+    private BoardPane boardPane;
     private InfoPane infoPane;
 
     @Requires("tileView != null")
@@ -46,7 +45,7 @@ public class Controller {
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
-                        pieceManager.setRegisteredPiece(newSelectedPiece);
+                    	pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
                     }
                 }
@@ -98,8 +97,8 @@ public class Controller {
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         board.clearHighlightedTiles();
-        AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
-        actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
+        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
+        actionPane.setSpecialEffectBtnDisable(!registeredPiece.isSpecialEffectAvailable());
     }
 
     public void handleKillButton() { 
@@ -161,8 +160,8 @@ public class Controller {
 
     public void clearCache() {
         board.clearHighlightedTiles();
-        board.clearCurrentTile();
-        pieceManager.clearCurrentPiece();
+        board.clearRegisteredTile();
+        pieceManager.clearRegisteredPiece();
     }
 
     private void endTurn() {
@@ -174,12 +173,16 @@ public class Controller {
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-    	this.actionPane = actionPane;
-    	this.infoPane = infoPane;
+    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+        int boardCol = boardSetup.getBoardSize()[0];
+        int boardRow = boardSetup.getBoardSize()[1];
 
-    	this.board = new Board();
-		this.pieceManager = new PieceManager(createInitialLineUp());
+		this.boardPane = boardPane;
+		this.actionPane = actionPane;
+		this.infoPane = infoPane;
+
+        this.board = new Board(boardCol, boardRow);
+        this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
         this.historyManager = new HistoryManager();
         this.game = new Game(this, actionPane);
@@ -225,15 +228,6 @@ public class Controller {
             obstacle.addAvatar(obstacleView);
         }
     }
-    
-	private Map<Hierarchy, Integer> createInitialLineUp() {
-		Map<Hierarchy, Integer> lineup = new HashMap<>();
-		lineup.put(Hierarchy.BIG, 1);
-		lineup.put(Hierarchy.MEDIUM, 1);
-		lineup.put(Hierarchy.SMALL, 1);
-		lineup.put(Hierarchy.BABY, 1);
-		return lineup;
-	}
 
 	public PlayerManager getPlayerManager() { return playerManager; }
 }

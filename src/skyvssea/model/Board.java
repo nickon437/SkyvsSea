@@ -1,7 +1,6 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.TargetType;
 
@@ -10,25 +9,30 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Board {
-	public static final int NUM_SIDE_CELL = 10;
+    private int col;
+    private int row;
 	private Tile[][] tiles;
-	private ArrayList<Tile> highlightedTiles = new ArrayList<>();
+	private List<Tile> highlightedTiles = new ArrayList<>();
 	private Tile registeredTile;
 
-	public Board() {
-		tiles = new Tile[NUM_SIDE_CELL][NUM_SIDE_CELL];
+	public Board(int col, int row) {
+		this.col = col;
+		this.row = row;
+		tiles = new Tile[col][row];
 
-		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
-			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
+		for (int x = 0; x < col; x++) {
+			for (int y = 0; y < row; y++) {
 				tiles[x][y] = new Tile(x, y);
 			}
 		}
 	}
 
-	public Tile[][] getTiles() { return tiles; }
+    public Tile[][] getTiles() {
+        return tiles;
+    }
 
 	@Requires("rootTile != null && distance >= 0")
-	private Tile getTile(Tile rootTile, Direction dir, int distance) {
+	public Tile getTile(Tile rootTile, Direction dir, int distance) {
 		int rootX = rootTile.getX();
 		int rootY = rootTile.getY();
 		Tile tile;
@@ -64,7 +68,7 @@ public class Board {
 	}
 
 	@Requires("tile != null")
-	private void highlightTile(Tile tile) {
+	public void highlightTile(Tile tile) {
 		tile.setHighlighted(true);
 		highlightedTiles.add(tile);
 	}
@@ -75,6 +79,14 @@ public class Board {
 		}
 		highlightedTiles.clear();
 	}
+	
+	public int getCol() {
+		return col;
+	}
+
+	public int getRow() {
+		return row;
+	}
 
 	public Tile getRegisteredTile() { return registeredTile; }
 
@@ -83,20 +95,20 @@ public class Board {
 		this.registeredTile = tile;
 	}
 
-	public void clearCurrentTile() {
+	public void clearRegisteredTile() {
 		this.registeredTile = null;
 	}
 
 	public Tile getTile(int x, int y) {
-		if (x >= 0 && y >= 0 && x < NUM_SIDE_CELL && y < NUM_SIDE_CELL) {
+		if (x >= 0 && y >= 0 && x < col && y < row) {
 			return tiles[x][y];
 		}
 		return null;
 	}
 
 	public void setBaseColours() {
-		for (int x = 0; x < NUM_SIDE_CELL; x ++) {
-			for (int y = 0; y < NUM_SIDE_CELL; y ++) {
+		for (int x = 0; x < col; x++) {
+			for (int y = 0; y < row; y++) {
 				tiles[x][y].setHighlighted(false);
 			}
 		}
@@ -109,7 +121,7 @@ public class Board {
 		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getMoveDirections()));
 	
 	    for (int count = 1; count <= moveRange; count++) {
-	        ArrayList<Direction> blockedDirections = new ArrayList<>();
+	        List<Direction> blockedDirections = new ArrayList<>();
 	        for (Direction direction : tempDirections) {
 	        	if (direction == Direction.JUMP_OVER) {
 	        		continue;

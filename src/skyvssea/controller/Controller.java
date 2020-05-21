@@ -6,7 +6,7 @@ import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.view.*;
 
-import java.util.*;
+import java.util.List;
 
 public class Controller {
 
@@ -15,6 +15,7 @@ public class Controller {
     private PieceManager pieceManager;
     private PlayerManager playerManager;
     private ActionPane actionPane;
+    private BoardPane boardPane;
     private InfoPane infoPane;
 
     @Requires("tileView != null")
@@ -45,7 +46,7 @@ public class Controller {
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
-                        pieceManager.setRegisteredPiece(newSelectedPiece);
+                    	pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
                     }
                 }
@@ -92,8 +93,8 @@ public class Controller {
 
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
-        AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
-        actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
+        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
+        actionPane.setSpecialEffectBtnDisable(!registeredPiece.isSpecialEffectAvailable());
     }
 
     public void handleKillButton() { 
@@ -145,8 +146,8 @@ public class Controller {
         infoPane.setPlayerInfo(player);
 
         board.clearHighlightedTiles();
-        board.clearCurrentTile();
-        pieceManager.clearCurrentPiece();
+        board.clearRegisteredTile();
+        pieceManager.clearRegisteredPiece();
     }
 
     private void endTurn() {
@@ -158,14 +159,18 @@ public class Controller {
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setViewsAndModels(BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
-    	this.actionPane = actionPane;
-    	this.infoPane = infoPane;
+    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+        int boardCol = boardSetup.getBoardSize()[0];
+        int boardRow = boardSetup.getBoardSize()[1];
 
-    	this.game = new Game(actionPane);
-    	this.board = new Board();
-		this.pieceManager = new PieceManager(createInitialLineUp());
-        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
+		this.boardPane = boardPane;
+		this.actionPane = actionPane;
+		this.infoPane = infoPane;
+
+		this.game = new Game(actionPane);
+		this.board = new Board(boardCol,boardRow);
+		this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
+		this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
@@ -208,13 +213,4 @@ public class Controller {
             obstacle.addAvatar(obstacleView);
         }
     }
-    
-	private Map<Hierarchy, Integer> createInitialLineUp() {
-		Map<Hierarchy, Integer> lineup = new HashMap<>();
-		lineup.put(Hierarchy.BIG, 1);
-		lineup.put(Hierarchy.MEDIUM, 1);
-		lineup.put(Hierarchy.SMALL, 1);
-		lineup.put(Hierarchy.BABY, 1);
-		return lineup;
-	}
 }

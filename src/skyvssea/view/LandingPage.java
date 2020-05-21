@@ -8,21 +8,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
+import skyvssea.util.RegionUtil;
 
 public class LandingPage extends AnchorPane {
 
     public static final int LANDING_PAGE_HEIGHT = 500;
     public static final int LANDING_PAGE_WIDTH = 1100;
 
-    public LandingPage() {
+    private StackPane boardSetupPane = new StackPane();
+
+    public LandingPage(BoardSetupView boardSetupView) {
         ImageView backgroundImage = new ImageView("file:resources/images/landing-page-background.jpg");
+
         Label titleLable = new Label("Sky vs. Sea");
         Button startBtn = new Button("Start");
         Button loadBtn = new Button("Load");
         VBox controlPane = new VBox(titleLable, startBtn, loadBtn);
-        this.getChildren().addAll(backgroundImage, controlPane);
+        this.getChildren().addAll(backgroundImage, controlPane, boardSetupPane);
 
         this.setPrefSize(LANDING_PAGE_WIDTH, LANDING_PAGE_HEIGHT);
 
@@ -32,11 +37,11 @@ public class LandingPage extends AnchorPane {
         formatStartBtn(startBtn);
         formatLoadBtn(loadBtn);
         formatButtons(startBtn, loadBtn);
+        formatBoardSetupView(boardSetupPane, boardSetupView);
     }
 
     private void formatBackgroundImage(ImageView image) {
         image.setFitHeight(LANDING_PAGE_HEIGHT);
-//        image.setFitWidth(1200);
         image.setPreserveRatio(true);
     }
 
@@ -47,7 +52,7 @@ public class LandingPage extends AnchorPane {
         controlPane.setPadding(new Insets(30));
         controlPane.setSpacing(15);
         controlPane.setEffect(new DropShadow());
-        controlPane.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 30, 30, false), null)));
+        RegionUtil.setBackground(controlPane, Color.WHITE, new CornerRadii(0, 0, 30, 30, false), null);
     }
 
     private void formatTitleLabel(Label label) {
@@ -69,9 +74,37 @@ public class LandingPage extends AnchorPane {
         button.setDefaultButton(true);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/play.png");
+        button.setOnAction(e -> setBoardSetupPaneVisible(true));
     }
 
     private void formatLoadBtn(Button button) {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");    }
+        ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
+    }
+
+    private void formatBoardSetupView(StackPane boardSetupPane, BoardSetupView boardSetupView) {
+        Pane overlayPane = new Pane();
+        RegionUtil.setBackground(overlayPane, Color.BLACK, null, null);
+        overlayPane.setOpacity(0.8);
+        overlayPane.setOnMouseClicked(e -> setBoardSetupPaneVisible(false));
+
+        RegionUtil.setBackground(boardSetupView, Color.WHITE, new CornerRadii(30), null);
+        boardSetupView.setMaxSize(300, 340);
+
+        AnchorPane.setLeftAnchor(boardSetupPane, 0.0);
+        AnchorPane.setRightAnchor(boardSetupPane, 0.0);
+        AnchorPane.setTopAnchor(boardSetupPane, 0.0);
+        AnchorPane.setBottomAnchor(boardSetupPane, 0.0);
+        boardSetupPane.getChildren().addAll(overlayPane, boardSetupView);
+        boardSetupPane.setVisible(false);
+    }
+
+    private void setBoardSetupPaneVisible(boolean isVisible) {
+        boardSetupPane.setVisible(isVisible);
+        if (isVisible) {
+            AnimationUtil.fadeInTransition(boardSetupPane);
+        } else {
+            AnimationUtil.fadeOutTransition(boardSetupPane);
+        }
+    }
 }

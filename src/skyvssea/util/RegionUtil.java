@@ -1,5 +1,6 @@
 package skyvssea.util;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -19,7 +20,7 @@ public class RegionUtil {
             backgroundFill = new BackgroundFill(backgroundFill.getFill(), cornerRadii, backgroundFill.getInsets());
             region.setBackground(new Background(backgroundFill));
         } catch (NullPointerException e) {
-            region.setBackground(new Background(new BackgroundFill(null, cornerRadii, null)));
+            setBackground(region, null, cornerRadii, null);
         }
     }
 
@@ -37,7 +38,7 @@ public class RegionUtil {
             backgroundFill = new BackgroundFill(paint, backgroundFill.getRadii(), backgroundFill.getInsets());
             region.setBackground(new Background(backgroundFill));
         } catch (NullPointerException e) {
-            region.setBackground(new Background(new BackgroundFill(paint, null, null)));
+            setBackground(region, paint, null, null);
         }
     }
 
@@ -49,5 +50,9 @@ public class RegionUtil {
         } catch (NullPointerException e) {
             region.setBorder(new Border(new BorderStroke(Color.SLATEGREY, BorderStrokeStyle.SOLID, cornerRadii, new BorderWidths(0.5))));
         }
+    }
+
+    public static void setBackground(Region region, Paint paint, CornerRadii cornerRadii, Insets insets) {
+        region.setBackground(new Background(new BackgroundFill(paint, cornerRadii, insets)));
     }
 }

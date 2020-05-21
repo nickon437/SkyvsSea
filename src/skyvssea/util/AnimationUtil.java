@@ -16,13 +16,25 @@ public class AnimationUtil {
         return keyFrame;
     }
 
-    public static KeyFrame formatKeyFrame(WritableValue target, Background background, Duration duration) {
-        KeyValue keyValue = new KeyValue(target, background, Interpolator.EASE_IN);
+    public static KeyFrame formatKeyFrame(WritableValue target, boolean endValue, Duration duration) {
+        KeyValue keyValue = new KeyValue(target, endValue, Interpolator.EASE_IN);
         KeyFrame keyFrame = new KeyFrame(duration, keyValue);
         return keyFrame;
     }
 
-//    public static formatFadeInTranstion(FadeTransition fadeTransition, Duration duration, Node node) {
-//        fadeTransition
-//    }
+    public static void fadeInTransition(Node node) {
+        node.setVisible(true);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), node);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+        fadeTransition.play();
+    }
+
+    public static void fadeOutTransition(Node node) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), node);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setOnFinished(e -> node.setVisible(false));
+        fadeTransition.play();
+    }
 }

@@ -5,16 +5,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.view.BoardSetupView;
+import skyvssea.view.LandingPage;
 
 public class BoardGameApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		BoardSetupController controller = new BoardSetupController(primaryStage);
-		BoardSetupView boardSetup = new BoardSetupView(controller);
+		BoardSetupController boardSetupController = new BoardSetupController(primaryStage);
+		BoardSetupView boardSetup = new BoardSetupView(boardSetupController);
 
-		Scene scene = new Scene(boardSetup);
+		LandingPage landingPage = new LandingPage(boardSetup);
+
+		Scene scene = new Scene(landingPage);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Design Your Game");
+		primaryStage.setTitle("Sky vs. Sea");
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}

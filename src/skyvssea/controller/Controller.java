@@ -93,8 +93,8 @@ public class Controller {
 
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
-        AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
-        actionPane.setSpecialEffectBtnDisable(!currentPiece.isSpecialEffectAvailable());
+        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
+        actionPane.setSpecialEffectBtnDisable(!registeredPiece.isSpecialEffectAvailable());
     }
 
     public void handleKillButton() { 
@@ -146,7 +146,7 @@ public class Controller {
         infoPane.setPlayerInfo(player);
 
         board.clearHighlightedTiles();
-        board.clearCurrentTile();
+        board.clearRegisteredTile();
         pieceManager.clearRegisteredPiece();
     }
 

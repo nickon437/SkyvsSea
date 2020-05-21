@@ -95,7 +95,7 @@ public class Board {
 		this.registeredTile = tile;
 	}
 
-	public void clearCurrentTile() {
+	public void clearRegisteredTile() {
 		this.registeredTile = null;
 	}
 

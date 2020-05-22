@@ -1,7 +1,11 @@
 package skyvssea.model.piece;
 
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
 import skyvssea.model.*;
+import skyvssea.model.command.Command;
+import skyvssea.model.command.HistoryManager;
+import skyvssea.model.command.UpdateCounterCommand;
 import skyvssea.model.specialeffect.SpecialEffect;
 import skyvssea.model.specialeffect.TargetType;
 
@@ -50,24 +54,19 @@ public abstract class AbstractPiece extends GameObject {
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
 
-    private int getSpecialEffectCounter() { return specialEffectCounter; }
+    public SpecialEffect getSpecialEffect() { return specialEffect; }
 
-	public void performSpecialEffect(AbstractPiece target) {
-	    SpecialEffect specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
-	    if (specialEffect != null && getSpecialEffectCounter() <= 0) {
-			target.getSpecialEffectManagerProxy().add(specialEffect);
-    		resetSpecialEffectCounter();    		
-    	}
-	}
-    
-    private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+    public int getDefaultSpecialEffectCooldown() { return DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+
+    public int getSpecialEffectCounter() { return specialEffectCounter; }
+    public void setSpecialEffectCounter(int specialEffectCounter) { this.specialEffectCounter = specialEffectCounter; }
 
 	public boolean isSpecialEffectAvailable() {
 		return specialEffect != null && specialEffectCounter <= 0;
     }
 
     @Ensures("specialEffectManagerProxy != null")
-    private SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
+    public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }
@@ -98,11 +97,16 @@ public abstract class AbstractPiece extends GameObject {
                 "SE description: " + specialEffect.toString();
         return summary;
     }
-    
+
+    @Requires("historyManager != null")
     @Ensures("specialEffectCounter >= 0")
-    public void updateStatus() {
-        if (specialEffectCounter > 0) { specialEffectCounter--; }
-        getSpecialEffectManagerProxy().updateEffectiveDuration();
+    public void updateStatus(HistoryManager historyManager) {
+        if (specialEffectCounter > 0) {
+            int newSpecialEffectCounter = specialEffectCounter - 1;
+            Command updateCounterCommand = new UpdateCounterCommand(this, newSpecialEffectCounter);
+            historyManager.storeAndExecute(updateCounterCommand);
+        }
+        getSpecialEffectManagerProxy().updateEffectiveDuration(historyManager);
     }
 
 	public TargetType getSpecialEffectTargetType() {

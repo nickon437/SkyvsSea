@@ -7,7 +7,7 @@ import javafx.scene.text.TextAlignment;
 import skyvssea.model.Avatar;
 import skyvssea.util.ColorUtil;
 
-public class PieceView extends /*StackPane implements */Avatar {
+public class PieceView extends Avatar {
     private Circle border;
     private Circle circle;
     private Text text;
@@ -39,6 +39,7 @@ public class PieceView extends /*StackPane implements */Avatar {
         border.setRadius((tileSize * CIRCLE_CONTENT_PERCENTAGE) / 2);
         circle.setRadius((tileSize * CIRCLE_CONTENT_PERCENTAGE) / 2);
         text.setWrappingWidth(tileSize * CIRCLE_CONTENT_PERCENTAGE * LABEL_CONTENT_PERCENTAGE);
+        text.setStyle("-fx-font-size: " + tileSize/6 + "; -fx-font-weight: bold;");
 
         border.setTranslateY(circle.getTranslateY() + (tileSize * OFFSET));
         border.setStrokeWidth(tileSize * 0.03);

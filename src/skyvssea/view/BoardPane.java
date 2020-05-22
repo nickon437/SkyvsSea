@@ -3,9 +3,13 @@ package skyvssea.view;
 import com.google.java.contract.Requires;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
+import skyvssea.util.RegionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,8 @@ public class BoardPane extends Pane {
     private List<PieceView> pieceViewGroup = new ArrayList<>();
     private List<ObstacleView> obstacleViewGroup = new ArrayList<>();
     private double tileSize;
+
+    private static final double CORNER_RADIUS = 15;
 
     @Requires("controller != null")
     public BoardPane(Controller controller, int col, int row) {
@@ -32,7 +38,28 @@ public class BoardPane extends Pane {
         }
         this.getChildren().addAll(tileViewGroup);
 
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setBlurType(BlurType.ONE_PASS_BOX);
+        this.setEffect(dropShadow);
+        roundUpCorners();
+
         setDynamicTileSize();
+    }
+
+    private void roundUpCorners() {
+        RegionUtil.setCornerRadii(this, new CornerRadii(30));
+
+        TileView topLeftTileView = getTileView(0, 0);
+        topLeftTileView.setCornerRadius(new CornerRadii(CORNER_RADIUS, 0, 0, 0, false));
+
+        TileView topRightTileView = getTileView(col - 1, 0);
+        topRightTileView.setCornerRadius(new CornerRadii(0, CORNER_RADIUS, 0, 0, false));
+
+        TileView bottomRightTileView = getTileView(col - 1, row - 1);
+        bottomRightTileView.setCornerRadius(new CornerRadii(0, 0, CORNER_RADIUS, 0, false));
+
+        TileView bottomLeftTileView = getTileView(0, row - 1);
+        bottomLeftTileView.setCornerRadius(new CornerRadii(0, 0, 0, CORNER_RADIUS, false));
     }
 
     private void setDynamicTileSize() {
@@ -44,12 +71,10 @@ public class BoardPane extends Pane {
             double colTileSize = paneWidth / col;
             double newTileSize = rowTileSize < colTileSize ? rowTileSize : colTileSize;
 
-            if (this.tileSize != newTileSize) {
-                this.tileSize = newTileSize;
-                updateTilesSize(tileSize, paneWidth, paneHeight);
-                updatePiecesSize(tileSize);
-                updateObstacleSize(tileSize);
-            }
+            this.tileSize = newTileSize;
+            updateTilesSize(tileSize, paneWidth, paneHeight);
+            updatePiecesSize(tileSize);
+            updateObstacleSize(tileSize);
         };
 
         widthProperty().addListener(paneSizeListener);

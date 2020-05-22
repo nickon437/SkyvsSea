@@ -44,6 +44,10 @@ public class SpecialEffectBase implements SpecialEffect {
 		return effectiveDuration;
 	}
 
+	public void setEffectiveDuration(int effectiveDuration) {
+		this.effectiveDuration = effectiveDuration;
+	}
+
 	@Override
 	public String getName() {
 		return name;

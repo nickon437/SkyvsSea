@@ -24,6 +24,10 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 	@Override
 	public int getEffectiveDuration() { return specialEffect.getEffectiveDuration(); }
 
+	// Nick - TODO: Double check to see if this is needed?
+	@Override
+	public void setEffectiveDuration(int effectiveDuration) { specialEffect.setEffectiveDuration(effectiveDuration); }
+
 	@Override
 	public String getName() { return specialEffect.getName(); }
 	

@@ -1,25 +1,25 @@
 package skyvssea.view;
 
 import com.google.java.contract.Requires;
-
 import javafx.scene.Node;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
 import skyvssea.util.ColorUtil;
+import skyvssea.util.RegionUtil;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class TileView extends Avatar implements Observer {
 
-    public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.valueOf("#FCF5EF");
-    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#BDBDBD");
+    public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.WHITE;//Color.valueOf("#FCF5EF");
+    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#c8c8c8");
     public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FCC42C");
     public static final Color SCANNED_COLOR = Color.valueOf("#fde7aa");
 
-    private Rectangle base;
+    private Region base;
     private int x;
     private int y;
     private boolean hasLightBaseColor;
@@ -42,16 +42,23 @@ public class TileView extends Avatar implements Observer {
 	}
 
     @Requires("x >= 0 && y >= 0 && tileSize >= 0")
-    private Rectangle createBase(int x, int y, double tileSize) {
-        Rectangle base = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
-        base.setStroke(DEFAULT_DARK_BASE_COLOR);
+    private Region createBase(int x, int y, double tileSize) {
+        Region base = new Region();
+        base.setBorder(new Border(new BorderStroke(Color.SLATEGREY, BorderStrokeStyle.SOLID, null, new BorderWidths(0.5))));
+        base.setTranslateX(x * tileSize);
+        base.setTranslateY(y * tileSize);
+        base.setPrefSize(tileSize, tileSize);
         return base;
+    }
+
+    public void setCornerRadius(CornerRadii cornerRadius) {
+        RegionUtil.setCornerRadii(base, cornerRadius);
+        RegionUtil.setBorderRadius(base, cornerRadius);
     }
 
     @Override
     public void updateSize(double tileSize) {
-        base.setWidth(tileSize);
-        base.setHeight(tileSize);
+        base.setPrefSize(tileSize, tileSize);
     }
 
     @Requires("tileSize >= 0")
@@ -65,13 +72,13 @@ public class TileView extends Avatar implements Observer {
 
     @Requires("color != null")
     private void updateBaseColor(Color color) {
-        base.setFill(color);
+        RegionUtil.setFill(base, color);
     }
 
     public void updateBaseColorAsHovered(boolean isHovered) {
-        Color baseColor = (Color) base.getFill();
+        Color baseColor = (Color) RegionUtil.getFill(base);
         Color modifiedColor = ColorUtil.getHoveringColor(isHovered, baseColor);
-        base.setFill(modifiedColor);
+        updateBaseColor(modifiedColor);
     }
 
     @Requires("arg instanceof Boolean || arg instanceof Avatar || arg == null")

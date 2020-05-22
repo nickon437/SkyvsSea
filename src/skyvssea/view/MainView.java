@@ -1,7 +1,6 @@
 package skyvssea.view;
 
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.Pane;
 
 public class MainView extends SplitPane {
 

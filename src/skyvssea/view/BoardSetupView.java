@@ -2,15 +2,20 @@ package skyvssea.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.NodeCoordinateUtil;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,7 +28,7 @@ public class BoardSetupView extends VBox {
 	private static final int MAX_NUM_PIECE = 5;
 	private static final int DEFAULT_NUM_PIECE = 1;
 
-	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be \n less than number of board rows");
+	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be\nmore than the number of board rows");
 	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE * 2, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> rowSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> bigPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);
@@ -34,18 +39,22 @@ public class BoardSetupView extends VBox {
 	private Button confirmButton = new Button("Confirm");
 
 	public BoardSetupView(BoardSetupController controller) {
+		Label boardSetupLabel = new Label("Board Setup");
+		boardSetupLabel.setFont(Font.loadFont("file:resources/fonts/Roboto/Roboto-Medium.ttf", 23));
+
 		GridPane inputPane = new GridPane();
 		formatInputPane(inputPane);
 
 		HBox buttonHolder = new HBox();
 		formatButtonHolder(buttonHolder, controller);
 
-		this.getChildren().addAll(inputPane, buttonHolder);
+		this.getChildren().addAll(boardSetupLabel, inputPane, buttonHolder);
 		this.setPadding(new Insets(30));
 		this.setSpacing(20);
 	}
 
 	private void formatInputPane(GridPane inputPane) {
+		// Content
 		inputPane.add(new Label("Columns:"), 0, 0);
 		inputPane.add(new Label("Rows:"), 0, 1);
 		inputPane.add(new Label("Big piece:"), 0, 3);
@@ -59,31 +68,27 @@ public class BoardSetupView extends VBox {
 		inputPane.add(smallPieceSpinner, 1, 5);
 		inputPane.add(babyPieceSpinner, 1, 6);
 
+		// Separator
 		Separator separator = new Separator();
 		inputPane.add(separator, 0, 2);
 		GridPane.setColumnSpan(separator, 2);
 
+		// Spinners
+		List<Spinner> spinners = Arrays.asList(colSpinner, rowSpinner, bigPieceSpinner, mediumPieceSpinner,
+				smallPieceSpinner, babyPieceSpinner);
+		formatSpinners(spinners);
+
+		// Input pane's properties
 		inputPane.setHgap(10);
 		inputPane.setVgap(10);
-		formatSpinnerTip();
-		formatSpinners();
 	}
 
-	private void formatSpinnerTip() {
-		rowSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		bigPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		mediumPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		smallPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-		babyPieceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
-	}
-
-	private void formatSpinners() {
-		colSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		rowSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		bigPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		mediumPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		smallPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-		babyPieceSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+	private void formatSpinners(List<Spinner> spinners) {
+		for (Spinner spinner : spinners) {
+			spinner.valueProperty().addListener((observable, oldValue, newValue) -> validateNumPiece());
+			spinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+			spinner.setCursor(Cursor.HAND);
+		}
 	}
 
 	private void formatButtonHolder(HBox holder, BoardSetupController controller) {
@@ -95,7 +100,8 @@ public class BoardSetupView extends VBox {
 
 	private void formatConfirmBtn(Button button, BoardSetupController controller) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-		button.setPrefSize(150, 50);
+		ButtonUtil.formatGraphic(button, "file:resources/icons/check.png");
+		button.setMinSize(150, ButtonUtil.STANDARD_BUTTON_HEIGHT);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
 		button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
@@ -103,8 +109,8 @@ public class BoardSetupView extends VBox {
 
 	public int[] getBoardSize() {
 		int[] boardSize = new int[2]; // Nick - Is there any better value type for this?
-		boardSize[0] = colSpinner.getValue().intValue();
-		boardSize[1] = rowSpinner.getValue().intValue();
+		boardSize[0] = colSpinner.getValue();
+		boardSize[1] = rowSpinner.getValue();
 		return boardSize;
 	}
 
@@ -117,7 +123,7 @@ public class BoardSetupView extends VBox {
 		return lineup;
 	}
 
-	public int getTotalPieces() {
+	private int getTotalPieces() {
 		int total = 0;
 		total += bigPieceSpinner.getValue();
 		total += mediumPieceSpinner.getValue();
@@ -126,7 +132,7 @@ public class BoardSetupView extends VBox {
 		return total;
 	}
 
-	public void validateNumPiece() {
+	private void validateNumPiece() {
 		final int OFFSET = 7;
 
 		if (rowSpinner.getValue() < getTotalPieces()) {

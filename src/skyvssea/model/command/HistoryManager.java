@@ -3,8 +3,6 @@ package skyvssea.model.command;
 import java.util.*;
 
 public class HistoryManager {
-    // Nick - TODO: Disable undo btn if there is nothing to undo;
-    // Nick - TODO: Fix bug - Undo during sharking turn will potentially allow shark make the first move
     private Stack<Stack<Command>> history = new Stack<>();
     private Stack<Command> turnCommands = new Stack<>();
 
@@ -37,5 +35,9 @@ public class HistoryManager {
             currentTurnCommands.pop().undo();
         }
         currentTurnCommands.clear();
+    }
+
+    public boolean isUndoAvailable() {
+        return history.size() >= 2 ? true : false;
     }
 }

@@ -230,4 +230,5 @@ public class Controller {
     }
 
 	public PlayerManager getPlayerManager() { return playerManager; }
+	public HistoryManager getHistoryManager() { return historyManager; }
 }

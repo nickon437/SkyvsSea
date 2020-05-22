@@ -20,7 +20,9 @@ public class Game {
             actionPane.setRegularActionPaneDisable(true);
             actionPane.hideActionIndicator();
 
-            boolean isUndoAvailable = controller.getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+            boolean isUndoEmpty = !controller.getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+            boolean hasHistory = controller.getHistoryManager().isUndoAvailable();
+            boolean isUndoAvailable = !isUndoEmpty && hasHistory;
             actionPane.setUndoBtnDisable(!isUndoAvailable);
 
             controller.clearCache();

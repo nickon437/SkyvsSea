@@ -2,7 +2,10 @@ package skyvssea.model;
 
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 public class Tile extends Observable implements AvatarCore {
@@ -10,7 +13,9 @@ public class Tile extends Observable implements AvatarCore {
     private int x;
 	private int y;
     private GameObject gameObject;
-    private boolean isHighlighted;
+    private List<SpecialEffectContainer> specialEffects;
+
+	private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
     @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
@@ -58,4 +63,42 @@ public class Tile extends Observable implements AvatarCore {
 
     @Override
     public Avatar getAvatar() { return avatar; }
+
+	public void addSpecialEffect(SpecialEffectContainer specialEffect) {
+		if (specialEffects == null) {
+			specialEffects = new ArrayList<>();
+		}
+		specialEffects.add(specialEffect);	
+	}
+	
+	public void removeSpecialEffect(SpecialEffectContainer specialEffect) {
+		specialEffects.remove(specialEffect);		
+	}
+	
+	public List<SpecialEffectContainer> getSpecialEffects() {
+		if (specialEffects == null) {
+			specialEffects = new ArrayList<>();
+		}
+		return specialEffects;
+	}
+
+	public void applySpecialEffect(AbstractPiece target, PlayerManager playerManager) {
+		if (specialEffects != null) {
+			for (SpecialEffectContainer specialEffect : specialEffects) {
+				if (specialEffect.usableOnPiece(target, playerManager)) {
+					SpecialEffectContainer copy = SpecialEffectFactory.getInstance().copy(specialEffect);
+					target.getSpecialEffectManagerProxy().add(copy);
+				}
+			}
+		}
+	}
+
+	public void removeSpecialEffect(AbstractPiece target) {
+		if (specialEffects != null) {
+			for (SpecialEffectContainer specialEffect : specialEffects) {
+				target.getSpecialEffectManagerProxy().remove(specialEffect);
+			}
+		}
+	}
+
 }

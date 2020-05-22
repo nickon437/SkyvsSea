@@ -36,5 +36,17 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
             }
         }
         appliedSpecialEffects.removeAll(toRemove);
+        
+        // TODO: Reapply all existing applied special effects
     }
+
+	@Override
+	public void remove(SpecialEffectContainer specialEffect) {
+		for (SpecialEffectContainer appliedSpecialEffect : appliedSpecialEffects) {
+            if (specialEffect.equals(appliedSpecialEffect)) {
+            	appliedSpecialEffect.remove(target);
+            	break;
+            }
+        }
+	}
 }

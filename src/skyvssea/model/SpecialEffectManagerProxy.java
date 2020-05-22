@@ -30,4 +30,11 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
             specialEffectManager.updateEffectiveDuration();
         }
     }
+
+	@Override
+	public void remove(SpecialEffectContainer specialEffect) {
+		if (specialEffectManager != null) {
+            specialEffectManager.remove(specialEffect);
+        }
+	}
 }

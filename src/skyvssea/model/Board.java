@@ -3,6 +3,7 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.SpecialEffectContainer;
 import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
@@ -156,19 +157,11 @@ public class Board {
 	@Requires("playerManager != null && registeredTile != null")
 	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
 		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
-	    TargetType targetType = selectedPiece.getSpecialEffectTargetType();
-	    
-	    if (targetType == TargetType.SELF) {
-	    	highlightTile(registeredTile);
-	    	return;
-	    }
-
-	    boolean isComrades = targetType != TargetType.ENEMIES;
-
+		SpecialEffectContainer specialEffect = selectedPiece.getSpecialEffect();
+		
 	    for (Tile currentTile : getDetectablePieceLocation(registeredTile)) {
 			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
-			boolean currentPlayerHasPiece = playerManager.isCurrentPlayerPiece(currentPiece);
-			if (isComrades == currentPlayerHasPiece) {
+			if (specialEffect.usableOnPiece(currentPiece, playerManager)) {
 				highlightTile(currentTile);
 			}
 		}
@@ -178,6 +171,7 @@ public class Board {
 	private List<Tile> getDetectablePieceLocation(Tile tile) {
 		AbstractPiece selectedPiece = (AbstractPiece) tile.getGameObject();
 		List<Tile> detectableTilesWithPiece = new ArrayList<>();
+		detectableTilesWithPiece.add(tile);
 
 		int attackRange = selectedPiece.getAttackRange();
 		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getAttackDirections()));
@@ -202,5 +196,18 @@ public class Board {
 			tempDirections.removeAll(blockedDirections);
 		}
 		return detectableTilesWithPiece;
+	}
+
+	public List<Tile> getSurroundingTiles(Tile tile) {
+		List<Tile> surroundingTiles = new ArrayList<>();
+		List<Direction> directions = Direction.getEightDirections();
+		int count = 1;
+		for (Direction direction : directions) {
+			Tile currentTile = getTile(tile, direction, count);
+			if (currentTile != null) {
+				surroundingTiles.add(currentTile);				
+			}
+		}
+		return surroundingTiles;
 	}
 }

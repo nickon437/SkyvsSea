@@ -1,6 +1,10 @@
 package skyvssea.model.piece;
 
+import java.util.List;
+
 import com.google.java.contract.Ensures;
+import com.google.java.contract.Requires;
+
 import skyvssea.model.*;
 import skyvssea.model.specialeffect.SpecialEffect;
 import skyvssea.model.specialeffect.SpecialEffectContainer;
@@ -14,6 +18,8 @@ public abstract class AbstractPiece extends GameObject {
     private int attackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
+    private SpecialEffectCode specialEffectCode;
+    private SpecialEffectCode passiveEffectCode;
     private SpecialEffectContainer specialEffect;
     private SpecialEffectContainer passiveEffect;
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
@@ -31,7 +37,7 @@ public abstract class AbstractPiece extends GameObject {
     	this.moveDirections = moveDirection;
     	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
     	this.attackRange = attackRange;
-    	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
+    	this.specialEffectCode = specialEffectCode;
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
         specialEffectCounter = 0;
         passiveEffectActivated = false;
@@ -56,21 +62,58 @@ public abstract class AbstractPiece extends GameObject {
     private int getSpecialEffectCounter() { return specialEffectCounter; }
 
 	public void performSpecialEffect(AbstractPiece target) {
-		SpecialEffectContainer specialEffect = SpecialEffectFactory.getInstance().copy(this.specialEffect);
-	    if (specialEffect != null && getSpecialEffectCounter() <= 0 && !passiveEffectActivated) {
-			target.getSpecialEffectManagerProxy().add(specialEffect);
+		SpecialEffectContainer copiedSpecialEffect = SpecialEffectFactory.getInstance().copy(getSpecialEffect());
+	    if (copiedSpecialEffect != null && getSpecialEffectCounter() <= 0 && !passiveEffectActivated) {
+			target.getSpecialEffectManagerProxy().add(copiedSpecialEffect);
     		resetSpecialEffectCounter();    		
     	}
+	}
+	
+	@Requires("passiveEffectActivated == true && passiveEffect != null")
+	public void passPassiveEffect(List<Tile> tiles, PlayerManager playerManager) {
+		// No need to duplicate passiveEffect when assigning it to Tile as Tile is responsible of duplicating it when performing it to pieces
+		for (Tile currentTile : tiles) {
+			currentTile.addSpecialEffect(passiveEffect);
+			if (currentTile.hasPiece()) {
+				AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
+				if (passiveEffect.usableOnPiece(currentPiece, playerManager)) {
+					performPassiveEffect(currentPiece);					
+				}
+			}
+		}
+	}
+	
+	public void removePassiveEffect(List<Tile> tiles) {
+		for (Tile currentTile : tiles) {
+			for (SpecialEffectContainer passiveEffect : currentTile.getSpecialEffects()) {
+				if (passiveEffect == this.passiveEffect) {
+					currentTile.removeSpecialEffect(passiveEffect);
+					if (currentTile.hasPiece()) {
+						AbstractPiece castedPiece = (AbstractPiece) currentTile.getGameObject();
+						castedPiece.specialEffectManagerProxy.remove(passiveEffect);
+					}
+					break;
+				}
+			}		
+		}
+	}
+	
+	@Requires("passiveEffectActivated == true")
+	public void performPassiveEffect(AbstractPiece target) {
+		SpecialEffectContainer copiedPassiveEffect = SpecialEffectFactory.getInstance().copy(passiveEffect);
+		if (copiedPassiveEffect != null) {
+			target.getSpecialEffectManagerProxy().add(copiedPassiveEffect);   		
+		}
 	}
     
     private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
 
 	public boolean isSpecialEffectAvailable() {
-		return specialEffect != null && specialEffectCounter <= 0 && !passiveEffectActivated;
+		return getSpecialEffect() != null && specialEffectCounter <= 0 && !passiveEffectActivated;
     }
 
     @Ensures("specialEffectManagerProxy != null")
-    private SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
+    public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }
@@ -93,12 +136,12 @@ public abstract class AbstractPiece extends GameObject {
 	
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
-        if (specialEffect == null) { return "Not applicable"; }
-        String summary = "Special effect's name (SE): " +  specialEffect.getName() + "\n" +
-                "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
+        if (getSpecialEffect() == null) { return "Not applicable"; }
+        String summary = "Special effect's name (SE): " +  getSpecialEffect().getName() + "\n" +
+                "SE effective duration: " + getSpecialEffect().getEffectiveDuration() + "\n" +
                 "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + specialEffect.toString();
+                "SE description: " + getSpecialEffect().toString();
         return summary;
     }
     
@@ -109,7 +152,7 @@ public abstract class AbstractPiece extends GameObject {
     }
 
 	public TargetType getSpecialEffectTargetType() {
-		return specialEffect.getTargetType();
+		return getSpecialEffect().getTargetType();
 	}
 
 	public Direction[] getAttackDirections() {
@@ -122,5 +165,33 @@ public abstract class AbstractPiece extends GameObject {
 
 	public void togglePassiveEffectSwitch() {
 		passiveEffectActivated = !passiveEffectActivated;
+		
+		// Handle applying/removing passive effect to/from itself if the passive effect is TargetType.SELF
+		if (passiveEffect.getTargetType() == TargetType.SELF) {
+			if (passiveEffectActivated) {
+				// No need to duplicate passiveEffect since it is only applied to the piece itself
+				specialEffectManagerProxy.add(passiveEffect); 
+			} else {
+				specialEffectManagerProxy.remove(passiveEffect); 
+			}			
+		}
+	}
+
+	public boolean isPassiveEffectTransmittable() {
+		return passiveEffect.getTargetType() != TargetType.SELF;
+	}
+
+	public SpecialEffectContainer getSpecialEffect() {
+		if (specialEffect == null) {
+			specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, specialEffectCode);
+		}
+		return specialEffect;
+	}
+
+	public SpecialEffectContainer getPassiveEffect() {
+		if (passiveEffect == null) {
+			passiveEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, passiveEffectCode);
+		}
+		return passiveEffect;
 	}
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
@@ -38,13 +39,16 @@ public class BoardSetupView extends VBox {
 	private Button confirmButton = new Button("Confirm");
 
 	public BoardSetupView(BoardSetupController controller) {
+		Label boardSetupLabel = new Label("Board Setup");
+		boardSetupLabel.setFont(Font.loadFont("file:resources/fonts/Roboto/Roboto-Medium.ttf", 23));
+
 		GridPane inputPane = new GridPane();
 		formatInputPane(inputPane);
 
 		HBox buttonHolder = new HBox();
 		formatButtonHolder(buttonHolder, controller);
 
-		this.getChildren().addAll(inputPane, buttonHolder);
+		this.getChildren().addAll(boardSetupLabel, inputPane, buttonHolder);
 		this.setPadding(new Insets(30));
 		this.setSpacing(20);
 	}
@@ -97,7 +101,7 @@ public class BoardSetupView extends VBox {
 	private void formatConfirmBtn(Button button, BoardSetupController controller) {
 		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
 		ButtonUtil.formatGraphic(button, "file:resources/icons/check.png");
-		button.setPrefSize(150, 50);
+		button.setMinSize(150, ButtonUtil.STANDARD_BUTTON_HEIGHT);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
 		button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
 		button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));

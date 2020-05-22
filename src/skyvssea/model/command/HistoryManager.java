@@ -38,6 +38,6 @@ public class HistoryManager {
     }
 
     public boolean isUndoAvailable() {
-        return history.size() >= 2 ? true : false;
+        return history.size() >= 2;
     }
 }

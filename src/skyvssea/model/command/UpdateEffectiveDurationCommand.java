@@ -21,14 +21,14 @@ public class UpdateEffectiveDurationCommand implements Command {
     @Override
     public void execute() {
         specialEffect.setEffectiveDuration(newEffectiveDuration);
-        if (newEffectiveDuration <= 0) {
+        if (newEffectiveDuration == 0) {
             specialEffectManager.remove(specialEffect);
         }
     }
 
     @Override
     public void undo() {
-        if (specialEffect.getEffectiveDuration() <= 0) {
+        if (specialEffect.getEffectiveDuration() == 0) {
             specialEffectManager.add(specialEffect);
         }
         specialEffect.setEffectiveDuration(currentEffectiveDuration);

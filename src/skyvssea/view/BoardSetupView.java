@@ -28,7 +28,7 @@ public class BoardSetupView extends VBox {
 	private static final int MAX_NUM_PIECE = 5;
 	private static final int DEFAULT_NUM_PIECE = 1;
 
-	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be \n less than number of board rows");
+	private Tooltip pieceTip = new Tooltip("The total number of pieces cannot be\nmore than the number of board rows");
 	private Spinner<Integer> colSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE * 2, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> rowSpinner = new Spinner<>(MIN_BOARD_SIZE, MAX_BOARD_SIZE, DEFAULT_BOARD_SIZE);
 	private Spinner<Integer> bigPieceSpinner = new Spinner<>(MIN_NUM_PIECE, MAX_NUM_PIECE, DEFAULT_NUM_PIECE);

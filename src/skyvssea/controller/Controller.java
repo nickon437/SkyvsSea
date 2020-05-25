@@ -201,7 +201,7 @@ public class Controller {
         for (TileView tileView : tileViews) {
             int x = tileView.getX();
             int y = tileView.getY();
-            tiles[x][y].addObserver(tileView);
+            tiles[x][y].attach(tileView);
             tiles[x][y].addAvatar(tileView);
         }
         board.setBaseColours();

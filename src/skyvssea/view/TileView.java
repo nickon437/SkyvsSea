@@ -80,7 +80,7 @@ public class TileView extends Avatar implements Observer {
         updateBaseColor(modifiedColor);
     }
 
-    @Requires("arg instanceof Boolean || arg instanceof Avatar || arg == null")
+    @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
 	public void update(Subject subject, Object arg) {
         if (arg instanceof Boolean) {

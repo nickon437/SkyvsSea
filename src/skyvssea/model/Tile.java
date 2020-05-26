@@ -55,12 +55,14 @@ public class Tile implements Subject, AvatarCore {
 	public int getX() { return x; }
 	public int getY() { return y; }
 
+	@Requires("avatar != null")
     @Override
     public void addAvatar(Avatar avatar) { this.avatar = avatar; }
 
     @Override
     public Avatar getAvatar() { return avatar; }
 
+    @Requires("observer != null")
     @Override
     public void attach(Observer observer) {
         observers.add(observer);

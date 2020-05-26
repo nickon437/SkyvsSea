@@ -3,6 +3,7 @@ package skyvssea.model.piece;
 import skyvssea.model.Hierarchy;
 
 public interface BigCharacter {
+	Hierarchy DEFAULT_LEVEL = Hierarchy.BIG;
 	Hierarchy DEFAULT_ATTACK_LEVEL = Hierarchy.BIG;
 	Hierarchy DEFAULT_DEFENCE_LEVEL = Hierarchy.MEDIUM;
 	int DEFAULT_MOVE_RANGE = 2;

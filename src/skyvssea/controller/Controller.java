@@ -16,6 +16,8 @@ public class Controller {
     private PieceManager pieceManager;
     private PlayerManager playerManager;
     private HistoryManager historyManager;
+
+    private MainView mainView;
     private ActionPane actionPane;
     private BoardPane boardPane;
     private InfoPane infoPane;
@@ -62,7 +64,7 @@ public class Controller {
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-        	    Command killCommand = new KillCommand(target, selectedTile);
+        	    Command killCommand = new KillCommand(target, selectedTile, this, pieceManager);
         	    historyManager.storeAndExecute(killCommand);
         		endTurn();
             }
@@ -153,6 +155,10 @@ public class Controller {
         game.setCurrentGameState(GameState.READY_TO_MOVE);
     }
 
+    public void declareWinner() {
+        mainView.setDeclarationLabel(playerManager.getCurrentPlayer().getName());
+    }
+
     private void changeTurn() {
         Player player = playerManager.changeTurn();
         infoPane.setPlayerInfo(player);
@@ -173,10 +179,11 @@ public class Controller {
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    public void setController(MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];
 
+        this.mainView = mainView;
 		this.boardPane = boardPane;
 		this.actionPane = actionPane;
 		this.infoPane = infoPane;

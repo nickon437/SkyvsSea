@@ -45,7 +45,7 @@ public class InfoPane extends VBox {
     }
 
     public void setPlayerInfo(Player player) {
-        playerNameText.setText(player.getName());
+        playerNameText.setText(player.getName() + "'s turn");
         Color color = player.getColor();
         playerNameTextHolder.setStyle("-fx-background-radius: 20;" +
                 "-fx-background-color: rgb(" + color.getRed()*255 + ", " +

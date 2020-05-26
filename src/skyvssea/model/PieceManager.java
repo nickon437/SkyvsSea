@@ -2,9 +2,14 @@ package skyvssea.model;
 
 import com.google.java.contract.Requires;
 import skyvssea.model.command.HistoryManager;
+import skyvssea.model.piece.AbstractEagle;
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.piece.AbstractShark;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PieceManager {
 
@@ -51,6 +56,24 @@ public class PieceManager {
 
     public void clearRegisteredPiece() {
         registeredPiece = null;
+    }
+
+    public void addPiece(AbstractPiece piece) {
+        if (piece instanceof AbstractEagle) {
+            sharkPieces.get(piece.getLevel()).add(piece);
+        } else if (piece instanceof AbstractShark) {
+            eaglePieces.get(piece.getLevel()).add(piece);
+        }
+    }
+
+    public int removePiece(AbstractPiece piece) {
+        for (Map<Hierarchy, List<AbstractPiece>> pieceMap : getAllPiecesList()) {
+            List<AbstractPiece> pieceList = pieceMap.get(piece.getLevel());
+            if (pieceList.remove(piece)) {
+                return pieceList.size();
+            }
+        }
+        return -1;
     }
 
     public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }

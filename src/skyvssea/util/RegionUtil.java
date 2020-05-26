@@ -1,6 +1,8 @@
 package skyvssea.util;
 
+import com.google.java.contract.Requires;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -54,5 +56,13 @@ public class RegionUtil {
 
     public static void setBackground(Region region, Paint paint, CornerRadii cornerRadii, Insets insets) {
         region.setBackground(new Background(new BackgroundFill(paint, cornerRadii, insets)));
+    }
+
+    @Requires("node != null")
+    public static void setAnchor(Node node, Double top, Double left, Double bottom, Double right) {
+        if (top != null) AnchorPane.setTopAnchor(node, top);
+        if (left != null) AnchorPane.setLeftAnchor(node, left);
+        if (bottom != null) AnchorPane.setBottomAnchor(node, bottom);
+        if (right != null) AnchorPane.setRightAnchor(node, right);
     }
 }

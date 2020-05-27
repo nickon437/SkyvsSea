@@ -38,4 +38,5 @@ public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
 		}
 		return copy;
 	}
+
 }

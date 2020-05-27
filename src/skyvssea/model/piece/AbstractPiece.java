@@ -17,6 +17,8 @@ public abstract class AbstractPiece extends GameObject {
     private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
     private int specialEffectCounter; // 0 = ready to use special effect
 
+    private SpecialEffectDescriptions specialEffectDescriptions;
+
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 
     protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
@@ -32,6 +34,7 @@ public abstract class AbstractPiece extends GameObject {
     	specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
         DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
         specialEffectCounter = 0;
+        specialEffectDescriptions = new SpecialEffectDescriptions();
     }
 
     public String getName() { return name; }
@@ -87,7 +90,34 @@ public abstract class AbstractPiece extends GameObject {
         summary += "\nAttack range: " + getAttackRange();
         return summary;
     }
-	
+
+	public String showDescription(Hierarchy h1, String name){
+        h1 = getAttackLevel();
+        name = getName();
+        if(name.contains("Shark")){
+            if(h1 == Hierarchy.BIG){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(0);
+            }
+            else  if(h1 == Hierarchy.MEDIUM){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(1);
+            }
+            else if(h1 == Hierarchy.SMALL){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(2);
+            }
+        }
+        else  if(name.contains("Eagle")){
+            if(h1 == Hierarchy.BIG){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(0);
+            }
+            else  if(h1 == Hierarchy.MEDIUM){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(1);
+            }
+            else if(h1 == Hierarchy.SMALL){
+                return specialEffectDescriptions.getSpecialEffectSharkDescription(2);
+            }
+        }
+        return "no piece";
+    }
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
         if (specialEffect == null) { return "Not applicable"; }
@@ -95,7 +125,7 @@ public abstract class AbstractPiece extends GameObject {
                 "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
                 "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + specialEffect.toString();
+                "SE description: " + showDescription(getAttackLevel(),getName());
         return summary;
     }
     

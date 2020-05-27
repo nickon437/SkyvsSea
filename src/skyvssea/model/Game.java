@@ -2,20 +2,26 @@ package skyvssea.model;
 
 import skyvssea.controller.Controller;
 import skyvssea.view.ActionPane;
+import skyvssea.view.InfoPane;
 
 public class Game {
     private GameState currentGameState;
     private Controller controller;
     private ActionPane actionPane;
+    private InfoPane infoPane;
 
-    public Game(Controller controller, ActionPane actionPane) {
+    public Game(Controller controller, ActionPane actionPane, InfoPane infoPane) {
         this.controller = controller;
         this.actionPane = actionPane;
+        this.infoPane = infoPane;
         setCurrentGameState(GameState.READY_TO_MOVE);
     }
 
     public void setCurrentGameState(GameState newState) {
         this.currentGameState = newState;
+
+        infoPane.setCurrentGameState(currentGameState);
+
         if (newState == GameState.READY_TO_MOVE) {
             actionPane.setRegularActionPaneDisable(true);
             actionPane.hideActionIndicator();

@@ -37,9 +37,13 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 	}
 	
 	public boolean usableOnPiece(AbstractPiece target, PlayerManager playerManager) {
-		boolean areComrades = playerManager.isCurrentPlayerPiece(target) == playerManager.isCurrentPlayerPiece(caster);
-		boolean forComrades = targetType == TargetType.COMRADES;
-		return areComrades == forComrades;
+		if (caster == target) {
+			return targetType == TargetType.SELF;
+		} else {
+			boolean areComrades = playerManager.isCurrentPlayerPiece(target) == playerManager.isCurrentPlayerPiece(caster);
+			boolean forComrades = targetType == TargetType.COMRADES;
+			return areComrades == forComrades;			
+		}
 	};
 	
 	@Override
@@ -51,11 +55,11 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 		specialEffectDecorator.remove(target);
 	}	
 	
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SpecialEffectContainer compared = (SpecialEffectContainer) o;
-        return name.equals(compared.name) && targetType == compared.targetType && caster == compared.caster;
-	}
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        SpecialEffectContainer compared = (SpecialEffectContainer) o;
+//        return name.equals(compared.name) && targetType == compared.targetType && caster == compared.caster;
+//	}
 }

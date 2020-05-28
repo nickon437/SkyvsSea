@@ -15,16 +15,6 @@ public class PassiveSpecialEffectContainer extends SpecialEffectContainer {
 	}
 	
 	@Override
-	public boolean usableOnPiece(AbstractPiece target, PlayerManager playerManager) {
-		// Prevent a caster getting its own passiveEffect with TargetType.COMRADES
-		if (targetType != TargetType.SELF && target.getPassiveEffect().equals(this)) {
-			return false;
-		}
-		
-		return super.usableOnPiece(target, playerManager);
-	}
-	
-	@Override
 	public SpecialEffectContainer copy() {
 		return new PassiveSpecialEffectContainer(caster, name, targetType, specialEffectDecorator.copy());
 	}

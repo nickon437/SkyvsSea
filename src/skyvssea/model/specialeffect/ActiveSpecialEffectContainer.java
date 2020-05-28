@@ -27,15 +27,6 @@ public class ActiveSpecialEffectContainer extends SpecialEffectContainer {
 	}
 	
 	@Override
-	public boolean usableOnPiece(AbstractPiece target, PlayerManager playerManager) {  
-	    if (targetType == TargetType.SELF && caster == target) {
-	    	return true;
-	    }
-	    
-	    return super.usableOnPiece(target, playerManager);
-	}
-	
-	@Override
 	public SpecialEffectContainer copy() {
 		return new ActiveSpecialEffectContainer(caster, name, effectiveDuration, targetType, specialEffectDecorator.copy());
 	}

@@ -10,14 +10,17 @@ public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 	
 	@Override
 	public void apply(AbstractPiece target) {
-		originalValue = target.getAttackRange();
-		target.setAttackRange((int) (originalValue * factor));
+		int originalValue = target.getInitialAttackRange();
+		int newValue = (int) (originalValue * factor);
+		if (isNewValueValid(originalValue, target.getAttackRange(), newValue)) {
+			target.setAttackRange(newValue);
+		}
 		super.apply(target);
 	}
 	   
 	@Override
 	public void remove(AbstractPiece target) {
-		target.setAttackRange(originalValue);
+		target.setAttackRange(target.getInitialAttackRange());
 		super.remove(target); 
 	}
 

@@ -1,5 +1,6 @@
 package skyvssea.model.specialeffect;
 
+import skyvssea.model.Hierarchy;
 import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {

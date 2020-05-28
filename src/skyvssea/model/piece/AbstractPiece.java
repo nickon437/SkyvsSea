@@ -13,16 +13,20 @@ import skyvssea.model.specialeffect.TargetType;
 public abstract class AbstractPiece extends GameObject {
     private String name;
     private Hierarchy attackLevel;
+    private final Hierarchy initialAttackLevel;
 	private Hierarchy defenceLevel;
+	private final Hierarchy initialDefenceLevel;
     private int moveRange;
-    private int attackRange;
+    private final int initialMoveRange;
+	private int attackRange;
+	private final int initialAttackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
     private SpecialEffectCode specialEffectCode;
     private SpecialEffectCode passiveEffectCode;
     private SpecialEffectContainer specialEffect;
     private SpecialEffectContainer passiveEffect;
-    private final int DEFAULT_SPECIAL_EFFECT_COOLDOWN;
+    private final int specialEffectCoolDown;
     private int specialEffectCounter; // 0 = ready to use special effect
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 	private boolean passiveEffectActivated;
@@ -31,14 +35,14 @@ public abstract class AbstractPiece extends GameObject {
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
                             int specialEffectCooldown) {
     	this.name = name;
-    	this.attackLevel = attackLevel;
-    	this.defenceLevel = defenceLevel;
-    	this.moveRange = moveRange;
+    	this.attackLevel = initialAttackLevel = attackLevel;
+    	this.defenceLevel = initialDefenceLevel = defenceLevel;
+    	this.moveRange = initialMoveRange = moveRange;
     	this.moveDirections = moveDirection;
     	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
-    	this.attackRange = attackRange;
+    	this.attackRange = initialAttackRange = attackRange;
     	this.specialEffectCode = specialEffectCode;
-        DEFAULT_SPECIAL_EFFECT_COOLDOWN = specialEffectCooldown;
+        this.specialEffectCoolDown = specialEffectCooldown;
         specialEffectCounter = 0;
         passiveEffectActivated = false;
     }
@@ -51,13 +55,21 @@ public abstract class AbstractPiece extends GameObject {
     public Hierarchy getDefenceLevel() { return defenceLevel; }
     public void setDefenceLevel(Hierarchy defenceLevel) { this.defenceLevel = defenceLevel; }
 
+	public Hierarchy getInitialAttackLevel() { return initialAttackLevel; }
+
+	public Hierarchy getInitialDefenceLevel() { return initialDefenceLevel; }
+	
     public int getMoveRange() { return moveRange; }
     public void setMoveRange(int moveRange) { this.moveRange = moveRange; }
 
+    public int getInitialMoveRange() {return initialMoveRange; }
+    
     public Direction[] getMoveDirections() { return moveDirections; }
 
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
+    
+    public int getInitialAttackRange() { return initialAttackRange; }
 
     private int getSpecialEffectCounter() { return specialEffectCounter; }
 
@@ -106,7 +118,7 @@ public abstract class AbstractPiece extends GameObject {
 		}
 	}
     
-    private void resetSpecialEffectCounter() { specialEffectCounter = DEFAULT_SPECIAL_EFFECT_COOLDOWN; }
+    private void resetSpecialEffectCounter() { specialEffectCounter = specialEffectCoolDown; }
 
 	public boolean isSpecialEffectAvailable() {
 		return getSpecialEffect() != null && specialEffectCounter <= 0 && !passiveEffectActivated;
@@ -139,7 +151,7 @@ public abstract class AbstractPiece extends GameObject {
         if (getSpecialEffect() == null) { return "Not applicable"; }
         String summary = "Special effect's name (SE): " +  getSpecialEffect().getName() + "\n" +
                 "SE effective duration: " + getSpecialEffect().getEffectiveDuration() + "\n" +
-                "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
+                "SE cooldown duration: " + specialEffectCoolDown + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
                 "SE description: " + getSpecialEffect().toString();
         return summary;

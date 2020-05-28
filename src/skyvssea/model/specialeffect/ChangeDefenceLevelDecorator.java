@@ -16,14 +16,17 @@ public class ChangeDefenceLevelDecorator extends ChangeHierarchyFieldDecorator {
 	
 	@Override
 	public void apply(AbstractPiece target) {
-		originalValue = target.getDefenceLevel();
-		target.setDefenceLevel(getNewLevel());
+		Hierarchy originalValue = target.getInitialDefenceLevel();
+		Hierarchy newValue = getNewLevel(originalValue);
+		if (isNewValueValid(originalValue, target.getDefenceLevel(), newValue)) {
+			target.setDefenceLevel(newValue);
+		}		
 		super.apply(target);
 	}
 	   
 	@Override
 	public void remove(AbstractPiece target) {
-		target.setDefenceLevel(originalValue);
+		target.setDefenceLevel(target.getInitialDefenceLevel());
 		super.remove(target); 
 	}
 

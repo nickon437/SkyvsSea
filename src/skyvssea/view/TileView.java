@@ -6,11 +6,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
+import skyvssea.model.observer.Observer;
+import skyvssea.model.observer.Subject;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.RegionUtil;
-
-import java.util.Observable;
-import java.util.Observer;
 
 public class TileView extends Avatar implements Observer {
 
@@ -81,9 +80,9 @@ public class TileView extends Avatar implements Observer {
         updateBaseColor(modifiedColor);
     }
 
-    @Requires("arg instanceof Boolean || arg instanceof Avatar || arg == null")
+    @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
-	public void update(Observable tile, Object arg) {
+	public void update(Subject subject, Object arg) {
         if (arg instanceof Boolean) {
             Color baseColor;
             if ((Boolean) arg == true) {

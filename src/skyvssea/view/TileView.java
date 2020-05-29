@@ -1,6 +1,7 @@
 package skyvssea.view;
 
 import com.google.java.contract.Requires;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -26,9 +27,17 @@ public class TileView extends Avatar implements Observer {
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
+        this.setOnMouseEntered(e -> {
+            RegionUtil.formatHoveringEffect(base, true);
+            controller.handleMouseEnteredTile(this);
+        });
+
+        this.setOnMouseExited(e -> {
+            RegionUtil.formatHoveringEffect(base, false);
+            this.setCursor(Cursor.DEFAULT);
+        });
+
         this.setOnMouseClicked(e -> controller.handleTileClicked(this));
-        this.setOnMouseEntered(e -> controller.handleMouseEnteredTile(this));
-        this.setOnMouseExited(e -> controller.handleMouseExitedTile(this));
     }
 
 	private boolean setDefaultBaseColor(int x, int y) {
@@ -69,12 +78,6 @@ public class TileView extends Avatar implements Observer {
         RegionUtil.setFill(base, color);
     }
 
-    public void updateBaseColorAsHovered(boolean isHovered) {
-        Color baseColor = (Color) RegionUtil.getFill(base);
-        Color modifiedColor = ColorUtil.getHoveringColor(isHovered, baseColor);
-        updateBaseColor(modifiedColor);
-    }
-
     @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
 	public void update(Subject subject, Object arg) {
@@ -82,8 +85,10 @@ public class TileView extends Avatar implements Observer {
             Color baseColor;
             if ((Boolean) arg == true) {
                 baseColor = ColorUtil.HIGHLIGHTED_COLOR;
+                this.setCursor(Cursor.HAND);
             } else {
                 baseColor = hasLightBaseColor ? ColorUtil.DEFAULT_LIGHT_BASE_COLOR : ColorUtil.DEFAULT_DARK_BASE_COLOR;
+                this.setCursor(Cursor.DEFAULT);
             }
             updateBaseColor(baseColor);
         } else if (arg instanceof Avatar) {

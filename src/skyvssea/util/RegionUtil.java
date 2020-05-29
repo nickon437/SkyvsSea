@@ -1,13 +1,29 @@
 package skyvssea.util;
 
+import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class RegionUtil {
+    @Requires("region != null")
+    @Ensures("region.getBackground().getFills().get(0).getFill() != old(region.getBackground().getFills().get(0).getFill())")
+    public static void formatHoveringEffect(Region region, boolean isHovered) {
+        Color curColor = (Color) region.getBackground().getFills().get(0).getFill();
+        Color modifiedColor = ColorUtil.getHoveringColor(isHovered, curColor);
+        RegionUtil.setBackground(region, modifiedColor, getCornerRadii(region), null);
+    }
+
+    @Requires("region != null")
+    public static void formatHoveringEffect(Region region) {
+        region.setOnMouseEntered(e -> formatHoveringEffect(region, true));
+        region.setOnMouseExited(e -> formatHoveringEffect(region, false));
+    }
+
     protected static CornerRadii getCornerRadii(Region region) {
         try {
             return region.getBackground().getFills().get(0).getRadii();
@@ -23,14 +39,6 @@ public class RegionUtil {
             region.setBackground(new Background(backgroundFill));
         } catch (NullPointerException e) {
             setBackground(region, null, cornerRadii, null);
-        }
-    }
-
-    public static Paint getFill(Region region) {
-        try {
-            return region.getBackground().getFills().get(0).getFill();
-        } catch (Exception e) {
-            return null;
         }
     }
 

@@ -42,8 +42,7 @@ public class LandingPage extends AnchorPane {
     }
 
     private void formatControlPane(VBox controlPane) {
-        AnchorPane.setTopAnchor(controlPane, 0.0);
-        AnchorPane.setLeftAnchor(controlPane, 60.0);
+        RegionUtil.setAnchor(controlPane, 0.0, 60.0, null, null);
 
         controlPane.setPadding(new Insets(30));
         controlPane.setSpacing(15);

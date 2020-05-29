@@ -74,26 +74,18 @@ public class Controller {
     @Requires("tileView != null")
     public void handleMouseEnteredTile(TileView tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
-        tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
             AbstractPiece hoveringPiece = (AbstractPiece) hoveringTile.getGameObject();
             infoPane.setPieceInfo(hoveringPiece);
         }
 
-        if (hoveringTile.isHighlighted()) {
-            tileView.setCursor(Cursor.HAND);
-        } else if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
             GameObject currentObject = hoveringTile.getGameObject();
             if (currentObject instanceof AbstractPiece &&
             		playerManager.isCurrentPlayerPiece((AbstractPiece) currentObject)) {
                 tileView.setCursor(Cursor.HAND);
             }
         }
-    }
-
-    @Requires("tileView != null")
-    public void handleMouseExitedTile(TileView tileView) {
-        tileView.updateBaseColorAsHovered(false);
     }
 
     private void switchToAttackMode() {

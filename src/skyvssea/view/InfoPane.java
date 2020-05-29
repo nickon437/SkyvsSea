@@ -83,8 +83,8 @@ public class InfoPane extends VBox {
         endLabel.setTextAlignment(TextAlignment.CENTER);
 
         // Content
-        Node[] fullInstructionArray = {passiveEffectLabel, rightArrowImg1, moveLabel, rightArrowImg2, attackLabel, rightArrowImg3, endLabel};
-        fullInstructionList = Arrays.asList(fullInstructionArray);
+        fullInstructionList = Arrays.asList(passiveEffectLabel, rightArrowImg1, moveLabel, rightArrowImg2, attackLabel,
+                rightArrowImg3, endLabel);
 
         // Instruction pane's properties
         instructionPane.setAlignment(Pos.CENTER);

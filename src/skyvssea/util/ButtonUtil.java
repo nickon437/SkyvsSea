@@ -30,6 +30,12 @@ public class ButtonUtil extends RegionUtil {
         RegionUtil.setBackground(button, modifiedColor, getCornerRadii(button), null);
     }
 
+    @Requires("button != null")
+    public static void formatHoveringEffect(Button button) {
+        button.setOnMouseEntered(e -> formatHoveringEffect(button, true));
+        button.setOnMouseExited(e -> formatHoveringEffect(button, false));
+    }
+
     @Requires("button != null && url.length() > 0 && url.contains(\".\")")
     @Ensures("button.getGraphic() != null")
     public static void formatGraphic(Button button, String url) {

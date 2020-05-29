@@ -80,8 +80,7 @@ public class ActionPane extends VBox {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/end-turn.png");
         button.setCancelButton(true);
-        button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-        button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+        ButtonUtil.formatHoveringEffect(button);
         button.setOnAction(e -> {
             shiftActionIndicator(button);
             controller.handleEndButton();
@@ -103,10 +102,9 @@ public class ActionPane extends VBox {
     }
 
     private void setActionIndicatorPosition(double xTranslate, double width) {
-        Timeline timeline = new Timeline();
         KeyFrame kfXCoord = AnimationUtil.formatKeyFrame(actionIndicator.translateXProperty(), xTranslate, Duration.seconds(0.5));
         KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
-        timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
+        Timeline timeline = new Timeline(kfXCoord, kfWidth);
         timeline.play();
     }
 

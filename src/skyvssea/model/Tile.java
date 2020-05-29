@@ -1,11 +1,16 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.model.observer.Observer;
+import skyvssea.model.observer.Subject;
 import skyvssea.model.piece.AbstractPiece;
 
-import java.util.Observable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Tile extends Observable implements AvatarCore {
+public class Tile implements Subject, AvatarCore {
+
+    private List<Observer> observers = new ArrayList<>();
     private Avatar avatar;
     public int x;
 	public int y;
@@ -31,14 +36,12 @@ public class Tile extends Observable implements AvatarCore {
     public void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         if (gameObject.getAvatar() != null) {
-            setChanged();
             notifyObservers(gameObject.getAvatar());
         }
     }
 
     public void removeGameObject() { 
-    	this.gameObject = null; 
-    	setChanged();
+    	this.gameObject = null;
         notifyObservers(null);
     }
 
@@ -46,16 +49,29 @@ public class Tile extends Observable implements AvatarCore {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        setChanged();
         notifyObservers(isHighlighted);
     }
 
 	public int getX() { return x; }
 	public int getY() { return y; }
 
+	@Requires("avatar != null")
     @Override
     public void addAvatar(Avatar avatar) { this.avatar = avatar; }
 
     @Override
     public Avatar getAvatar() { return avatar; }
+
+    @Requires("observer != null")
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        for (Observer observer : observers) {
+            observer.update(this, arg);
+        }
+    }
 }

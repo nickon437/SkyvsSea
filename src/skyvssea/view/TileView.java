@@ -13,11 +13,6 @@ import skyvssea.util.RegionUtil;
 
 public class TileView extends Avatar implements Observer {
 
-    public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.WHITE;//Color.valueOf("#FCF5EF");
-    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#c8c8c8");
-    public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FCC42C");
-    public static final Color SCANNED_COLOR = Color.valueOf("#fde7aa");
-
     private Region base;
     private int x;
     private int y;
@@ -86,9 +81,9 @@ public class TileView extends Avatar implements Observer {
         if (arg instanceof Boolean) {
             Color baseColor;
             if ((Boolean) arg == true) {
-                baseColor = HIGHLIGHTED_COLOR;
+                baseColor = ColorUtil.HIGHLIGHTED_COLOR;
             } else {
-                baseColor = hasLightBaseColor ? DEFAULT_LIGHT_BASE_COLOR : DEFAULT_DARK_BASE_COLOR;
+                baseColor = hasLightBaseColor ? ColorUtil.DEFAULT_LIGHT_BASE_COLOR : ColorUtil.DEFAULT_DARK_BASE_COLOR;
             }
             updateBaseColor(baseColor);
         } else if (arg instanceof Avatar) {

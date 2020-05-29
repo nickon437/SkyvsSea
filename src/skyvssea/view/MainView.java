@@ -33,7 +33,7 @@ public class MainView extends AnchorPane {
         RegionUtil.setBackground(overlayPane, Color.BLACK, null, null);
         overlayPane.setOpacity(0.8);
 
-        ResourceManager.setFont(ResourceManager.HEADING_FONT, declarationLabel);
+        ResourceManager.setFont(ResourceManager.HEADING_STYLE, declarationLabel);
         VBox winnerInfo = new VBox(declarationLabel);
         winnerInfo.setAlignment(Pos.CENTER);
         winnerInfo.setMaxSize(200, 100);

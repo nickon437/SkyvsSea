@@ -192,7 +192,7 @@ public class Controller {
         this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
         this.historyManager = new HistoryManager();
-        this.game = new Game(this, actionPane);
+        this.game = new Game(this, actionPane, infoPane);
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 

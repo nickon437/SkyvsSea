@@ -37,4 +37,28 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
             specialEffectManager.remove(specialEffect);
         }
 	}
+
+	@Override
+	public boolean isImmuneToEnemySpecialEffect() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		return specialEffectManager.isImmuneToEnemySpecialEffect();
+	}
+
+	@Override
+	public void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect) {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		specialEffectManager.setImmuneToEnemySpecialEffect(immuneToSpecialEffect);
+	}
+
+	@Override
+	public void removeEnemySpecialEffect() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		specialEffectManager.removeEnemySpecialEffect();
+	}
 }

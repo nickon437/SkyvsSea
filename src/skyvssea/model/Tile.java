@@ -5,15 +5,17 @@ import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectContainer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 
 public class Tile extends Observable implements AvatarCore {
     private Avatar avatar;
     private int x;
 	private int y;
     private GameObject gameObject;
-    private List<SpecialEffectContainer> specialEffects;
+    private Set<SpecialEffectContainer> specialEffects;
 
 	private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
@@ -64,30 +66,35 @@ public class Tile extends Observable implements AvatarCore {
     @Override
     public Avatar getAvatar() { return avatar; }
 
-	public void addSpecialEffect(SpecialEffectContainer specialEffect) {
+	public boolean addSpecialEffect(SpecialEffectContainer specialEffect) {
 		if (specialEffects == null) {
-			specialEffects = new ArrayList<>();
+			specialEffects = new HashSet<>();
 		}
-		specialEffects.add(specialEffect);	
+		return specialEffects.add(specialEffect);	
 	}
 	
 	public void removeSpecialEffect(SpecialEffectContainer specialEffect) {
 		specialEffects.remove(specialEffect);		
+		if (hasPiece()) {
+			AbstractPiece castedPiece = (AbstractPiece) gameObject;
+			castedPiece.getSpecialEffectManagerProxy().remove(specialEffect);
+		}
 	}
 	
-	public List<SpecialEffectContainer> getSpecialEffects() {
+	public Set<SpecialEffectContainer> getSpecialEffects() {
 		if (specialEffects == null) {
-			specialEffects = new ArrayList<>();
+			specialEffects = new HashSet<>();
 		}
 		return specialEffects;
 	}
 
-	public void applySpecialEffect(AbstractPiece target, PlayerManager playerManager) {
-		if (specialEffects != null) {
+	public void applySpecialEffect(PlayerManager playerManager) {
+		if (specialEffects != null && gameObject instanceof AbstractPiece) {
+			AbstractPiece piece = (AbstractPiece) gameObject;
 			for (SpecialEffectContainer specialEffect : specialEffects) {
-				if (specialEffect.usableOnPiece(target, playerManager)) {
-					SpecialEffectContainer copy = SpecialEffectFactory.getInstance().copy(specialEffect);
-					target.getSpecialEffectManagerProxy().add(copy);
+				if (specialEffect.usableOnPiece(piece, playerManager)) {
+					SpecialEffectContainer copy = (SpecialEffectContainer) specialEffect.copy();
+					piece.getSpecialEffectManagerProxy().add(copy);
 				}
 			}
 		}

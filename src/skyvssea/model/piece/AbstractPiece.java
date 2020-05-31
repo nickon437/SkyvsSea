@@ -23,9 +23,8 @@ public abstract class AbstractPiece extends GameObject {
     private Direction[] moveDirections;
     private Direction[] attackDirections;
     private SpecialEffectCode specialEffectCode;
-    private SpecialEffectCode passiveEffectCode;
     private SpecialEffectContainer specialEffect;
-    private SpecialEffectContainer passiveEffect;
+    protected SpecialEffectContainer passiveEffect;
     private final int specialEffectCoolDown;
     private int specialEffectCounter; // 0 = ready to use special effect
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
@@ -74,7 +73,7 @@ public abstract class AbstractPiece extends GameObject {
     private int getSpecialEffectCounter() { return specialEffectCounter; }
 
 	public void performSpecialEffect(AbstractPiece target) {
-		SpecialEffectContainer copiedSpecialEffect = SpecialEffectFactory.getInstance().copy(getSpecialEffect());
+		SpecialEffectContainer copiedSpecialEffect = (SpecialEffectContainer) specialEffect.copy();
 	    if (copiedSpecialEffect != null && getSpecialEffectCounter() <= 0 && !passiveEffectActivated) {
 			target.getSpecialEffectManagerProxy().add(copiedSpecialEffect);
     		resetSpecialEffectCounter();    		
@@ -85,10 +84,10 @@ public abstract class AbstractPiece extends GameObject {
 	public void passPassiveEffect(List<Tile> tiles, PlayerManager playerManager) {
 		// No need to duplicate passiveEffect when assigning it to Tile as Tile is responsible of duplicating it when performing it to pieces
 		for (Tile currentTile : tiles) {
-			currentTile.addSpecialEffect(passiveEffect);
-			if (currentTile.hasPiece()) {
+			// If addSpecialEffect() returns false, it means the piece with active passive effect moves to the same tile
+			if (currentTile.addSpecialEffect(getPassiveEffect()) && currentTile.hasPiece()) {
 				AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
-				if (passiveEffect.usableOnPiece(currentPiece, playerManager)) {
+				if (getPassiveEffect().usableOnPiece(currentPiece, playerManager)) {
 					performPassiveEffect(currentPiece);					
 				}
 			}
@@ -98,12 +97,8 @@ public abstract class AbstractPiece extends GameObject {
 	public void removePassiveEffect(List<Tile> tiles) {
 		for (Tile currentTile : tiles) {
 			for (SpecialEffectContainer passiveEffect : currentTile.getSpecialEffects()) {
-				if (passiveEffect == this.passiveEffect) {
+				if (passiveEffect == this.getPassiveEffect()) {
 					currentTile.removeSpecialEffect(passiveEffect);
-					if (currentTile.hasPiece()) {
-						AbstractPiece castedPiece = (AbstractPiece) currentTile.getGameObject();
-						castedPiece.specialEffectManagerProxy.remove(passiveEffect);
-					}
 					break;
 				}
 			}		
@@ -112,7 +107,7 @@ public abstract class AbstractPiece extends GameObject {
 	
 	@Requires("passiveEffectActivated == true")
 	public void performPassiveEffect(AbstractPiece target) {
-		SpecialEffectContainer copiedPassiveEffect = SpecialEffectFactory.getInstance().copy(passiveEffect);
+		SpecialEffectContainer copiedPassiveEffect = (SpecialEffectContainer) getPassiveEffect().copy();
 		if (copiedPassiveEffect != null) {
 			target.getSpecialEffectManagerProxy().add(copiedPassiveEffect);   		
 		}
@@ -153,7 +148,8 @@ public abstract class AbstractPiece extends GameObject {
                 "SE effective duration: " + getSpecialEffect().getEffectiveDuration() + "\n" +
                 "SE cooldown duration: " + specialEffectCoolDown + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + getSpecialEffect().toString();
+                "SE description: " + getSpecialEffect().toString() + "\n" +
+                "Passive effect: " + getPassiveEffect().getName();
         return summary;
     }
     
@@ -179,18 +175,18 @@ public abstract class AbstractPiece extends GameObject {
 		passiveEffectActivated = !passiveEffectActivated;
 		
 		// Handle applying/removing passive effect to/from itself if the passive effect is TargetType.SELF
-		if (passiveEffect.getTargetType() == TargetType.SELF) {
+		if (getPassiveEffect().getTargetType() == TargetType.SELF) {
 			if (passiveEffectActivated) {
 				// No need to duplicate passiveEffect since it is only applied to the piece itself
-				specialEffectManagerProxy.add(passiveEffect); 
+				getSpecialEffectManagerProxy().add(getPassiveEffect()); 
 			} else {
-				specialEffectManagerProxy.remove(passiveEffect); 
+				getSpecialEffectManagerProxy().remove(getPassiveEffect()); 
 			}			
 		}
 	}
 
 	public boolean isPassiveEffectTransmittable() {
-		return passiveEffect.getTargetType() != TargetType.SELF;
+		return getPassiveEffect().getTargetType() != TargetType.SELF;
 	}
 
 	public SpecialEffectContainer getSpecialEffect() {
@@ -199,11 +195,6 @@ public abstract class AbstractPiece extends GameObject {
 		}
 		return specialEffect;
 	}
-
-	public SpecialEffectContainer getPassiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, passiveEffectCode);
-		}
-		return passiveEffect;
-	}
+	
+	public abstract SpecialEffectContainer getPassiveEffect();
 }

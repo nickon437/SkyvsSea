@@ -180,11 +180,20 @@ public class ActionPane extends VBox {
     public void enableKillBtn() {
     	killBtn.setDisable(false);
     }
+    
+    public void disableEndBtn() {
+    	endBtn.setDisable(true);
+    }
+    public void enableEndBtn() {
+    	endBtn.setDisable(false);
+    }
 
 	public void disableAllButtons() {
         disableSpecialEffectBtn();
         disablePassiveEffectBtn();
+        deactivatePassiveEffectBtn();
         disableKillBtn();
+        disableEndBtn();
         hideActionIndicator();		
 	}
 }

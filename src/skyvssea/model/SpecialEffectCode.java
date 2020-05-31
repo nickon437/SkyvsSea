@@ -7,6 +7,5 @@ public enum SpecialEffectCode {
     RETARDING,
     FREEZING,
     WEAKENING,
-    STRENGTHENING,
-    TOUGHENING_COMRADES
+    STRENGTHENING
 }

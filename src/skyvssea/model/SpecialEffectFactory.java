@@ -45,11 +45,36 @@ public class SpecialEffectFactory {
     			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, null)));
     }
     
-    private SpecialEffectContainer createTougheningComrades(AbstractPiece caster) { 
+    public SpecialEffectContainer createPassiveDefenceLevelPlus1(AbstractPiece caster) { 
     	return new PassiveSpecialEffectContainer(caster, "Increasing Defence Level of Nearby Comrades", TargetType.COMRADES, 
     			new ChangeDefenceLevelDecorator(1, null));
     }
-
+    
+    public SpecialEffectContainer createPassiveAttackLevelPlus1(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectContainer(caster, "Increasing Attack Level of Nearby Comrades", TargetType.COMRADES, 
+    			new ChangeAttackLevelDecorator(1, null));
+    }
+    
+    public SpecialEffectContainer createPassiveAntiSpecialEffect(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectContainer(caster, "Shielding Nearby Comrades from Enemies' Special Effects", TargetType.COMRADES, 
+    			new ActivateImmunityToSpecialEffectDecorator(null));
+    }
+    
+    public SpecialEffectContainer createPassiveFreezing(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectContainer(caster, "Freezing Nearby Enemies", TargetType.ENEMIES, 
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
+    }
+    
+    public SpecialEffectContainer createPassiveDefenceLevelUpAttackLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectContainer(caster, "Self Defence Level Up, Self Attack Level Down", TargetType.SELF, 
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(1, null)));
+    }
+    
+    public SpecialEffectContainer createPassiveAttackLevelUpDefenceLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectContainer(caster, "Self Attack Level Up, Self Defence Level Down", TargetType.SELF, 
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(-1, null)));
+    }
+    
     public SpecialEffectContainer createSpecialEffect(AbstractPiece caster, SpecialEffectCode code) {
         switch (code) {
             case DOUBLE_ATTACK_RANGE:
@@ -64,14 +89,12 @@ public class SpecialEffectFactory {
                 return createStrengthening(caster);
             case WEAKENING:
             	return createWeakening(caster);
-            case TOUGHENING_COMRADES:
-            	return createTougheningComrades(caster);
             default:
                 return null;
         }
     }
     
-    public SpecialEffectContainer copy(SpecialEffectContainer specialEffect) {
-    	return (SpecialEffectContainer) specialEffect.copy();
-    }
+//    public SpecialEffectContainer copy(SpecialEffectContainer specialEffect) {
+//    	return (SpecialEffectContainer) specialEffect.copy();
+//    }
 }

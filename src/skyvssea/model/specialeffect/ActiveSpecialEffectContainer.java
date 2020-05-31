@@ -2,7 +2,6 @@ package skyvssea.model.specialeffect;
 
 import com.google.java.contract.Requires;
 
-import skyvssea.model.PlayerManager;
 import skyvssea.model.piece.AbstractPiece;
 
 public class ActiveSpecialEffectContainer extends SpecialEffectContainer {
@@ -16,6 +15,7 @@ public class ActiveSpecialEffectContainer extends SpecialEffectContainer {
 		super(caster, name, effectiveDuration, targetType, specialEffectDecorator);
 	}
 	
+	@Override
 	@Requires("effectiveDuration > 0")
 	public boolean updateEffectiveDuration() {
 		boolean isActive = true;

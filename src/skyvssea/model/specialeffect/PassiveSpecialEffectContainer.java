@@ -1,6 +1,5 @@
 package skyvssea.model.specialeffect;
 
-import skyvssea.model.PlayerManager;
 import skyvssea.model.piece.AbstractPiece;
 
 public class PassiveSpecialEffectContainer extends SpecialEffectContainer {
@@ -10,6 +9,7 @@ public class PassiveSpecialEffectContainer extends SpecialEffectContainer {
 		super(caster, name, PASSIVE_DURATION, targetType, specialEffectDecorator);
 	}
 
+	@Override
 	public boolean updateEffectiveDuration() {
 		return true;
 	}

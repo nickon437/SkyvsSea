@@ -1,8 +1,5 @@
 package skyvssea.model.specialeffect;
 
-import com.google.java.contract.Requires;
-import com.sun.prism.impl.Disposer.Target;
-
 import skyvssea.model.PlayerManager;
 import skyvssea.model.piece.AbstractPiece;
 
@@ -21,7 +18,6 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 		this.specialEffectDecorator = specialEffectDecorator;
 	}
 	
-	@Requires("effectiveDuration > 0")
 	public abstract boolean updateEffectiveDuration();
 	
 	public int getEffectiveDuration() {
@@ -37,12 +33,24 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 	}
 	
 	public boolean usableOnPiece(AbstractPiece target, PlayerManager playerManager) {
+		// Satisfied when a piece with activated passive effect for comrades before the current round moves to an adjacent tile
 		if (caster == target) {
 			return targetType == TargetType.SELF;
-		} else {
+		} 
+		//Satisfied when a piece wants to use its special effect on itself
+		else if (targetType == TargetType.SELF) {
+			return caster == target;
+		} 
+		// For special effects for comrades/enemies
+		else {
 			boolean areComrades = playerManager.isCurrentPlayerPiece(target) == playerManager.isCurrentPlayerPiece(caster);
 			boolean forComrades = targetType == TargetType.COMRADES;
-			return areComrades == forComrades;			
+			boolean applicable = areComrades == forComrades;
+			if (applicable && !forComrades && target.getSpecialEffectManagerProxy().isImmuneToEnemySpecialEffect()) {
+				return false;
+			} else {
+				return applicable;
+			}
 		}
 	};
 	
@@ -55,11 +63,11 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 		specialEffectDecorator.remove(target);
 	}	
 	
-//	@Override
-//	public boolean equals(Object o) {
-//		if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        SpecialEffectContainer compared = (SpecialEffectContainer) o;
-//        return name.equals(compared.name) && targetType == compared.targetType && caster == compared.caster;
-//	}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpecialEffectContainer compared = (SpecialEffectContainer) o;
+        return name.equals(compared.name) && targetType == compared.targetType && caster == compared.caster;
+	}
 }

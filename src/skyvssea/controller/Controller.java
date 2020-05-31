@@ -37,20 +37,23 @@ public class Controller {
                 	previousRegisteredTile.removeGameObject();
                 	// Handle removing passive effect from a moving piece if the moving piece moves away from a passive effect caster
                 	previousRegisteredTile.removeSpecialEffect(registeredPiece);  
+                	
                     selectedTile.setGameObject(registeredPiece);
                     // Handle applying passive effect to a moving piece if the moving piece moves towards a passive effect caster
-                    selectedTile.applySpecialEffect(registeredPiece, playerManager);                    
-                    
-                    // Handle setting up transmittable passive effect on nearby tiles so that it can be applied to a piece moving to any of the nearby tiles
-                    if (registeredPiece.isPassiveEffectActivated() && registeredPiece.isPassiveEffectTransmittable()) {
-                    	List<Tile> surroundingTiles;
-                    	surroundingTiles = board.getSurroundingTiles(previousRegisteredTile);
-                    	registeredPiece.removePassiveEffect(surroundingTiles);
-                    	surroundingTiles = board.getSurroundingTiles(selectedTile);
-                    	registeredPiece.passPassiveEffect(surroundingTiles, playerManager);                    	
-                    }
+                    selectedTile.applySpecialEffect(playerManager);                         
                 }
 
+                // Handle setting up transmittable passive effect on nearby tiles so that it can be applied to a piece moving to any of the nearby tiles
+                if (registeredPiece.isPassiveEffectActivated() && registeredPiece.isPassiveEffectTransmittable()) {
+                	List<Tile> surroundingTiles;
+                	if (!selectedTile.equals(previousRegisteredTile)) {
+                		surroundingTiles = board.getSurroundingTiles(previousRegisteredTile);  
+                		surroundingTiles.forEach(tile -> tile.removeSpecialEffect(registeredPiece.getPassiveEffect()));
+                	}
+                	surroundingTiles = board.getSurroundingTiles(selectedTile);
+                	registeredPiece.passPassiveEffect(surroundingTiles, playerManager);                    	
+                }
+                
                 switchToAttackMode();
 
             } else {
@@ -60,8 +63,16 @@ public class Controller {
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
                         pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
-                        boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
-                        actionPane.enablePassiveEffectBtn(isPassiveEffectActivated);
+                        
+                        // Configure the passive btn after clicking a piece
+                        if (newSelectedPiece.getPassiveEffect() != null) {
+                        	boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
+                        	actionPane.enablePassiveEffectBtn(isPassiveEffectActivated);                        	
+                        } else {
+                        	// For baby pieces with no passive effect, must ensure the passive btn is default color and disabled
+                        	actionPane.deactivatePassiveEffectBtn();
+                        	actionPane.disablePassiveEffectBtn();
+                        }
                     } else {
                     	// Click on an enemy piece
                     	actionPane.disableAllButtons();
@@ -80,6 +91,11 @@ public class Controller {
             
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
+        		AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
+        		if (target.isPassiveEffectActivated() && target.isPassiveEffectTransmittable()) {
+                	List<Tile> surroundingTiles = board.getSurroundingTiles(selectedTile);       
+                	surroundingTiles.forEach(tile -> tile.removeSpecialEffect(target.getPassiveEffect()));
+        		}
         		selectedTile.removeGameObject();
         		endTurn();
             }
@@ -115,6 +131,7 @@ public class Controller {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         actionPane.enableKillBtn();
         actionPane.disablePassiveEffectBtn();
+        actionPane.enableEndBtn();
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
         if (currentPiece.isSpecialEffectAvailable()) {
         	actionPane.enableSpecialEffectBtn();
@@ -166,7 +183,14 @@ public class Controller {
     }
     
 	public void handlePassiveEffectButton() {
-		pieceManager.getRegisteredPiece().togglePassiveEffectSwitch();
+		AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
+		registeredPiece.togglePassiveEffectSwitch();
+		
+		// Remove transmittable passiveEffect from surrounding tiles and pieces if passiveEffect is turned off
+		if (!registeredPiece.isPassiveEffectActivated() && registeredPiece.isPassiveEffectTransmittable()) {
+        	List<Tile> surroundingTiles = board.getSurroundingTiles(board.getRegisteredTile());      
+        	surroundingTiles.forEach(tile -> tile.removeSpecialEffect(registeredPiece.getPassiveEffect()));
+        }
 	}
 
     public void handleEndButton() { endTurn(); }
@@ -185,6 +209,7 @@ public class Controller {
         changeTurn();
         game.setCurrentGameState(GameState.READY_TO_MOVE);
         actionPane.disableAllButtons();
+        
         // TODO: Add save for undo here
     }
 

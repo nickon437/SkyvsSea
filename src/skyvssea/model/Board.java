@@ -4,7 +4,6 @@ import com.google.java.contract.Requires;
 
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
-import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,13 +154,13 @@ public class Board {
 	}
 
 	@Requires("playerManager != null && registeredTile != null")
-	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
+	public void highlightPossibleActiveEffectTiles(PlayerManager playerManager) {
 		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
-		SpecialEffectObject specialEffect = selectedPiece.getSpecialEffect();
+		SpecialEffectObject activeEffect = selectedPiece.getActiveEffect();
 		
 	    for (Tile currentTile : getDetectablePieceLocation(registeredTile)) {
 			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
-			if (specialEffect.usableOnPiece(currentPiece, playerManager)) {
+			if (activeEffect.usableOnPiece(currentPiece, playerManager)) {
 				highlightTile(currentTile);
 			}
 		}

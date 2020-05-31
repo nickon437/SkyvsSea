@@ -97,13 +97,6 @@ public class Tile extends Observable implements AvatarCore {
 			}
 		}	
 	}
-	
-	public Set<SpecialEffectObject> getSpecialEffects() {
-		if (specialEffects == null) {
-			specialEffects = new HashSet<>();
-		}
-		return specialEffects;
-	}
 
 	/**
 	 * Invoked when a piece moves to another tile

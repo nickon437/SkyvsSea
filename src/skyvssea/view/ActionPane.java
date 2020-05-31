@@ -18,7 +18,7 @@ public class ActionPane extends VBox {
     private HBox buttonHolder = new HBox();
     private Pane actionIndicator = new Pane();
     private Button killBtn = new Button("Kill");
-    private Button specialEffectBtn = new Button("Special Effect");
+    private Button activeEffectBtn = new Button("Active Effect");
     private ToggleButton passiveEffectBtn = new ToggleButton("Passive Effect");
     private Button endBtn = new Button("End");
 
@@ -29,12 +29,12 @@ public class ActionPane extends VBox {
         this.getChildren().addAll(actionIndicator, buttonHolder);
         this.setSpacing(5);
 
-        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, passiveEffectBtn, endBtn);
+        buttonHolder.getChildren().addAll(killBtn, activeEffectBtn, passiveEffectBtn, endBtn);
         buttonHolder.setSpacing(SPACING);
 
         formatActionIndicator();
         formatKillBtn(killBtn, controller);
-        formatSpecialEffectBtn(specialEffectBtn, controller);
+        formatActiveEffectBtn(activeEffectBtn, controller);
         formatPassiveEffectBtn(passiveEffectBtn, controller);
         formatEndBtn(endBtn, controller);
     }
@@ -106,21 +106,21 @@ public class ActionPane extends VBox {
     	}
     }
     
-    private void formatSpecialEffectBtn(Button button, Controller controller) {
+    private void formatActiveEffectBtn(Button button, Controller controller) {
         maximizeControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
-            controller.handleMouseEnteredSpecialEffectBtn();
+            controller.handleMouseEnteredActiveEffectBtn();
         });
         button.setOnMouseExited(e -> {
             ButtonUtil.formatHoveringEffect(button, false);
-            controller.handleMouseExitedSpecialEffectBtn();
+            controller.handleMouseExitedActiveEffectBtn();
         });
         button.setOnAction(e -> {
             shiftActionIndicator(button);
-            controller.handleSpecialEffectButton();
+            controller.handleActiveEffectButton();
         });
     }
 
@@ -167,11 +167,11 @@ public class ActionPane extends VBox {
         timeline.play();
     }
 
-    public void enableSpecialEffectBtn() {
-        specialEffectBtn.setDisable(false);
+    public void enableActiveEffectBtn() {
+        activeEffectBtn.setDisable(false);
     }
-    public void disableSpecialEffectBtn() {
-    	specialEffectBtn.setDisable(true);
+    public void disableActiveEffectBtn() {
+    	activeEffectBtn.setDisable(true);
     }
     
     public void disableKillBtn() {
@@ -189,7 +189,7 @@ public class ActionPane extends VBox {
     }
 
 	public void disableAllButtons() {
-        disableSpecialEffectBtn();
+        disableActiveEffectBtn();
         disablePassiveEffectBtn();
         deactivatePassiveEffectBtn();
         disableKillBtn();

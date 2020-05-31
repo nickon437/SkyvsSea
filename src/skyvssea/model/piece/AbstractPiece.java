@@ -20,16 +20,16 @@ public abstract class AbstractPiece extends GameObject {
     private Direction[] moveDirections;
     private Direction[] attackDirections;
     private SpecialEffectCode specialEffectCode;
-    private SpecialEffectObject specialEffect;
+    private SpecialEffectObject activeEffect;
     protected SpecialEffectObject passiveEffect;
-    private final int specialEffectCoolDown;
-    private int specialEffectCounter; // 0 = ready to use special effect
+    private final int activeEffectCoolDown;
+    private int activeEffectCounter; // 0 = ready to use special effect
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 	private boolean passiveEffectActivated;
 
 	protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
-                            int specialEffectCooldown) {
+                            int activeEffectCoolDown) {
     	this.name = name;
     	this.attackLevel = initialAttackLevel = attackLevel;
     	this.defenceLevel = initialDefenceLevel = defenceLevel;
@@ -38,8 +38,8 @@ public abstract class AbstractPiece extends GameObject {
     	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
     	this.attackRange = initialAttackRange = attackRange;
     	this.specialEffectCode = specialEffectCode;
-        this.specialEffectCoolDown = specialEffectCooldown;
-        specialEffectCounter = 0;
+        this.activeEffectCoolDown = activeEffectCoolDown;
+        activeEffectCounter = 0;
         passiveEffectActivated = false;
     }
 
@@ -67,12 +67,12 @@ public abstract class AbstractPiece extends GameObject {
     
     public int getInitialAttackRange() { return initialAttackRange; }
 
-    @Requires("specialEffectCounter <= 0 && !passiveEffectActivated")
-	public void performSpecialEffect(AbstractPiece target) {
-		SpecialEffectObject copiedSpecialEffect = (SpecialEffectObject) specialEffect.copy();
-	    if (copiedSpecialEffect != null) {
-			target.getSpecialEffectManagerProxy().add(copiedSpecialEffect);
-    		resetSpecialEffectCounter();    		
+    @Requires("activeEffectCounter <= 0 && !passiveEffectActivated")
+	public void performActiveEffect(AbstractPiece target) {
+		SpecialEffectObject copiedActiveEffect = (SpecialEffectObject) activeEffect.copy();
+	    if (copiedActiveEffect != null) {
+			target.getSpecialEffectManagerProxy().add(copiedActiveEffect);
+    		resetActiveEffectCounter();    		
     	}
 	}
 	
@@ -85,14 +85,14 @@ public abstract class AbstractPiece extends GameObject {
 	}
 	
 	public void receiveSpecialEffect(SpecialEffectObject specialEffect) {
-		SpecialEffectObject copiedPassiveEffect = (SpecialEffectObject) specialEffect.copy();
-		getSpecialEffectManagerProxy().add(copiedPassiveEffect);
+		SpecialEffectObject copiedSpecialEffect = (SpecialEffectObject) specialEffect.copy();
+		getSpecialEffectManagerProxy().add(copiedSpecialEffect);
 	}
     
-    private void resetSpecialEffectCounter() { specialEffectCounter = specialEffectCoolDown; }
+    private void resetActiveEffectCounter() { activeEffectCounter = activeEffectCoolDown; }
 
-	public boolean isSpecialEffectAvailable() {
-		return getSpecialEffect() != null && specialEffectCounter <= 0 && !passiveEffectActivated;
+	public boolean isActiveEffectAvailable() {
+		return getActiveEffect() != null && activeEffectCounter <= 0 && !passiveEffectActivated;
     }
 
     @Ensures("specialEffectManagerProxy != null")
@@ -119,24 +119,24 @@ public abstract class AbstractPiece extends GameObject {
 	
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
-        if (getSpecialEffect() == null) { return "Not applicable"; }
-        String summary = "Special effect's name (SE): " +  getSpecialEffect().getName() + "\n" +
-                "SE effective duration: " + getSpecialEffect().getEffectiveDuration() + "\n" +
-                "SE cooldown duration: " + specialEffectCoolDown + "\n" +
-                "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + getSpecialEffect().toString() + "\n" +
+        if (getActiveEffect() == null) { return "Not applicable"; }
+        String summary = "Active effect's name (AE): " +  getActiveEffect().getName() + "\n" +
+                "AE effective duration: " + getActiveEffect().getEffectiveDuration() + "\n" +
+                "AE cooldown duration: " + activeEffectCoolDown + "\n" +
+                "AE remaining cooldown duration: " + activeEffectCounter + "\n" +
+                "AE description: " + getActiveEffect().toString() + "\n" +
                 "Passive effect: " + getPassiveEffect().getName();
         return summary;
     }
     
-    @Ensures("specialEffectCounter >= 0")
+    @Ensures("activeEffectCounter >= 0")
     public void updateStatus() {
-        if (specialEffectCounter > 0) { specialEffectCounter--; }
+        if (activeEffectCounter > 0) { activeEffectCounter--; }
         getSpecialEffectManagerProxy().updateEffectiveDuration();
     }
 
-	public TargetType getSpecialEffectTargetType() {
-		return getSpecialEffect().getTargetType();
+	public TargetType getActiveEffectTargetType() {
+		return getActiveEffect().getTargetType();
 	}
 
 	public Direction[] getAttackDirections() {
@@ -165,11 +165,11 @@ public abstract class AbstractPiece extends GameObject {
 		return getPassiveEffect().getTargetType() != TargetType.SELF;
 	}
 
-	public SpecialEffectObject getSpecialEffect() {
-		if (specialEffect == null) {
-			specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, specialEffectCode);
+	public SpecialEffectObject getActiveEffect() {
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, specialEffectCode);
 		}
-		return specialEffect;
+		return activeEffect;
 	}
 	
 	public abstract SpecialEffectObject getPassiveEffect();

@@ -83,9 +83,9 @@ public class Controller {
                 }
             }
             
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
             if (selectedTile.isHighlighted()) {
-                registeredPiece.performSpecialEffect((AbstractPiece) selectedTile.getGameObject());
+                registeredPiece.performActiveEffect((AbstractPiece) selectedTile.getGameObject());
                 endTurn();
             }
             
@@ -133,10 +133,10 @@ public class Controller {
         actionPane.disablePassiveEffectBtn();
         actionPane.enableEndBtn();
         AbstractPiece currentPiece = pieceManager.getRegisteredPiece();
-        if (currentPiece.isSpecialEffectAvailable()) {
-        	actionPane.enableSpecialEffectBtn();
+        if (currentPiece.isActiveEffectAvailable()) {
+        	actionPane.enableActiveEffectBtn();
         } else {
-        	actionPane.disableSpecialEffectBtn();
+        	actionPane.disableActiveEffectBtn();
         }
     }
 
@@ -147,7 +147,7 @@ public class Controller {
     public void handleMouseEnteredKillBtn() { 
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
     		board.highlightPossibleKillTiles(playerManager); 
-    	} else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+    	} else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
     		board.clearHighlightedTiles();
     		board.highlightPossibleKillTiles(playerManager);
     	}
@@ -156,24 +156,24 @@ public class Controller {
     public void handleMouseExitedKillBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
         	board.clearHighlightedTiles();
-        	board.highlightPossibleSpecialEffectTiles(playerManager);
+        	board.highlightPossibleActiveEffectTiles(playerManager);
         }
     }
 
-    public void handleSpecialEffectButton() { 
-    	game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT); 
+    public void handleActiveEffectButton() { 
+    	game.setCurrentGameState(GameState.PERFORMING_ACTIVE_EFFECT); 
 	}
-    public void handleMouseEnteredSpecialEffectBtn() { 
+    public void handleMouseEnteredActiveEffectBtn() { 
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
-    		board.highlightPossibleSpecialEffectTiles(playerManager);     		
+    		board.highlightPossibleActiveEffectTiles(playerManager);     		
     	} else if (game.getCurrentGameState() == GameState.KILLING) {
     		board.clearHighlightedTiles();
-    		board.highlightPossibleSpecialEffectTiles(playerManager);
+    		board.highlightPossibleActiveEffectTiles(playerManager);
     	}
 	}
-    public void handleMouseExitedSpecialEffectBtn() {
+    public void handleMouseExitedActiveEffectBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {

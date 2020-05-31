@@ -1,13 +1,10 @@
 package skyvssea.model.piece;
 
-import java.util.List;
-
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 
 import skyvssea.model.*;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 import skyvssea.model.specialeffect.TargetType;
 
 public abstract class AbstractPiece extends GameObject {
@@ -23,8 +20,8 @@ public abstract class AbstractPiece extends GameObject {
     private Direction[] moveDirections;
     private Direction[] attackDirections;
     private SpecialEffectCode specialEffectCode;
-    private SpecialEffectContainer specialEffect;
-    protected SpecialEffectContainer passiveEffect;
+    private SpecialEffectObject specialEffect;
+    protected SpecialEffectObject passiveEffect;
     private final int specialEffectCoolDown;
     private int specialEffectCounter; // 0 = ready to use special effect
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
@@ -70,47 +67,26 @@ public abstract class AbstractPiece extends GameObject {
     
     public int getInitialAttackRange() { return initialAttackRange; }
 
-    private int getSpecialEffectCounter() { return specialEffectCounter; }
-
+    @Requires("specialEffectCounter <= 0 && !passiveEffectActivated")
 	public void performSpecialEffect(AbstractPiece target) {
-		SpecialEffectContainer copiedSpecialEffect = (SpecialEffectContainer) specialEffect.copy();
-	    if (copiedSpecialEffect != null && getSpecialEffectCounter() <= 0 && !passiveEffectActivated) {
+		SpecialEffectObject copiedSpecialEffect = (SpecialEffectObject) specialEffect.copy();
+	    if (copiedSpecialEffect != null) {
 			target.getSpecialEffectManagerProxy().add(copiedSpecialEffect);
     		resetSpecialEffectCounter();    		
     	}
 	}
 	
-	@Requires("passiveEffectActivated == true && passiveEffect != null")
-	public void passPassiveEffect(List<Tile> tiles, PlayerManager playerManager) {
-		// No need to duplicate passiveEffect when assigning it to Tile as Tile is responsible of duplicating it when performing it to pieces
-		for (Tile currentTile : tiles) {
-			// If addSpecialEffect() returns false, it means the piece with active passive effect moves to the same tile
-			if (currentTile.addSpecialEffect(getPassiveEffect()) && currentTile.hasPiece()) {
-				AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
-				if (getPassiveEffect().usableOnPiece(currentPiece, playerManager)) {
-					performPassiveEffect(currentPiece);					
-				}
-			}
-		}
-	}
-	
-	public void removePassiveEffect(List<Tile> tiles) {
-		for (Tile currentTile : tiles) {
-			for (SpecialEffectContainer passiveEffect : currentTile.getSpecialEffects()) {
-				if (passiveEffect == this.getPassiveEffect()) {
-					currentTile.removeSpecialEffect(passiveEffect);
-					break;
-				}
-			}		
-		}
-	}
-	
 	@Requires("passiveEffectActivated == true")
 	public void performPassiveEffect(AbstractPiece target) {
-		SpecialEffectContainer copiedPassiveEffect = (SpecialEffectContainer) getPassiveEffect().copy();
+		SpecialEffectObject copiedPassiveEffect = (SpecialEffectObject) getPassiveEffect().copy();
 		if (copiedPassiveEffect != null) {
 			target.getSpecialEffectManagerProxy().add(copiedPassiveEffect);   		
 		}
+	}
+	
+	public void receiveSpecialEffect(SpecialEffectObject specialEffect) {
+		SpecialEffectObject copiedPassiveEffect = (SpecialEffectObject) specialEffect.copy();
+		getSpecialEffectManagerProxy().add(copiedPassiveEffect);
 	}
     
     private void resetSpecialEffectCounter() { specialEffectCounter = specialEffectCoolDown; }
@@ -189,12 +165,12 @@ public abstract class AbstractPiece extends GameObject {
 		return getPassiveEffect().getTargetType() != TargetType.SELF;
 	}
 
-	public SpecialEffectContainer getSpecialEffect() {
+	public SpecialEffectObject getSpecialEffect() {
 		if (specialEffect == null) {
 			specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, specialEffectCode);
 		}
 		return specialEffect;
 	}
 	
-	public abstract SpecialEffectContainer getPassiveEffect();
+	public abstract SpecialEffectObject getPassiveEffect();
 }

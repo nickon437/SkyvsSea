@@ -3,14 +3,14 @@ package skyvssea.model.specialeffect;
 import skyvssea.model.PlayerManager;
 import skyvssea.model.piece.AbstractPiece;
 
-public abstract class SpecialEffectContainer implements SpecialEffect {
+public abstract class SpecialEffectObject implements SpecialEffect {
 	protected AbstractSpecialEffectDecorator specialEffectDecorator;
 	protected AbstractPiece caster;
 	protected String name;
 	protected TargetType targetType;
 	protected int effectiveDuration;
 	
-	public SpecialEffectContainer(AbstractPiece caster, String name, int effectiveDuration, TargetType targetType, AbstractSpecialEffectDecorator specialEffectDecorator) {
+	public SpecialEffectObject(AbstractPiece caster, String name, int effectiveDuration, TargetType targetType, AbstractSpecialEffectDecorator specialEffectDecorator) {
 		this.caster = caster;
 		this.name = name;
 		this.targetType = targetType;
@@ -67,7 +67,7 @@ public abstract class SpecialEffectContainer implements SpecialEffect {
 	public boolean equals(Object o) {
 		if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SpecialEffectContainer compared = (SpecialEffectContainer) o;
+        SpecialEffectObject compared = (SpecialEffectObject) o;
         return name.equals(compared.name) && targetType == compared.targetType && caster == compared.caster;
 	}
 }

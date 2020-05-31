@@ -3,7 +3,7 @@ package skyvssea.model;
 import com.google.java.contract.Requires;
 
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
@@ -157,7 +157,7 @@ public class Board {
 	@Requires("playerManager != null && registeredTile != null")
 	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
 		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
-		SpecialEffectContainer specialEffect = selectedPiece.getSpecialEffect();
+		SpecialEffectObject specialEffect = selectedPiece.getSpecialEffect();
 		
 	    for (Tile currentTile : getDetectablePieceLocation(registeredTile)) {
 			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();

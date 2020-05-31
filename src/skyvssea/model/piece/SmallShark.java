@@ -2,7 +2,7 @@ package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
 import skyvssea.model.SpecialEffectFactory;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class SmallShark extends AbstractShark implements SmallCharacter {
 	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.STRENGTHENING;
@@ -13,7 +13,7 @@ public class SmallShark extends AbstractShark implements SmallCharacter {
 	}
 	
 	@Override
-	public SpecialEffectContainer getPassiveEffect() {
+	public SpecialEffectObject getPassiveEffect() {
 		if (passiveEffect == null) {
 			passiveEffect = SpecialEffectFactory.getInstance().createPassiveFreezing(this);
 		}

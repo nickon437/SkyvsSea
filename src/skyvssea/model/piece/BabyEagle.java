@@ -1,7 +1,7 @@
 package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class BabyEagle extends AbstractEagle implements BabyCharacter {
 	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.NOT_APPLICABLE;
@@ -12,7 +12,7 @@ public class BabyEagle extends AbstractEagle implements BabyCharacter {
 	}
 
 	@Override
-	public SpecialEffectContainer getPassiveEffect() {
+	public SpecialEffectObject getPassiveEffect() {
 		// Baby character does not have a passive effect
 		return null;
 	}

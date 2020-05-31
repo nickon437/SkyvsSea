@@ -2,7 +2,7 @@ package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
 import skyvssea.model.SpecialEffectFactory;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class SmallEagle extends AbstractEagle implements SmallCharacter {
 	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.FREEZING;
@@ -13,7 +13,7 @@ public class SmallEagle extends AbstractEagle implements SmallCharacter {
 	}
 	
 	@Override
-	public SpecialEffectContainer getPassiveEffect() {
+	public SpecialEffectObject getPassiveEffect() {
 		if (passiveEffect == null) {
 			passiveEffect = SpecialEffectFactory.getInstance().createPassiveAntiSpecialEffect(this);
 		}

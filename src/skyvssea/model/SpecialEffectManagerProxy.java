@@ -3,7 +3,7 @@ package skyvssea.model;
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface {
 
@@ -17,7 +17,7 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
     @Requires("specialEffect != null")
     @Ensures("specialEffectManager != null")
     @Override
-    public void add(SpecialEffectContainer specialEffect) {
+    public void add(SpecialEffectObject specialEffect) {
         if (specialEffectManager == null) {
             specialEffectManager = new SpecialEffectManager(target);
         }
@@ -32,7 +32,7 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
     }
 
 	@Override
-	public void remove(SpecialEffectContainer specialEffect) {
+	public void remove(SpecialEffectObject specialEffect) {
 		if (specialEffectManager != null) {
             specialEffectManager.remove(specialEffect);
         }

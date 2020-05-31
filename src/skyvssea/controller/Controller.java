@@ -34,13 +34,13 @@ public class Controller {
             	board.clearHighlightedTiles();
             	// Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
                 if (!selectedTile.equals(previousRegisteredTile)) {
-                	previousRegisteredTile.removeGameObject();
                 	// Handle removing passive effect from a moving piece if the moving piece moves away from a passive effect caster
-                	previousRegisteredTile.removeSpecialEffect(registeredPiece);  
+                	previousRegisteredTile.removeSpecialEffects();  
+                	previousRegisteredTile.removeGameObject();
                 	
                     selectedTile.setGameObject(registeredPiece);
                     // Handle applying passive effect to a moving piece if the moving piece moves towards a passive effect caster
-                    selectedTile.applySpecialEffect(playerManager);                         
+                    selectedTile.applySpecialEffects(playerManager);                         
                 }
 
                 // Handle setting up transmittable passive effect on nearby tiles so that it can be applied to a piece moving to any of the nearby tiles
@@ -51,7 +51,7 @@ public class Controller {
                 		surroundingTiles.forEach(tile -> tile.removeSpecialEffect(registeredPiece.getPassiveEffect()));
                 	}
                 	surroundingTiles = board.getSurroundingTiles(selectedTile);
-                	registeredPiece.passPassiveEffect(surroundingTiles, playerManager);                    	
+                	surroundingTiles.forEach(tile -> tile.addSpecialEffect(registeredPiece.getPassiveEffect(), playerManager));
                 }
                 
                 switchToAttackMode();

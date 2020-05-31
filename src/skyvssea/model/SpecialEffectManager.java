@@ -3,14 +3,14 @@ package skyvssea.model;
 import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 import skyvssea.model.specialeffect.TargetType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecialEffectManager implements SpecialEffectManagerInterface {
-	private List<SpecialEffectContainer> appliedSpecialEffects = new ArrayList<>();
+	private List<SpecialEffectObject> appliedSpecialEffects = new ArrayList<>();
 	private boolean immuneToEnemySpecialEffect;
 	private AbstractPiece target;
 
@@ -20,9 +20,8 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 	}
 
 	@Requires("specialEffect != null")
-//	@Ensures("appliedSpecialEffects.size() == old(appliedSpecialEffects.size()) + 1 && appliedSpecialEffects.contains(specialEffect)")
 	@Override
-	public void add(SpecialEffectContainer specialEffect) {
+	public void add(SpecialEffectObject specialEffect) {
 		specialEffect.apply(target);
 		appliedSpecialEffects.add(specialEffect);
 	}
@@ -30,8 +29,8 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 	@Override
 	@Ensures("appliedSpecialEffects.size() <= old(appliedSpecialEffects.size())")
 	public void updateEffectiveDuration() {
-		List<SpecialEffectContainer> toRemove = new ArrayList<>();
-		for (SpecialEffectContainer specialEffect : appliedSpecialEffects) {
+		List<SpecialEffectObject> toRemove = new ArrayList<>();
+		for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
 			boolean isActive = specialEffect.updateEffectiveDuration();
 			if (!isActive) {
 				specialEffect.remove(target);
@@ -42,15 +41,15 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 
 		// Reapply all existing appliedSpecialEffects because the specialEffect removal
 		// just now might cancel special effects which are still effective
-		for (SpecialEffectContainer specialEffect : appliedSpecialEffects) {
+		for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
 			specialEffect.apply(target);
 		}
 	}
 
 	@Override
-	public void remove(SpecialEffectContainer specialEffect) {
-		SpecialEffectContainer toRemove = null;
-		for (SpecialEffectContainer appliedSpecialEffect : appliedSpecialEffects) {
+	public void remove(SpecialEffectObject specialEffect) {
+		SpecialEffectObject toRemove = null;
+		for (SpecialEffectObject appliedSpecialEffect : appliedSpecialEffects) {
 			if (specialEffect.equals(appliedSpecialEffect)) {
 				appliedSpecialEffect.remove(target);
 				toRemove = appliedSpecialEffect;
@@ -62,18 +61,20 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 		}
 	}
 
+	@Override
 	public boolean isImmuneToEnemySpecialEffect() {
 		return immuneToEnemySpecialEffect;
 	}
 
+	@Override
 	public void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect) {
 		this.immuneToEnemySpecialEffect = immuneToSpecialEffect;
 	}
 
 	@Override
 	public void removeEnemySpecialEffect() {
-		List<SpecialEffectContainer> toRemove = new ArrayList<>();
-		for (SpecialEffectContainer specialEffect : appliedSpecialEffects) {
+		List<SpecialEffectObject> toRemove = new ArrayList<>();
+		for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
 			if (specialEffect.getTargetType() == TargetType.ENEMIES) {
 				specialEffect.remove(target);
 				toRemove.add(specialEffect);

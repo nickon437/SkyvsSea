@@ -1,7 +1,5 @@
 package skyvssea.model;
 
-import skyvssea.view.ActionPane;
-
 public class Game {
     private GameState currentGameState;
 

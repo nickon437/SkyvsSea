@@ -2,7 +2,7 @@ package skyvssea.model;
 
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +15,7 @@ public class Tile extends Observable implements AvatarCore {
     private int x;
 	private int y;
     private GameObject gameObject;
-    private Set<SpecialEffectContainer> specialEffects;
+    private Set<SpecialEffectObject> specialEffects;
 
 	private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
@@ -66,44 +66,71 @@ public class Tile extends Observable implements AvatarCore {
     @Override
     public Avatar getAvatar() { return avatar; }
 
-	public boolean addSpecialEffect(SpecialEffectContainer specialEffect) {
+    /**
+     * Invoked when a piece with activated passiveEffect makes a move
+     * @param specialEffect to be added to this tile
+     * @param playerManager used to determine if specialEffect is applicable to the piece on this tile
+     */
+	public void addSpecialEffect(SpecialEffectObject specialEffect, PlayerManager playerManager) {
 		if (specialEffects == null) {
 			specialEffects = new HashSet<>();
 		}
-		return specialEffects.add(specialEffect);	
-	}
-	
-	public void removeSpecialEffect(SpecialEffectContainer specialEffect) {
-		specialEffects.remove(specialEffect);		
-		if (hasPiece()) {
-			AbstractPiece castedPiece = (AbstractPiece) gameObject;
-			castedPiece.getSpecialEffectManagerProxy().remove(specialEffect);
+		
+		if (specialEffects.add(specialEffect) && hasPiece()) {
+			AbstractPiece currentPiece = (AbstractPiece) gameObject;
+			if (specialEffect.usableOnPiece(currentPiece, playerManager)) {
+				currentPiece.receiveSpecialEffect(specialEffect);		
+			}
 		}
 	}
 	
-	public Set<SpecialEffectContainer> getSpecialEffects() {
+	/**
+	 * Invoked when the piece with activated passiveEffect moves away or turns off its passiveEffect
+	 * @param specialEffect to be removed from this tile
+	 */
+	public void removeSpecialEffect(SpecialEffectObject specialEffect) {
+		if (specialEffects != null) {
+			specialEffects.remove(specialEffect);		
+			if (hasPiece()) {
+				AbstractPiece castedPiece = (AbstractPiece) gameObject;
+				castedPiece.getSpecialEffectManagerProxy().remove(specialEffect);
+			}
+		}	
+	}
+	
+	public Set<SpecialEffectObject> getSpecialEffects() {
 		if (specialEffects == null) {
 			specialEffects = new HashSet<>();
 		}
 		return specialEffects;
 	}
 
-	public void applySpecialEffect(PlayerManager playerManager) {
+	/**
+	 * Invoked when a piece moves to another tile
+	 * The piece will receive all applicable specialEffects stored in this tile
+	 * @param playerManager used to determine if a specialEffect is applicable to the piece
+	 */
+	public void applySpecialEffects(PlayerManager playerManager) {
 		if (specialEffects != null && gameObject instanceof AbstractPiece) {
 			AbstractPiece piece = (AbstractPiece) gameObject;
-			for (SpecialEffectContainer specialEffect : specialEffects) {
+			for (SpecialEffectObject specialEffect : specialEffects) {
 				if (specialEffect.usableOnPiece(piece, playerManager)) {
-					SpecialEffectContainer copy = (SpecialEffectContainer) specialEffect.copy();
+					SpecialEffectObject copy = (SpecialEffectObject) specialEffect.copy();
 					piece.getSpecialEffectManagerProxy().add(copy);
 				}
 			}
 		}
 	}
 
-	public void removeSpecialEffect(AbstractPiece target) {
+	/**
+	 * Invoked when a piece moves to another tile
+	 * Removes all specialEffects applied to the piece when it landed on this tile
+	 */
+	public void removeSpecialEffects() {
 		if (specialEffects != null) {
-			for (SpecialEffectContainer specialEffect : specialEffects) {
-				target.getSpecialEffectManagerProxy().remove(specialEffect);
+			AbstractPiece piece = (AbstractPiece) gameObject;
+			for (SpecialEffectObject specialEffect : specialEffects) {
+				piece.getSpecialEffectManagerProxy().remove(specialEffect);
 			}
 		}
 	}

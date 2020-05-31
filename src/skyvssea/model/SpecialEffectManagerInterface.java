@@ -1,11 +1,11 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public interface SpecialEffectManagerInterface {
-    void add(SpecialEffectContainer specialEffect);
+    void add(SpecialEffectObject specialEffect);
     void updateEffectiveDuration();
-	void remove(SpecialEffectContainer specialEffect);
+	void remove(SpecialEffectObject specialEffect);
 	boolean isImmuneToEnemySpecialEffect();
 	void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect);
 	void removeEnemySpecialEffect();

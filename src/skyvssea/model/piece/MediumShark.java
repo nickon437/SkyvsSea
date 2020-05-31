@@ -2,7 +2,7 @@ package skyvssea.model.piece;
 
 import skyvssea.model.SpecialEffectCode;
 import skyvssea.model.SpecialEffectFactory;
-import skyvssea.model.specialeffect.SpecialEffectContainer;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class MediumShark extends AbstractShark implements MediumCharacter {
 	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.WEAKENING;
@@ -13,7 +13,7 @@ public class MediumShark extends AbstractShark implements MediumCharacter {
 	}
 	
 	@Override
-	public SpecialEffectContainer getPassiveEffect() {
+	public SpecialEffectObject getPassiveEffect() {
 		if (passiveEffect == null) {
 			passiveEffect = SpecialEffectFactory.getInstance().createPassiveDefenceLevelUpAttackLevelDown(this);
 		}

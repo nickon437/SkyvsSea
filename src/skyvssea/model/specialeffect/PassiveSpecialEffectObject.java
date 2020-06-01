@@ -9,14 +9,20 @@ public class PassiveSpecialEffectObject extends SpecialEffectObject {
 		super(caster, name, PASSIVE_DURATION, targetType, specialEffectDecorator);
 	}
 
-	@Override
-	public boolean updateEffectiveDuration() {
-		return true;
-	}
+//	@Override
+//	public boolean updateEffectiveDuration() {
+//		return true;
+//	}
 	
 	@Override
 	public SpecialEffectObject copy() {
 		return new PassiveSpecialEffectObject(caster, name, targetType, specialEffectDecorator.copy());
+	}
+
+	@Override
+	public void setEffectiveDuration(int newEffectiveDuration) {
+		// No implementation since passiveEffect has no real effective duration
+		return;
 	}
 
 }

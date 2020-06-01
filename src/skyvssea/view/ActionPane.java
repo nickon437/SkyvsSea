@@ -1,18 +1,16 @@
 package skyvssea.view;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
-import javafx.scene.control.Control;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
+import skyvssea.util.AnimationUtil;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
+import skyvssea.util.RegionUtil;
 
 public class ActionPane extends VBox {
     private HBox buttonHolder = new HBox();
@@ -20,36 +18,35 @@ public class ActionPane extends VBox {
     private Button killBtn = new Button("Kill");
     private Button activeEffectBtn = new Button("Active Effect");
     private ToggleButton passiveEffectBtn = new ToggleButton("Passive Effect");
-    private Button endBtn = new Button("End");
+	private Button endBtn = new Button("End");
 
-    private static final double BUTTON_HEIGHT = 50;
-    private static final double SPACING = 20;
+    private AdvancedActionPane advancedActionPane;
 
     public ActionPane(Controller controller) {
-        this.getChildren().addAll(actionIndicator, buttonHolder);
+        advancedActionPane = new AdvancedActionPane(controller);
+        this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
         this.setSpacing(5);
 
         buttonHolder.getChildren().addAll(killBtn, activeEffectBtn, passiveEffectBtn, endBtn);
-        buttonHolder.setSpacing(SPACING);
+        buttonHolder.setSpacing(ButtonUtil.BUTTON_SPACING);
 
-        formatActionIndicator();
+        formatActionIndicator(actionIndicator);
         formatKillBtn(killBtn, controller);
         formatActiveEffectBtn(activeEffectBtn, controller);
         formatPassiveEffectBtn(passiveEffectBtn, controller);
         formatEndBtn(endBtn, controller);
     }
 
-
-	private void formatActionIndicator() {
-        actionIndicator.setPrefHeight(3);
-        actionIndicator.setMaxWidth(0);
-        actionIndicator.setBackground(new Background(new BackgroundFill(ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null)));
+    private void formatActionIndicator(Pane indicator) {
+        indicator.setPrefHeight(3);
+        indicator.setMaxWidth(0);
+        RegionUtil.setBackground(indicator, ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null);
     }
 
     private void formatKillBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/kill.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/kill.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredKillBtn();
@@ -65,7 +62,7 @@ public class ActionPane extends VBox {
     }
 
     private void formatPassiveEffectBtn(ToggleButton button, Controller controller) {
-    	maximizeControlSize(button);
+    	ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
@@ -83,6 +80,10 @@ public class ActionPane extends VBox {
         });
     }
     
+    public ToggleButton getPassiveEffectBtn() {
+		return passiveEffectBtn;
+	}
+    
     public void activatePassiveEffectBtn() {
     	passiveEffectBtn.setSelected(true);
     	ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.ACTIVATED_BUTTON_COLOR);
@@ -97,6 +98,11 @@ public class ActionPane extends VBox {
     	passiveEffectBtn.setDisable(true);
     }
     
+	public void disableAndDeactivatePassiveEffectBtn() {
+		deactivatePassiveEffectBtn();
+    	disablePassiveEffectBtn();
+	}
+    
     public void enablePassiveEffectBtn(boolean passiveEffectActivated) {
     	passiveEffectBtn.setDisable(false);
     	if (passiveEffectActivated) {
@@ -107,9 +113,9 @@ public class ActionPane extends VBox {
     }
     
     private void formatActiveEffectBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/special-effect.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredActiveEffectBtn();
@@ -125,9 +131,9 @@ public class ActionPane extends VBox {
     }
 
     private void formatEndBtn(Button button, Controller controller) {
-        maximizeControlSize(button);
+        ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
-        ButtonUtil.formatGraphic(button, "resources/icons/end-turn.png");
+        ButtonUtil.formatGraphic(button, "file:resources/icons/end-turn.png");
         button.setCancelButton(true);
         button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
         button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
@@ -137,17 +143,11 @@ public class ActionPane extends VBox {
         });
     }
 
-    private void maximizeControlSize(Control control) {
-        control.setPrefHeight(BUTTON_HEIGHT);
-        HBox.setHgrow(control, Priority.ALWAYS);
-        control.setMaxWidth(Double.MAX_VALUE);
-    }
-
     private void shiftActionIndicator(Button button) {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);
         double xCoord = 0;
         for (int i = 0; i < buttonIndex; i++) {
-            xCoord += ((ButtonBase) buttonHolder.getChildren().get(i)).getWidth() + SPACING;
+            xCoord += ((ButtonBase) buttonHolder.getChildren().get(i)).getWidth() + ButtonUtil.BUTTON_SPACING;
         }
         double width = ((ButtonBase) buttonHolder.getChildren().get(buttonIndex)).getWidth();
         setActionIndicatorPosition(xCoord, width);
@@ -159,12 +159,18 @@ public class ActionPane extends VBox {
 
     private void setActionIndicatorPosition(double xTranslate, double width) {
         Timeline timeline = new Timeline();
-        KeyValue kvXCoord = new KeyValue(actionIndicator.translateXProperty(), xTranslate, Interpolator.EASE_IN);
-        KeyFrame kfXCoord = new KeyFrame(Duration.seconds(0.5), kvXCoord);
-        KeyValue kvWidth = new KeyValue(actionIndicator.maxWidthProperty(), width, Interpolator.EASE_IN);
-        KeyFrame kfWidth = new KeyFrame(Duration.seconds(0.5), kvWidth);
+        KeyFrame kfXCoord = AnimationUtil.formatKeyFrame(actionIndicator.translateXProperty(), xTranslate, Duration.seconds(0.5));
+        KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
         timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
         timeline.play();
+    }
+
+    public void disableRegularActionPane() {
+    	disableActiveEffectBtn();
+        disablePassiveEffectBtn();
+        deactivatePassiveEffectBtn();
+        disableKillBtn();
+        disableEndBtn();
     }
 
     public void enableActiveEffectBtn() {
@@ -187,13 +193,8 @@ public class ActionPane extends VBox {
     public void enableEndBtn() {
     	endBtn.setDisable(false);
     }
-
-	public void disableAllButtons() {
-        disableActiveEffectBtn();
-        disablePassiveEffectBtn();
-        deactivatePassiveEffectBtn();
-        disableKillBtn();
-        disableEndBtn();
-        hideActionIndicator();		
-	}
+    
+    public void setUndoBtnDisable(boolean isDisabled) {
+        advancedActionPane.setUndoBtnDisable(isDisabled);
+    }
 }

@@ -9,8 +9,8 @@ public class ObstacleManager {
 
     public List<Tile> setObstacleOnBoard(Board board) {
         List<Tile> obstacleTiles = new ArrayList<>();
-        int numCol = Board.NUM_SIDE_CELL;
-        int numRow = Board.NUM_SIDE_CELL;
+        int numCol = board.getCol();
+        int numRow = board.getRow();
 
         for (int x = 0; x < numCol; x++) {
             for (int y = 0; y < numRow; y++) {

@@ -93,8 +93,4 @@ public class SpecialEffectFactory {
                 return null;
         }
     }
-    
-//    public SpecialEffectContainer copy(SpecialEffectContainer specialEffect) {
-//    	return (SpecialEffectContainer) specialEffect.copy();
-//    }
 }

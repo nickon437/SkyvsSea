@@ -18,11 +18,13 @@ public abstract class SpecialEffectObject implements SpecialEffect {
 		this.specialEffectDecorator = specialEffectDecorator;
 	}
 	
-	public abstract boolean updateEffectiveDuration();
+//	public abstract boolean updateEffectiveDuration();
 	
 	public int getEffectiveDuration() {
 		return effectiveDuration;
 	}
+	
+	public abstract void setEffectiveDuration(int newEffectiveDuration);
 	
 	public String getName() {
 		return name;

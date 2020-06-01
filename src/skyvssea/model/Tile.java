@@ -1,26 +1,27 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+import skyvssea.model.observer.Observer;
+import skyvssea.model.observer.Subject;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
-public class Tile extends Observable implements AvatarCore {
+public class Tile implements Subject, AvatarCore {
+	private List<Observer> observers = new ArrayList<>();
     private Avatar avatar;
     private int x;
 	private int y;
     private GameObject gameObject;
     private Set<SpecialEffectObject> specialEffects;
-
 	private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
-    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
+    @Requires("x >= 0 && y >= 0")
 	public Tile(int x, int y) {
         this.x = x;
 		this.y = y;
@@ -38,14 +39,12 @@ public class Tile extends Observable implements AvatarCore {
     public void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         if (gameObject.getAvatar() != null) {
-            setChanged();
             notifyObservers(gameObject.getAvatar());
         }
     }
 
     public void removeGameObject() { 
-    	this.gameObject = null; 
-    	setChanged();
+    	this.gameObject = null;
         notifyObservers(null);
     }
 
@@ -53,13 +52,13 @@ public class Tile extends Observable implements AvatarCore {
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        setChanged();
         notifyObservers(isHighlighted);
     }
 
 	public int getX() { return x; }
 	public int getY() { return y; }
 
+	@Requires("avatar != null")
     @Override
     public void addAvatar(Avatar avatar) { this.avatar = avatar; }
 
@@ -127,5 +126,24 @@ public class Tile extends Observable implements AvatarCore {
 			}
 		}
 	}
+	
+	public Set<SpecialEffectObject> getSpecialEffects() {
+		if (specialEffects == null) {
+			specialEffects = new HashSet<>();
+		}
+		return specialEffects;
+	}
 
+    @Requires("observer != null")
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        for (Observer observer : observers) {
+            observer.update(this, arg);
+        }
+    }
 }

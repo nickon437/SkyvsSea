@@ -218,12 +218,7 @@ public class Controller {
     public void handleUndoButton() {
         playerManager.getCurrentPlayer().reduceNumUndos();
         historyManager.undoToMyTurn();
-        game.setCurrentGameState(GameState.READY_TO_MOVE);
-    }
-
-    private void changeTurn() {
-        Player player = playerManager.changeTurn();
-        infoPane.setPlayerInfo(player);
+        startNewTurn();
     }
     
     public void clearCache() {
@@ -233,17 +228,27 @@ public class Controller {
     }
 
     private void endTurn() {
+    	pieceManager.updatePieceStatus(historyManager);
         playerManager.getCurrentPlayer().validateUndoAvailability();
-        pieceManager.updatePieceStatus(historyManager);
-        changeTurn();
+        playerManager.changeTurn();
         historyManager.startNewTurnCommand();
         
-        game.setCurrentGameState(GameState.READY_TO_MOVE);
-        actionPane.disableRegularActionPane();
-        actionPane.hideActionIndicator();
-        clearCache();
+        startNewTurn();
     }
 
+    private void startNewTurn() {
+    	game.setCurrentGameState(GameState.READY_TO_MOVE);
+        actionPane.disableRegularActionPane();
+        actionPane.hideActionIndicator();
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        clearCache();
+        
+		boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+		boolean hasHistory = getHistoryManager().isUndoAvailable();
+		boolean isUndoAvailable = !isUndoEmpty && hasHistory;
+		actionPane.setUndoBtnDisable(!isUndoAvailable);
+    }
+    
     @Requires("boardPane != null && actionPane != null && infoPane != null")
     public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
@@ -253,10 +258,11 @@ public class Controller {
 		this.boardPane = boardPane;
 		this.infoPane = infoPane;
 
-        this.board = new Board(boardCol, boardRow);
-        this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
-        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-        this.historyManager = new HistoryManager();
+        board = new Board(boardCol, boardRow);
+        pieceManager = new PieceManager(boardSetup.getPieceLineup());
+        playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
+        historyManager = new HistoryManager();
+        game = new Game();
 
         setTiles(boardPane);
         setPieces(boardPane);
@@ -302,9 +308,6 @@ public class Controller {
 	public HistoryManager getHistoryManager() { return historyManager; }
 
 	public void startGame() {
-		game = new Game();
-		game.setCurrentGameState(GameState.READY_TO_MOVE);
-        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
-        actionPane.disableRegularActionPane();
+		startNewTurn();
 	}
 }

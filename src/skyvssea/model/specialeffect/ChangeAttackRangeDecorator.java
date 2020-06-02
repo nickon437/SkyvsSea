@@ -25,4 +25,9 @@ public class ChangeAttackRangeDecorator extends ChangeIntFieldDecorator {
 	public SpecialEffect copy() {
 		return new ChangeAttackRangeDecorator(factor, specialEffect.copy());
 	}
+
+    @Override
+    public String getDescrption() {
+        return specialEffect.getDescrption();
+    }
 }

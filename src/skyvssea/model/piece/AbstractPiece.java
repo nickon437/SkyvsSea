@@ -88,41 +88,7 @@ public abstract class AbstractPiece extends GameObject {
         summary += "\nAttack range: " + getAttackRange();
         return summary;
     }
-    /*
-        Phil-show different description in the info panel
-     */
-	public String showDescription(Hierarchy h1, String name){
-        final  String[] SpecialEffectSharkDescription = {"Itself attack range double","Increasing own attack level from Medium to Big ","Increasing own attack level from Smallto Middle "};
-        final  String[] SpecialEffectEagleDescription = {"Move twice in one round","One piece cannot move itself and attack others","The attack and move range of one piece becomes half"};
-        String des = "";
-        h1 = getAttackLevel();
-        name = getName();
-        if(name.contains("Shark")){
-            if(h1 == Hierarchy.BIG){
-                des = SpecialEffectSharkDescription[0];
-            }
-            else  if(h1 == Hierarchy.MEDIUM){
-                des = SpecialEffectSharkDescription[1];
-            }
-            else if(h1 == Hierarchy.SMALL){
-                des = SpecialEffectSharkDescription[2];
-            }
 
-        }
-        else  if(name.contains("Eagle")){
-            if(h1 == Hierarchy.BIG){
-                des = SpecialEffectEagleDescription[0];
-            }
-            else  if(h1 == Hierarchy.MEDIUM){
-                des =  SpecialEffectEagleDescription[1];
-            }
-            else if(h1 == Hierarchy.SMALL){
-                return SpecialEffectEagleDescription[2];
-            }
-            return des;
-        }
-        return des;
-    }
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
         if (specialEffect == null) { return "Not applicable"; }
@@ -130,7 +96,7 @@ public abstract class AbstractPiece extends GameObject {
                 "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
                 "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + showDescription(getAttackLevel(),getName());
+                "SE description: " + specialEffect.getDescrption();
         return summary;
     }
     

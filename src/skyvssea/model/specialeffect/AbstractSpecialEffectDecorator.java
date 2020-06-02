@@ -6,7 +6,7 @@ import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 	protected SpecialEffect specialEffect;
-	
+
 	@Ensures("specialEffect != null")
 	public AbstractSpecialEffectDecorator(SpecialEffect specialEffect) {
 		this.specialEffect = specialEffect;
@@ -31,4 +31,5 @@ public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
 	public TargetType getTargetType() { return specialEffect.getTargetType(); }
 
 	public SpecialEffect getSpecialEffect() { return specialEffect; }
+
 }

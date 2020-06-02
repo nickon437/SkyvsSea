@@ -13,4 +13,5 @@ public interface SpecialEffect {
 	String getName();
 	SpecialEffect copy();
 	TargetType getTargetType();
+	String getDescrption();
 }

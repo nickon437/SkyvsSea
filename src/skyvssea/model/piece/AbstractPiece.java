@@ -4,10 +4,7 @@ import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 
 import skyvssea.model.*;
-import skyvssea.model.command.AbstractPassiveEffectCommand;
-import skyvssea.model.command.ActivatePassiveEffectCommand;
 import skyvssea.model.command.Command;
-import skyvssea.model.command.DeactivatePassiveEffectCommand;
 import skyvssea.model.command.HistoryManager;
 import skyvssea.model.command.UpdateCounterCommand;
 import skyvssea.model.specialeffect.SpecialEffectObject;
@@ -25,7 +22,6 @@ public abstract class AbstractPiece extends GameObject {
 	private final int initialAttackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
-    private SpecialEffectCode specialEffectCode;
     private SpecialEffectObject activeEffect;
     protected SpecialEffectObject passiveEffect;
     private final int activeEffectCoolDown;
@@ -34,8 +30,7 @@ public abstract class AbstractPiece extends GameObject {
 	private boolean passiveEffectActivated;
 
 	protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
-                            Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
-                            int activeEffectCoolDown) {
+                            Direction[] moveDirection, int attackRange, int activeEffectCoolDown) {
     	this.name = name;
     	this.attackLevel = initialAttackLevel = attackLevel;
     	this.defenceLevel = initialDefenceLevel = defenceLevel;
@@ -43,7 +38,6 @@ public abstract class AbstractPiece extends GameObject {
     	this.moveDirections = moveDirection;
     	this.attackDirections = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}; //Default
     	this.attackRange = initialAttackRange = attackRange;
-    	this.specialEffectCode = specialEffectCode;
         this.activeEffectCoolDown = activeEffectCoolDown;
         activeEffectCounter = 0;
         passiveEffectActivated = false;
@@ -80,12 +74,7 @@ public abstract class AbstractPiece extends GameObject {
     	}
 	}
 	
-    public SpecialEffectObject getActiveEffect() {
-    	if (activeEffect == null) {
-    		activeEffect = SpecialEffectFactory.getInstance().createSpecialEffect(this, specialEffectCode);
-    	}
-    	return activeEffect;
-    }
+    public abstract SpecialEffectObject getActiveEffect();
     
     public int getActiveEffectCoolDown() { return activeEffectCoolDown; }
     

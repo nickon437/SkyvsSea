@@ -1,12 +1,9 @@
 package skyvssea.model.command;
 
-import java.util.List;
-
 import skyvssea.model.Board;
 import skyvssea.model.PlayerManager;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class MoveCommand implements Command {
 	private Tile currentTile;

@@ -37,17 +37,9 @@ public class Controller {
             if (selectedTile.isHighlighted()) {
             	// Switch on/off registeredPiece's passiveEffect if passiveEffectBtn is clicked
             	if (actionPane.getPassiveEffectBtn().isSelected() != registeredPiece.isPassiveEffectActivated()) {
-            		AbstractPassiveEffectCommand passiveEffectCommand;
-            		if (registeredPiece.isPassiveEffectActivated()) {
-            			if (registeredPiece.isPassiveEffectTransmittable()) {
-                			passiveEffectCommand = new DeactivateTransmittablePassiveEffectCommand(registeredPiece, previousRegisteredTile, board, playerManager);		
-            			} else {
-            				passiveEffectCommand = new DeactivatePassiveEffectCommand(registeredPiece, board, playerManager);		            				
-            			}
-            		} else {
-            			passiveEffectCommand = new ActivatePassiveEffectCommand(registeredPiece);
-            		}
-            		historyManager.storeAndExecute(passiveEffectCommand);
+            		TogglePassiveEffectCommand togglePassiveEffectCommand;
+    				togglePassiveEffectCommand = new TogglePassiveEffectCommand(registeredPiece, previousRegisteredTile, board, playerManager);		            				
+            		historyManager.storeAndExecute(togglePassiveEffectCommand);
             	}
             	
             	// Change piece location to a new tile

@@ -1,10 +1,12 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
+
 import skyvssea.model.observer.Observer;
 import skyvssea.model.observer.Subject;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
+import skyvssea.model.EventType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,20 +41,20 @@ public class Tile implements Subject, AvatarCore {
     public void setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
         if (gameObject.getAvatar() != null) {
-            notifyObservers(gameObject.getAvatar());
+            notifyObservers(EventType.SET_GAME_OBJECT, gameObject.getAvatar());
         }
     }
 
     public void removeGameObject() { 
     	this.gameObject = null;
-        notifyObservers(null);
+        notifyObservers(EventType.SET_GAME_OBJECT, null);
     }
 
     public boolean isHighlighted() { return isHighlighted; }
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        notifyObservers(isHighlighted);
+        notifyObservers(EventType.HIGHLIGHT, isHighlighted);
     }
 
 	public int getX() { return x; }
@@ -141,9 +143,9 @@ public class Tile implements Subject, AvatarCore {
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(EventType event, Object arg) {
         for (Observer observer : observers) {
-            observer.update(this, arg);
+            observer.update(this, event, arg);
         }
     }
 }

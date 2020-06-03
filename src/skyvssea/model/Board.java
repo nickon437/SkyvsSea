@@ -221,4 +221,14 @@ public class Board {
 		}
 		return surroundingTiles;
 	}
+	
+	public void setUnhighlightedTilesDisable(boolean disable) {
+		for (Tile[] row : getTiles()) {
+			for (Tile tile : row) {
+				if (!tile.isHighlighted()) {
+					tile.notifyObservers(EventType.DISABLE, disable);
+				}
+			}
+		}
+	}
 }

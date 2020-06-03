@@ -130,7 +130,7 @@ public class Controller {
         
         if (isPassiveEffectBtnClicked) {
         	isPassiveEffectBtnClicked = false;
-        	setUnhighlightedTilesDisable(false);        	
+        	board.setUnhighlightedTilesDisable(false);        	
         }
     }
 
@@ -180,18 +180,7 @@ public class Controller {
      
 	public void handlePassiveEffectButton() {
 		isPassiveEffectBtnClicked = !isPassiveEffectBtnClicked;
-		setUnhighlightedTilesDisable(isPassiveEffectBtnClicked); // Prevent clicking passiveEffect for more than 1 pieces
-	}
-	
-	private void setUnhighlightedTilesDisable(boolean disable) {
-		for (Tile[] row : board.getTiles()) {
-			for (Tile tile : row) {
-				if (!tile.isHighlighted()) {
-					TileView tileView = boardPane.getTileView(tile.getX(), tile.getY());
-					tileView.setDisable(disable);
-				}
-			}
-		}
+		board.setUnhighlightedTilesDisable(isPassiveEffectBtnClicked); // Prevent clicking passiveEffect for more than 1 pieces
 	}
 
     public void handleEndButton() { endTurn(); }

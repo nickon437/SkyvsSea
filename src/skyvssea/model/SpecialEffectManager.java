@@ -14,12 +14,12 @@ import java.util.List;
 
 public class SpecialEffectManager implements SpecialEffectManagerInterface {
 	private List<SpecialEffectObject> appliedSpecialEffects = new ArrayList<>();
-	private boolean immuneToEnemySpecialEffect;
+	private boolean isImmuneToEnemySpecialEffect;
 	private AbstractPiece target;
 
 	public SpecialEffectManager(AbstractPiece piece) {
 		this.target = piece;
-		immuneToEnemySpecialEffect = false;
+		isImmuneToEnemySpecialEffect = false;
 	}
 
 	@Requires("specialEffect != null")
@@ -46,12 +46,12 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 
 	@Override
 	public boolean isImmuneToEnemySpecialEffect() {
-		return immuneToEnemySpecialEffect;
+		return isImmuneToEnemySpecialEffect;
 	}
 
 	@Override
-	public void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect) {
-		this.immuneToEnemySpecialEffect = immuneToSpecialEffect;
+	public void setImmuneToEnemySpecialEffect(boolean isImmuneToSpecialEffect) {
+		this.isImmuneToEnemySpecialEffect = isImmuneToSpecialEffect;
 	}
 
 	@Override

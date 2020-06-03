@@ -34,6 +34,6 @@ public class BoardSetupController {
         stage.setResizable(true);
         stage.show();
         
-        controller.startGame();
+        controller.startNewTurn();
     }
 }

@@ -236,7 +236,7 @@ public class Controller {
         startNewTurn();
     }
 
-    private void startNewTurn() {
+    public void startNewTurn() {
     	game.setCurrentGameState(GameState.READY_TO_MOVE);
         actionPane.disableRegularActionPane();
         actionPane.hideActionIndicator();
@@ -306,8 +306,4 @@ public class Controller {
 
 	public PlayerManager getPlayerManager() { return playerManager; }
 	public HistoryManager getHistoryManager() { return historyManager; }
-
-	public void startGame() {
-		startNewTurn();
-	}
 }

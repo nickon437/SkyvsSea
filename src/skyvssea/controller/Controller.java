@@ -78,7 +78,7 @@ public class Controller {
         } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
             if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-                Command performSpecialEffectCommand = new PerformActiveEffectCommand(registeredPiece, target, historyManager);
+                Command performSpecialEffectCommand = new PerformActiveEffectCommand(registeredPiece, target);
                 historyManager.storeAndExecute(performSpecialEffectCommand);
                 endTurn();
             }

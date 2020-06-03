@@ -8,27 +8,26 @@ public class PerformActiveEffectCommand implements Command {
     private SpecialEffectObject activeEffect;
     private AbstractPiece caster;
     private AbstractPiece target;
-    private HistoryManager historyManager;
+    private Command updateCounterCommand;
 
-    public PerformActiveEffectCommand(AbstractPiece caster, AbstractPiece target, HistoryManager historyManager) {
+    public PerformActiveEffectCommand(AbstractPiece caster, AbstractPiece target) {
         this.activeEffect = (SpecialEffectObject) caster.getActiveEffect().copy();
         this.caster = caster;
         this.target = target;
-        this.historyManager = historyManager;
     }
 
     @Override
     public void execute() {
         if (activeEffect != null && caster.getActiveEffectCounter() <= 0) {
             target.getSpecialEffectManagerProxy().add(activeEffect);
-
-            Command updateCounterCommand = new UpdateCounterCommand(caster, caster.getActiveEffectCoolDown());
-            historyManager.storeAndExecute(updateCounterCommand);
+            updateCounterCommand = new UpdateCounterCommand(caster, caster.getActiveEffectCoolDown());
+            updateCounterCommand.execute();
         }
     }
 
     @Override
     public void undo() {
         target.getSpecialEffectManagerProxy().remove(activeEffect);
+        updateCounterCommand.undo();
     }
 }

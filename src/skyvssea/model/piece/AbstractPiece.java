@@ -22,7 +22,7 @@ public abstract class AbstractPiece extends GameObject {
 	private final int initialAttackRange;
     private Direction[] moveDirections;
     private Direction[] attackDirections;
-    private SpecialEffectObject activeEffect;
+    protected SpecialEffectObject activeEffect;
     protected SpecialEffectObject passiveEffect;
     private final int activeEffectCoolDown;
     private int activeEffectCounter; // 0 = ready to use special effect
@@ -107,15 +107,6 @@ public abstract class AbstractPiece extends GameObject {
 	
 	public void setPassiveEffectActivated(boolean activated) {
 		passiveEffectActivated = activated;
-		// Handle applying/removing passive effect to/from itself if the passive effect is TargetType.SELF
-		if (getPassiveEffect().getTargetType() == TargetType.SELF) {
-			if (passiveEffectActivated) {
-				// No need to duplicate passiveEffect since it is only applied to the piece itself
-				getSpecialEffectManagerProxy().add(getPassiveEffect()); 
-			} else {
-				getSpecialEffectManagerProxy().remove(getPassiveEffect()); 
-			}			
-		}
 	}	
 	
 	public boolean isPassiveEffectTransmittable() {

@@ -18,9 +18,9 @@ public class BigEagle extends AbstractEagle implements BigCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createDoubleMoveRange(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createDoubleMoveRange(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

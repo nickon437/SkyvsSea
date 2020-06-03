@@ -19,9 +19,9 @@ public class BigShark extends AbstractShark implements BigCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createDoubleAttackRange(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createDoubleAttackRange(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

@@ -18,9 +18,9 @@ public class SmallShark extends AbstractShark implements SmallCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createStrengthening(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createStrengthening(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

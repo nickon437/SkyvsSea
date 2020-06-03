@@ -18,9 +18,9 @@ public class MediumEagle extends AbstractEagle implements MediumCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createRetarding(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createRetarding(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

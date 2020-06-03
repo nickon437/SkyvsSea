@@ -18,9 +18,9 @@ public class MediumShark extends AbstractShark implements MediumCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createWeakening(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createWeakening(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

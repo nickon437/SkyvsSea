@@ -18,9 +18,9 @@ public class SmallEagle extends AbstractEagle implements SmallCharacter {
 	
 	@Override
 	public SpecialEffectObject getActiveEffect() {
-		if (passiveEffect == null) {
-			passiveEffect = SpecialEffectFactory.getInstance().createFreezing(this);
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createFreezing(this);
 		}
-		return passiveEffect;
+		return activeEffect;
 	}
 }

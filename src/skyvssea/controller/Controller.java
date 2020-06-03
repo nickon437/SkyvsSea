@@ -59,7 +59,8 @@ public class Controller {
                         // Configure the passive btn after clicking a piece
                         if (newSelectedPiece.getPassiveEffect() != null) {
                         	boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
-                        	actionPane.enablePassiveEffectBtn(isPassiveEffectActivated);                        	
+                        	actionPane.setPassiveEffectBtnActivated(isPassiveEffectActivated);                     	
+                        	actionPane.setPassiveEffectBtnDisable(false);
                         } else {
                         	// For baby pieces with no passive effect, must ensure the passive btn is default color and disabled
                         	actionPane.disableAndDeactivatePassiveEffectBtn();
@@ -120,15 +121,12 @@ public class Controller {
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         board.clearHighlightedTiles();
-        actionPane.enableKillBtn();
-        actionPane.disablePassiveEffectBtn();
-        actionPane.enableEndBtn();
-        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
-        if (registeredPiece.isActiveEffectAvailable()) {
-        	actionPane.enableActiveEffectBtn();
-        } else {
-        	actionPane.disableActiveEffectBtn();
-        }
+        actionPane.setPassiveEffectBtnDisable(true);
+        actionPane.setKillBtnDisable(false);
+        actionPane.setEndBtnDisable(false);
+        
+        boolean isActiveEffectAvailable = pieceManager.getRegisteredPiece().isActiveEffectAvailable();
+        actionPane.setActiveEffectBtnDisable(!isActiveEffectAvailable);
         
         if (isPassiveEffectBtnClicked) {
         	isPassiveEffectBtnClicked = false;

@@ -84,32 +84,23 @@ public class ActionPane extends VBox {
 		return passiveEffectBtn;
 	}
     
-    public void activatePassiveEffectBtn() {
-    	passiveEffectBtn.setSelected(true);
-    	ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.ACTIVATED_BUTTON_COLOR);
-    }
-    
-    public void deactivatePassiveEffectBtn() {
-    	passiveEffectBtn.setSelected(false);
-    	ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-    }
-    
-    public void disablePassiveEffectBtn() {
-    	passiveEffectBtn.setDisable(true);
-    }
-    
-	public void disableAndDeactivatePassiveEffectBtn() {
-		deactivatePassiveEffectBtn();
-    	disablePassiveEffectBtn();
-	}
-    
-    public void enablePassiveEffectBtn(boolean passiveEffectActivated) {
-    	passiveEffectBtn.setDisable(false);
-    	if (passiveEffectActivated) {
-    		activatePassiveEffectBtn();
+    public void setPassiveEffectBtnActivated(boolean isActivated) {
+    	passiveEffectBtn.setSelected(isActivated);
+    	
+    	if (isActivated) {
+    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.ACTIVATED_BUTTON_COLOR);
     	} else {
-    		deactivatePassiveEffectBtn();
+    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
     	}
+    }
+    
+    public void setPassiveEffectBtnDisable(boolean isDisabled) {
+    	passiveEffectBtn.setDisable(isDisabled);
+    }
+    
+    public void disableAndDeactivatePassiveEffectBtn() {
+    	setPassiveEffectBtnActivated(false);
+    	passiveEffectBtn.setDisable(true);
     }
     
     private void formatActiveEffectBtn(Button button, Controller controller) {
@@ -166,32 +157,23 @@ public class ActionPane extends VBox {
     }
 
     public void disableRegularActionPane() {
-    	disableActiveEffectBtn();
-        disablePassiveEffectBtn();
-        deactivatePassiveEffectBtn();
-        disableKillBtn();
-        disableEndBtn();
+    	activeEffectBtn.setDisable(true);
+    	passiveEffectBtn.setDisable(true);
+        setPassiveEffectBtnActivated(false);
+        killBtn.setDisable(true);
+        endBtn.setDisable(true);
     }
 
-    public void enableActiveEffectBtn() {
-        activeEffectBtn.setDisable(false);
-    }
-    public void disableActiveEffectBtn() {
-    	activeEffectBtn.setDisable(true);
+    public void setActiveEffectBtnDisable(boolean isDisabled) {
+    	activeEffectBtn.setDisable(isDisabled);
     }
     
-    public void disableKillBtn() {
-    	killBtn.setDisable(true);
-    }
-    public void enableKillBtn() {
-    	killBtn.setDisable(false);
+    public void setKillBtnDisable(boolean isDisabled) {
+    	killBtn.setDisable(isDisabled);
     }
     
-    public void disableEndBtn() {
-    	endBtn.setDisable(true);
-    }
-    public void enableEndBtn() {
-    	endBtn.setDisable(false);
+    public void setEndBtnDisable(boolean isDisabled) {
+    	endBtn.setDisable(isDisabled);
     }
     
     public void setUndoBtnDisable(boolean isDisabled) {

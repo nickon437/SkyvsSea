@@ -7,7 +7,6 @@ import skyvssea.model.PlayerManager;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
-import skyvssea.model.specialeffect.TargetType;
 
 public class TogglePassiveEffectCommand implements Command {
 	private AbstractPiece piece;

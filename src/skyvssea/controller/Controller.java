@@ -85,12 +85,7 @@ public class Controller {
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-                Command killCommand;
-        		if (target.isPassiveEffectActivated() && target.isPassiveEffectTransmittable()) {
-        			killCommand = new KillPieceWithActivatedTransmittablePassiveEffectCommand(target, selectedTile, board, playerManager);   
-        		} else {
-        			killCommand = new KillCommand(target, selectedTile);        			
-        		}
+                Command killCommand = new KillCommand(target, selectedTile, board, playerManager);  
         	    historyManager.storeAndExecute(killCommand);
         		endTurn();
             }

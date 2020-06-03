@@ -1,6 +1,5 @@
 package skyvssea.model.piece;
 
-import skyvssea.model.SpecialEffectCode;
 import skyvssea.model.SpecialEffectFactory;
 import skyvssea.model.specialeffect.SpecialEffectObject;
 

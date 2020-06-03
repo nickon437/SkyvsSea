@@ -1,20 +1,29 @@
 package skyvssea.model.command;
 
+import java.util.List;
+
+import skyvssea.model.Board;
 import skyvssea.model.PlayerManager;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class MoveCommand implements Command {
-	protected Tile currentTile;
-    protected Tile newTile;
-    protected AbstractPiece piece;
-    protected PlayerManager playerManager;
+	private Tile currentTile;
+	private Tile newTile;
+    private AbstractPiece piece;
+    private PlayerManager playerManager;
+    private Command performPassiveEffectCommand;
 
-    public MoveCommand(AbstractPiece piece, Tile currentTile, Tile newTile, PlayerManager playerManager) {
+    public MoveCommand(AbstractPiece piece, Tile currentTile, Tile newTile, PlayerManager playerManager, Board board) {
         this.piece = piece;
         this.currentTile = currentTile;
         this.newTile = newTile;
         this.playerManager = playerManager;
+        
+        if (piece.isPassiveEffectActivated() && piece.isPassiveEffectTransmittable()) {
+        	performPassiveEffectCommand = new PerformPassiveEffectCommand(piece, currentTile, newTile, playerManager, board);
+        }
     }
 
     @Override
@@ -25,10 +34,18 @@ public class MoveCommand implements Command {
             newTile.setGameObject(piece);
             newTile.applySpecialEffects(playerManager); // Apply passiveEffects to piece if they exist on newTile
         }
+        
+        if (performPassiveEffectCommand != null) {
+    		performPassiveEffectCommand.execute();
+    	}
     }
 
     @Override
     public void undo() {
+    	if (performPassiveEffectCommand != null) {
+    		performPassiveEffectCommand.undo();
+    	}
+    	
         if (!newTile.equals(currentTile)) {
         	newTile.removeSpecialEffects();
         	newTile.removeGameObject();

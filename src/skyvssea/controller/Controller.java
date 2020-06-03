@@ -19,7 +19,7 @@ public class Controller {
     private ActionPane actionPane;
     private BoardPane boardPane;
     private InfoPane infoPane;
-    private boolean passiveEffectBtnClicked = false;
+    private boolean isPassiveEffectBtnClicked = false;
     
     @Requires("tileView != null")
     public void handleTileClicked(TileView tileView) {
@@ -52,11 +52,7 @@ public class Controller {
             	
             	// Change piece location to a new tile
             	Command moveCommand;
-                if (registeredPiece.isPassiveEffectActivated() && registeredPiece.isPassiveEffectTransmittable()) {
-                	moveCommand = new MovePieceWithActivatedTransmittablePassiveEffectCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
-                } else {
-                	moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager);
-                }
+            	moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
                 historyManager.storeAndExecute(moveCommand);                     
                 
                 switchToAttackMode();
@@ -147,8 +143,8 @@ public class Controller {
         	actionPane.disableActiveEffectBtn();
         }
         
-        if (passiveEffectBtnClicked) {
-        	passiveEffectBtnClicked = false;
+        if (isPassiveEffectBtnClicked) {
+        	isPassiveEffectBtnClicked = false;
         	setUnhighlightedTilesDisable(false);        	
         }
     }
@@ -198,8 +194,8 @@ public class Controller {
     }
      
 	public void handlePassiveEffectButton() {
-		passiveEffectBtnClicked = !passiveEffectBtnClicked;
-		setUnhighlightedTilesDisable(passiveEffectBtnClicked); // Prevent clicking passiveEffect for more than 1 pieces
+		isPassiveEffectBtnClicked = !isPassiveEffectBtnClicked;
+		setUnhighlightedTilesDisable(isPassiveEffectBtnClicked); // Prevent clicking passiveEffect for more than 1 pieces
 	}
 	
 	private void setUnhighlightedTilesDisable(boolean disable) {

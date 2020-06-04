@@ -8,11 +8,6 @@ public class PassiveSpecialEffectObject extends SpecialEffectObject {
 	public PassiveSpecialEffectObject(AbstractPiece caster, String name, TargetType targetType, AbstractSpecialEffectDecorator specialEffectDecorator) {
 		super(caster, name, PASSIVE_DURATION, targetType, specialEffectDecorator);
 	}
-
-//	@Override
-//	public boolean updateEffectiveDuration() {
-//		return true;
-//	}
 	
 	@Override
 	public SpecialEffectObject copy() {
@@ -24,5 +19,4 @@ public class PassiveSpecialEffectObject extends SpecialEffectObject {
 		// No implementation since passiveEffect has no real effective duration
 		return;
 	}
-
 }

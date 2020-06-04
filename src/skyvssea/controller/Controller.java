@@ -66,6 +66,10 @@ public class Controller {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
         	    Command killCommand = new KillCommand(target, selectedTile, this, pieceManager);
         	    historyManager.storeAndExecute(killCommand);
+        	    
+        	    //Check if there's a winner
+        	    checkForWinner(target);
+        	    
         		endTurn();
             }
         }   
@@ -147,8 +151,14 @@ public class Controller {
         game.setCurrentGameState(GameState.READY_TO_MOVE);
     }
 
-    public void declareWinner() {
+    private void declareWinner() {
         mainView.setDeclarationLabel(playerManager.getCurrentPlayer().getName());
+    }
+    
+    private void checkForWinner(AbstractPiece killTarget) {
+        if (killTarget.getLevel() == Hierarchy.BABY && pieceManager.getNumberOfPieceInHierarchy(killTarget) == 0) {
+            declareWinner();
+        }
     }
 
     private void changeTurn() {

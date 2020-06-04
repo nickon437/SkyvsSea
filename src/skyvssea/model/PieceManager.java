@@ -66,15 +66,33 @@ public class PieceManager {
         }
     }
 
-    public int removePiece(AbstractPiece piece) {
-        for (Map<Hierarchy, List<AbstractPiece>> pieceMap : getAllPiecesList()) {
-            List<AbstractPiece> pieceList = pieceMap.get(piece.getLevel());
-            if (pieceList.remove(piece)) {
-                return pieceList.size();
-            }
-        }
-        return -1;
+    public void removePiece(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.remove(piece);    		
+    	}
     }
+    
+    public int getNumberOfPieceInHierarchy(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		return pieceList.size(); 		
+    	} else {
+    		return -1;    		
+    	}
+    }
+
+	private List<AbstractPiece> getPiecesInHierarchy(AbstractPiece piece) {
+		List<AbstractPiece> pieceList = null;
+    	if (piece instanceof AbstractEagle) {
+    		pieceList = eaglePieces.get(piece.getLevel());
+    	} else if (piece instanceof AbstractShark) {
+    		pieceList = sharkPieces.get(piece.getLevel());
+    	}
+		return pieceList;
+	}
 
     public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }
 
@@ -86,7 +104,7 @@ public class PieceManager {
         piecesList.add(sharkPieces);
         return piecesList;
     }
-
+    
     @Requires("board != null")
     public List<Tile> setPiecesOnBoard(Board board) {
         List<Tile> startingPositions = new ArrayList<>();

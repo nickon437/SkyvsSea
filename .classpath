@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/jiang/OneDrive/OOSD/assignment-project/lib/asm-8.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jiang/OneDrive/OOSD/assignment-project/lib/asm-commons-8.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jiang/OneDrive/OOSD/assignment-project/lib/asm-tree-8.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jiang/OneDrive/OOSD/assignment-project/lib/cofoja.contracts-1.3-20160207.jar"/>
+	<classpathentry kind="output" path="out/production/SkyvsSea"/>
+</classpath>

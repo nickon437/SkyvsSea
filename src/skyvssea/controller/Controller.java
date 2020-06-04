@@ -37,14 +37,13 @@ public class Controller {
             if (selectedTile.isHighlighted()) {
             	// Switch on/off registeredPiece's passiveEffect if passiveEffectBtn is clicked
             	if (actionPane.getPassiveEffectBtn().isSelected() != registeredPiece.isPassiveEffectActivated()) {
-            		TogglePassiveEffectCommand togglePassiveEffectCommand;
-    				togglePassiveEffectCommand = new TogglePassiveEffectCommand(registeredPiece, previousRegisteredTile, board, playerManager);		            				
+            		TogglePassiveEffectCommand togglePassiveEffectCommand = new TogglePassiveEffectCommand(registeredPiece, 
+            				previousRegisteredTile, board, playerManager);		            				
             		historyManager.storeAndExecute(togglePassiveEffectCommand);
             	}
             	
             	// Change piece location to a new tile
-            	Command moveCommand;
-            	moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
+            	Command moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
                 historyManager.storeAndExecute(moveCommand);                     
 
                 // If the player undoes and then makes a move, undo will no longer be available 
@@ -55,6 +54,7 @@ public class Controller {
                 switchToAttackMode();
             } else {
             	board.clearHighlightedTiles();
+            	actionPane.disableAndDeactivatePassiveEffectBtn();
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
@@ -62,21 +62,13 @@ public class Controller {
                         board.highlightPossibleMoveTiles();
                         
                         // Configure the passive btn after clicking a piece
+                        // Enable and configure passive btn when the player clicks on its piece
                         if (newSelectedPiece.getPassiveEffect() != null) {
                         	boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
                         	actionPane.setPassiveEffectBtnActivated(isPassiveEffectActivated);                     	
                         	actionPane.setPassiveEffectBtnDisable(false);
-                        } else {
-                        	// For baby pieces with no passive effect, must ensure the passive btn is default color and disabled
-                        	actionPane.disableAndDeactivatePassiveEffectBtn();
                         }
-                    } else {
-                    	// Click on an enemy piece
-                    	actionPane.disableAndDeactivatePassiveEffectBtn();
                     }
-                } else {
-                	// Click on a unhighlighted tile with no piece
-                	actionPane.disableAndDeactivatePassiveEffectBtn();
                 }
             }
             

@@ -110,7 +110,7 @@ public class BoardPane extends Pane {
     }
 
 	@Requires("x >= 0 && y >= 0 && x < col && y < row")
-    private TileView getTileView(int x, int y) {
+    public TileView getTileView(int x, int y) {
 		for (Node node : tileViewGroup) {
 			if (((TileView) node).getX() == x && ((TileView) node).getY() == y) {
 				return (TileView) node;

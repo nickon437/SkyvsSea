@@ -1,12 +1,26 @@
 package skyvssea.model.piece;
 
-import skyvssea.model.SpecialEffectCode;
+import skyvssea.model.SpecialEffectFactory;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class SmallShark extends AbstractShark implements SmallCharacter {
-	private static final SpecialEffectCode SPECIAL_EFFECT_CODE = SpecialEffectCode.STRENGTHENING;
-	
 	public SmallShark() {
-		super("Small Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE,
-				SPECIAL_EFFECT_CODE, SPECIAL_EFFECT_COOLDOWN);
+		super("Small Shark", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_COOLDOWN);
+	}
+	
+	@Override
+	public SpecialEffectObject getPassiveEffect() {
+		if (passiveEffect == null) {
+			passiveEffect = SpecialEffectFactory.getInstance().createPassiveFreezing(this);
+		}
+		return passiveEffect;
+	}
+	
+	@Override
+	public SpecialEffectObject getActiveEffect() {
+		if (activeEffect == null) {
+			activeEffect = SpecialEffectFactory.getInstance().createStrengthening(this);
+		}
+		return activeEffect;
 	}
 }

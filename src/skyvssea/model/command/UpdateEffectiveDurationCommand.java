@@ -1,16 +1,16 @@
 package skyvssea.model.command;
 
 import skyvssea.model.SpecialEffectManagerInterface;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class UpdateEffectiveDurationCommand implements Command {
 
     private SpecialEffectManagerInterface specialEffectManager;
-    private SpecialEffect specialEffect;
+    private SpecialEffectObject specialEffect;
     private int currentEffectiveDuration;
     private int newEffectiveDuration;
 
-    public UpdateEffectiveDurationCommand(SpecialEffectManagerInterface specialEffectManager, SpecialEffect specialEffect,
+    public UpdateEffectiveDurationCommand(SpecialEffectManagerInterface specialEffectManager, SpecialEffectObject specialEffect,
                                           int newEffectiveDuration) {
         this.specialEffectManager = specialEffectManager;
         this.specialEffect = specialEffect;

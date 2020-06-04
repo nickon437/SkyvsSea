@@ -67,6 +67,8 @@ public class LoadHandler {
         stage.setTitle("Sky vs. Sea");
         stage.setResizable(true);
         stage.show();
+
+        controller.updateUI();
     }
 
     private PieceManager loadPieceManager(Board board) {

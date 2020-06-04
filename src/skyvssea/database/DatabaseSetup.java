@@ -42,7 +42,7 @@ public class DatabaseSetup {
                 String query = "CREATE TABLE " + table_name + " (" +
                         "GameID             INT NOT NULL PRIMARY KEY " +
                         "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
-                        "CurrentState       VARCHAR(20) NOT NULL, " +
+                        "CurrentState       VARCHAR(50) NOT NULL, " +
                         "CurrentPlayer      INT NOT NULL, " +
                         "RegisteredPiece    INT, " +
                         "RegisteredTileX    INT, " +

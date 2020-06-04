@@ -121,4 +121,12 @@ public class ActionPane extends VBox {
     public void setUndoBtnDisable(boolean isDisabled) {
         advancedActionPane.setUndoBtnDisable(isDisabled);
     }
+
+    public void fireKillBtn() {
+        killBtn.fire();
+    }
+
+    public void fireSpecialEffectBtn() {
+        specialEffectBtn.fire();
+    }
 }

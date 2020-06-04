@@ -199,10 +199,24 @@ public class Controller {
         actionPane.setUndoBtnDisable(!isUndoAvailable);
     }
 
+    public void updateUI() {
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+            startNewTurn();
+        } else if (game.getCurrentGameState() == GameState.KILLING) {
+            switchToAttackMode();
+            board.highlightPossibleKillTiles(playerManager);
+            actionPane.fireKillBtn();
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+            switchToAttackMode();
+            board.highlightPossibleSpecialEffectTiles(playerManager);
+            actionPane.fireSpecialEffectBtn();
+        }
+    }
+
     public void loadController(Stage stage, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Board board,
                                PieceManager pieceManager, PlayerManager playerManager, Game game) {
         this.stage = stage;
-        this.boardPane = boardPane;
         this.boardPane = boardPane;
         this.actionPane = actionPane;
         this.infoPane = infoPane;
@@ -212,8 +226,6 @@ public class Controller {
         this.playerManager = playerManager;
         this.historyManager = new HistoryManager();
         this.game = game;
-
-        startNewTurn();
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")

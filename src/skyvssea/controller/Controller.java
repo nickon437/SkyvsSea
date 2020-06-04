@@ -163,7 +163,8 @@ public class Controller {
     }
 
     public void handleLoadButton() {
-        LoadHandler.loadGame(stage);
+        LoadHandler loadHandler = new LoadHandler();
+        loadHandler.loadGame(stage);
     }
 
     private void changeTurn() {
@@ -211,6 +212,8 @@ public class Controller {
         this.playerManager = playerManager;
         this.historyManager = new HistoryManager();
         this.game = game;
+
+        startNewTurn();
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
@@ -229,11 +232,9 @@ public class Controller {
         this.historyManager = new HistoryManager();
         this.game = new Game(this, actionPane);
 
-        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
-
         setTiles(boardPane, board);
-        setPieces(boardPane, null, playerManager);
-        setObstacles(boardPane, null);
+        setPieces(boardPane, board, null, pieceManager, playerManager);
+        setObstacles(boardPane, board,null);
 
         startNewTurn();
     }
@@ -253,7 +254,8 @@ public class Controller {
 
     // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    public void setPieces(BoardPane boardPane, List<Tile> pieceTiles, PlayerManager playerManager) {
+    public void setPieces(BoardPane boardPane, Board board, List<Tile> pieceTiles, PieceManager pieceManager,
+                          PlayerManager playerManager) {
         if (pieceTiles == null) {
             pieceTiles = pieceManager.setPiecesOnBoard(board);
         }
@@ -261,6 +263,10 @@ public class Controller {
         for (Tile tile : pieceTiles) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.getPlayer(piece);
+            if (boardPane == null) System.out.println("boardPane null");
+            if (tile == null) System.out.println("tile null");
+            if (piece == null) System.out.println("piece null");
+            if (player == null) System.out.println("player null");
             Avatar pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }
@@ -268,7 +274,7 @@ public class Controller {
 
     // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    public void setObstacles(BoardPane boardPane, List<Tile> obstacleTiles) {
+    public void setObstacles(BoardPane boardPane, Board board, List<Tile> obstacleTiles) {
         if (obstacleTiles == null) {
             ObstacleManager obstacleManager = new ObstacleManager();
             obstacleTiles = obstacleManager.setObstacleOnBoard(board);

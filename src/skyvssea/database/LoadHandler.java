@@ -16,19 +16,19 @@ import java.util.List;
 
 public class LoadHandler {
 
-    private static int col;
-    private static int row;
-    private static String currentGameStateString;
-    private static int registeredPieceID;
-    private static int registeredTileX;
-    private static int registeredTileY;
-    private static int currentPlayerID;
+    private int col;
+    private int row;
+    private String currentGameStateString;
+    private int registeredPieceID;
+    private int registeredTileX;
+    private int registeredTileY;
+    private int currentPlayerID;
 
-    private static List<Tile> tilesWithPiece = new ArrayList<>();
-    private static List<Tile> tilesWithObstacle = new ArrayList<>();
-    private static List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
+    private List<Tile> tilesWithPiece = new ArrayList<>();
+    private List<Tile> tilesWithObstacle = new ArrayList<>();
+    private List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
 
-    public static void loadGame(Stage stage) {
+    public void loadGame(Stage stage) {
         stage.close();
 
         Controller controller = new Controller();
@@ -57,8 +57,8 @@ public class LoadHandler {
 
         // Link GameObject with their Avatar
         controller.setTiles(boardPane, board);
-        controller.setPieces(boardPane, tilesWithPiece, playerManager);
-        controller.setObstacles(boardPane, tilesWithObstacle);
+        controller.setPieces(boardPane, board, tilesWithPiece, pieceManager, playerManager);
+        controller.setObstacles(boardPane, board, tilesWithObstacle);
 
         controller.loadController(stage, boardPane, actionPane, infoPane, board, pieceManager, playerManager, game);
 
@@ -69,7 +69,7 @@ public class LoadHandler {
         stage.show();
     }
 
-    private static PieceManager loadPieceManager(Board board) {
+    private PieceManager loadPieceManager(Board board) {
         List<AbstractPiece> eaglePieces = new ArrayList<>();
         List<AbstractPiece> sharkPieces = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class LoadHandler {
         return pieceManager;
     }
 
-    private static void loadObstacleManager(Board board) {
+    private void loadObstacleManager(Board board) {
         try {
             String query = "SELECT * FROM " + SVSDatabase.OBSTACLE_TABLE;
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query);
@@ -155,7 +155,7 @@ public class LoadHandler {
         }
     }
 
-    private static void loadSpecialEffectManager() {
+    private void loadSpecialEffectManager() {
         try {
             String query = "SELECT * FROM " + SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE;
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query);
@@ -173,7 +173,7 @@ public class LoadHandler {
 
                 // SpecialEffect
                 String specialEffectString = rs.getString("SpecialEffect");
-                SpecialEffectCode specialEffectCode = SpecialEffectCode.valueOf(specialEffectString);
+                SpecialEffectCode specialEffectCode = SpecialEffectCode.fromString(specialEffectString);
                 SpecialEffect specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
 
                 piece.getSpecialEffectManager().add(specialEffect);
@@ -186,7 +186,7 @@ public class LoadHandler {
         }
     }
 
-    private static void loadCoreGameData() {
+    private void loadCoreGameData() {
         try {
             String query = "SELECT * FROM " + SVSDatabase.CORE_GAME_TABLE;
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query);

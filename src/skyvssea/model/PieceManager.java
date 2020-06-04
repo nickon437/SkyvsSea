@@ -52,7 +52,6 @@ public class PieceManager {
         }
         // Input piece
         for (AbstractPiece piece : pieceList) {
-            System.out.println("pieceList size: " + pieceList.size());
             if (pieceMap == null) System.out.println("pieceMap == null");
             if (piece == null) System.out.println("piece == null");
             pieceMap.get(piece.getLevel()).add(piece);

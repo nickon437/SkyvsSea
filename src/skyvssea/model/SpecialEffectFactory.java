@@ -21,22 +21,22 @@ public class SpecialEffectFactory {
     }
 
     private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2", TargetType.SELF));
+        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase(SpecialEffectCode.DOUBLE_ATTACK_RANGE.getText(), TargetType.SELF));
     }
     private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", TargetType.SELF));
+    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase(SpecialEffectCode.DOUBLE_MOVE_RANGE.getText(), TargetType.SELF));
     }
     private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding", TargetType.ENEMIES));
+    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase(SpecialEffectCode.RETARDING.getText(), TargetType.ENEMIES));
     }
     private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase("Freezing", TargetType.ENEMIES)));
+    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase(SpecialEffectCode.FREEZING.getText(), TargetType.ENEMIES)));
 	}
     private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening", TargetType.COMRADES)));
+        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase(SpecialEffectCode.STRENGTHENING.getText(), TargetType.COMRADES)));
     }
     private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", TargetType.ENEMIES)));
+        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase(SpecialEffectCode.WEAKENING.getText(), TargetType.ENEMIES)));
     }
 
     public SpecialEffect createSpecialEffect(SpecialEffectCode code) {
@@ -56,6 +56,11 @@ public class SpecialEffectFactory {
             default:
                 return null;
         }
+    }
+
+    public SpecialEffect createSpecialEffect(String name) {
+        SpecialEffectCode specialEffectCode = SpecialEffectCode.valueOf(name);
+        return createSpecialEffect(specialEffectCode);
     }
     
     public SpecialEffect copy(SpecialEffect specialEffect) {

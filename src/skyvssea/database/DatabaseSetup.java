@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DatabaseSetup {
 
-    public static void buildDatabase() {
+    public static void rebuildDatabase() {
         dropTable(SVSDatabase.CORE_GAME_TABLE);
         dropTable(SVSDatabase.OBSTACLE_TABLE);
         dropTable(SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE);
@@ -12,6 +12,10 @@ public class DatabaseSetup {
 //        dropTable(SVSDatabase.SPECIAL_EFFECT_TABLE);
 //        dropTable(SVSDatabase.PLAYER_TABLE);
 
+        setupDatabase();
+    }
+
+    private static void setupDatabase() {
 //        createPlayerTable();
 //        createSpecialEffectTable();
         createPieceTable();

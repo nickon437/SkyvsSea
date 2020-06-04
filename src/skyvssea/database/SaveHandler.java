@@ -4,6 +4,7 @@ import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,6 +13,8 @@ import java.util.List;
 public class SaveHandler {
 
     public static void saveGame(Board board, PieceManager pieceManager, PlayerManager playerManager, Game game) {
+        DatabaseSetup.rebuildDatabase();
+
         int registeredPieceID = -1;
         AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
 

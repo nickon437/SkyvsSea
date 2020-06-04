@@ -25,7 +25,7 @@ public class BoardGameApplication extends Application {
 	}
 
 	public void setupDatabase() {
-		DatabaseSetup.buildDatabase();
+		DatabaseSetup.rebuildDatabase();
 	}
 
     public static void main(String[] args) {

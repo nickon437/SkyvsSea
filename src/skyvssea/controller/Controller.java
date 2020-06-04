@@ -46,6 +46,11 @@ public class Controller {
             	Command moveCommand;
             	moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
                 historyManager.storeAndExecute(moveCommand);                     
+
+                // If the player undoes and then makes a move, undo will no longer be available 
+                if (!playerManager.getCurrentPlayer().validateUndoAvailability()) {
+                	actionPane.setUndoBtnDisable(true);
+                }
                 
                 switchToAttackMode();
             } else {
@@ -199,7 +204,6 @@ public class Controller {
 
     private void endTurn() {
     	pieceManager.updatePieceStatus(historyManager);
-        playerManager.getCurrentPlayer().validateUndoAvailability();
         playerManager.changeTurn();
         historyManager.startNewTurnCommand();
         

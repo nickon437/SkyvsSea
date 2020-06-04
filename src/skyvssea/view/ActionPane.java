@@ -1,7 +1,9 @@
 package skyvssea.view;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
@@ -10,18 +12,25 @@ import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.RegionUtil;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ActionPane extends VBox {
     private HBox buttonHolder = new HBox();
     private Pane actionIndicator = new Pane();
     private Button killBtn = new Button("Kill");
     private Button specialEffectBtn = new Button("Special Effect");
     private Button endBtn = new Button("End");
+    private ProgressBar timerProgressBar = new ProgressBar();
+    private double runningTimer;
 
     private AdvancedActionPane advancedActionPane;
 
+    private static final double DEFAULT_DURATION = 30;
+
     public ActionPane(Controller controller) {
         advancedActionPane = new AdvancedActionPane(controller);
-        this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
+        this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane, new HBox(timerProgressBar));
         this.setSpacing(5);
 
         buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
@@ -31,6 +40,7 @@ public class ActionPane extends VBox {
         formatKillBtn(killBtn, controller);
         formatSpecialEffectBtn(specialEffectBtn, controller);
         formatEndBtn(endBtn, controller);
+        formatTimerProgressBar(timerProgressBar);
     }
 
     private void formatActionIndicator(Pane indicator) {
@@ -88,6 +98,11 @@ public class ActionPane extends VBox {
         });
     }
 
+    private void formatTimerProgressBar(ProgressBar timerProgressBar) {
+        ButtonUtil.maximizeHBoxControlSize(timerProgressBar);
+        timerProgressBar.setPrefHeight(10);
+    }
+
     private void shiftActionIndicator(Button button) {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);
         double xCoord = 0;
@@ -108,6 +123,28 @@ public class ActionPane extends VBox {
         KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
         timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
         timeline.play();
+    }
+
+    public void startTimer(Controller controller) {
+        runningTimer = DEFAULT_DURATION;
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    if (runningTimer > 0) {
+                        runningTimer = runningTimer - 0.05;
+                        timerProgressBar.setProgress(runningTimer / DEFAULT_DURATION);
+                    } else {
+                        controller.handleEndButton();
+                        this.cancel();
+                    }
+                });
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(timerTask, 0, 50);
     }
 
     public void setRegularActionPaneDisable(boolean isDisabled) {

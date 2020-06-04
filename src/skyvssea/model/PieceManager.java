@@ -12,6 +12,11 @@ public class PieceManager {
     private Map<Hierarchy, List<AbstractPiece>> eaglePieces = new TreeMap<>();
     private AbstractPiece registeredPiece;
 
+    public PieceManager(List<AbstractPiece> eaglePieceList, List<AbstractPiece> sharkPieceList) {
+        convertPieceListToMap(eaglePieceList, eaglePieces);
+        convertPieceListToMap(sharkPieceList, sharkPieces);
+    }
+
     public PieceManager(Map<Hierarchy, Integer> lineup) {
         initializePieces(lineup);
     }
@@ -40,11 +45,24 @@ public class PieceManager {
         }
     }
 
+    private void convertPieceListToMap(List<AbstractPiece> pieceList, Map<Hierarchy, List<AbstractPiece>> pieceMap) {
+        // Create empty arraylist value
+        for (Hierarchy hierarchy : Hierarchy.values()) {
+            pieceMap.put(hierarchy, new ArrayList<>());
+        }
+        // Input piece
+        for (AbstractPiece piece : pieceList) {
+            System.out.println("pieceList size: " + pieceList.size());
+            if (pieceMap == null) System.out.println("pieceMap == null");
+            if (piece == null) System.out.println("piece == null");
+            pieceMap.get(piece.getLevel()).add(piece);
+        }
+    }
+
     public AbstractPiece getRegisteredPiece() {
         return registeredPiece;
     }
 
-    @Requires("registeredPiece != null")
     public void setRegisteredPiece(AbstractPiece registeredPiece) {
         this.registeredPiece = registeredPiece;
     }

@@ -15,11 +15,11 @@ public class PlayerManager {
         initializePlayers(eaglePieces, sharkPieces);
     }
 
-	 private void initializePlayers(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
-	        players[0] = new Player("Eagle's turn", Color.valueOf("#E92707"), eaglePieces);
-	        players[1] = new Player("Shark's turn", Color.valueOf("#390593"), sharkPieces);
-	        currentPlayer = players[0];
-	    }
+    private void initializePlayers(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
+        players[0] = new Player("Eagle's turn", Color.valueOf("#E92707"), eaglePieces);
+        players[1] = new Player("Shark's turn", Color.valueOf("#390593"), sharkPieces);
+        currentPlayer = players[0];
+    }
 
     @Requires("piece != null")
     public Player getPlayer(AbstractPiece piece) {
@@ -38,6 +38,14 @@ public class PlayerManager {
     public Player changeTurn() {
         currentPlayer = currentPlayer.equals(players[0]) ? players[1] : players[0];
         return currentPlayer;
+    }
+
+    public int getPlayerIndex(Player player) {
+        return player.equals(players[0]) ? 0 : 1;
+    }
+
+    public void setCurrentPlayer(int playerIndex) {
+	    currentPlayer = players[playerIndex];
     }
 
 	public boolean isCurrentPlayerPiece(AbstractPiece piece) {

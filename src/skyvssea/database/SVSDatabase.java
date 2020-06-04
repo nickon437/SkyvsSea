@@ -6,11 +6,11 @@ import java.sql.DriverManager;
 public class SVSDatabase {
 
     private static final String DB_NAME = "svsdb";
-    public static final String GAME_TABLE = "GAME";
+    public static final String CORE_GAME_TABLE = "CORE_GAME";
     public static final String OBSTACLE_TABLE = "OBSTACLE";
     public static final String PIECE_TABLE = "PIECE";
-    public static final String SPECIAL_EFFECT_MANAGER_TABLE = "PIECE";
-    public static final String SPECIAL_EFFECT_TABLE  = "PIECE";
+    public static final String SPECIAL_EFFECT_MANAGER_TABLE = "SPECIAL_EFFECT_MANAGER";
+    public static final String SPECIAL_EFFECT_TABLE  = "SPECIAL_EFFECT";
     public static final String PLAYER_TABLE = "PLAYER";
 
     private static Connection con;

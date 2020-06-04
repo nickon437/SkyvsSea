@@ -78,12 +78,12 @@ public class AdvancedActionPane extends SplitPane {
 
     private void formatSaveButton(Button button, Controller controller) {
         ButtonUtil.formatGraphic(button, "file:resources/icons/save.png");
-        // TODO: Add handle click
+        button.setOnAction(e -> controller.handleSaveButton());
     }
 
     private void formatLoadButton(Button button, Controller controller) {
         ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
-        // TODO: Add handle click
+        button.setOnAction(e -> controller.handleLoadButton());
     }
 
     private void formatRestartButton(Button button, Controller controller) {

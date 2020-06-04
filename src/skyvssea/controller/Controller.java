@@ -2,6 +2,9 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
+import javafx.stage.Stage;
+import skyvssea.database.LoadHandler;
+import skyvssea.database.SaveHandler;
 import skyvssea.model.*;
 import skyvssea.model.command.*;
 import skyvssea.model.piece.AbstractPiece;
@@ -11,6 +14,7 @@ import java.util.List;
 
 public class Controller {
 
+    private Stage stage;
     private Game game;
     private Board board;
     private PieceManager pieceManager;
@@ -99,6 +103,7 @@ public class Controller {
         board.clearHighlightedTiles();
         AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
         actionPane.setSpecialEffectBtnDisable(!registeredPiece.isSpecialEffectAvailable());
+        actionPane.setRegularActionPaneDisable(false);
     }
 
     public void handleKillButton() { 
@@ -150,7 +155,15 @@ public class Controller {
     public void handleUndoButton() {
         playerManager.getCurrentPlayer().reduceNumUndos();
         historyManager.undoToMyTurn();
-        game.setCurrentGameState(GameState.READY_TO_MOVE);
+        startNewTurn();
+    }
+
+    public void handleSaveButton() {
+        SaveHandler.saveGame(board, pieceManager, playerManager, game);
+    }
+
+    public void handleLoadButton() {
+        LoadHandler.loadGame(stage);
     }
 
     private void changeTurn() {
@@ -169,14 +182,43 @@ public class Controller {
         pieceManager.updatePieceStatus(historyManager);
         changeTurn();
         historyManager.startNewTurnCommand();
+        startNewTurn();
+    }
+
+    public void startNewTurn() {
         game.setCurrentGameState(GameState.READY_TO_MOVE);
+        actionPane.setRegularActionPaneDisable(true);
+        actionPane.hideActionIndicator();
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        clearCache();
+
+        boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+        boolean hasHistory = getHistoryManager().isUndoAvailable();
+        boolean isUndoAvailable = !isUndoEmpty && hasHistory;
+        actionPane.setUndoBtnDisable(!isUndoAvailable);
+    }
+
+    public void loadController(Stage stage, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Board board,
+                               PieceManager pieceManager, PlayerManager playerManager, Game game) {
+        this.stage = stage;
+        this.boardPane = boardPane;
+        this.boardPane = boardPane;
+        this.actionPane = actionPane;
+        this.infoPane = infoPane;
+
+        this.board = board;
+        this.pieceManager = pieceManager;
+        this.playerManager = playerManager;
+        this.historyManager = new HistoryManager();
+        this.game = game;
     }
 
     @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    public void setController(Stage stage, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];
 
+        this.stage = stage;
 		this.boardPane = boardPane;
 		this.actionPane = actionPane;
 		this.infoPane = infoPane;
@@ -189,13 +231,15 @@ public class Controller {
 
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
 
-        setTiles(boardPane);
-        setPieces(boardPane);
-        setObstacles(boardPane);
+        setTiles(boardPane, board);
+        setPieces(boardPane, null, playerManager);
+        setObstacles(boardPane, null);
+
+        startNewTurn();
     }
 
     @Requires("boardPane != null")
-    private void setTiles(BoardPane boardPane) {
+    public void setTiles(BoardPane boardPane, Board board) {
         Tile[][] tiles = board.getTiles();
         List<TileView> tileViews = boardPane.getTileViewGroup();
         for (TileView tileView : tileViews) {
@@ -207,21 +251,29 @@ public class Controller {
         board.setBaseColours();
     }
 
+    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    private void setPieces(BoardPane boardPane) {
-        List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
-        for (Tile tile : startingPositions) {
+    public void setPieces(BoardPane boardPane, List<Tile> pieceTiles, PlayerManager playerManager) {
+        if (pieceTiles == null) {
+            pieceTiles = pieceManager.setPiecesOnBoard(board);
+        }
+
+        for (Tile tile : pieceTiles) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.getPlayer(piece);
-            PieceView pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
+            Avatar pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }
     }
 
+    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    private void setObstacles(BoardPane boardPane) {
-        ObstacleManager obstacleManager = new ObstacleManager();
-        List<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+    public void setObstacles(BoardPane boardPane, List<Tile> obstacleTiles) {
+        if (obstacleTiles == null) {
+            ObstacleManager obstacleManager = new ObstacleManager();
+            obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+        }
+
         for (Tile tile : obstacleTiles) {
             Obstacle obstacle = (Obstacle) tile.getGameObject();
             ObstacleView obstacleView = boardPane.instantiateObstacleView(tile.getX(), tile.getY());

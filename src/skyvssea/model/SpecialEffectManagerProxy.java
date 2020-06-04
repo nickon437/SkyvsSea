@@ -6,6 +6,9 @@ import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface {
 
     private SpecialEffectManagerInterface specialEffectManager;
@@ -38,6 +41,21 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
     public void updateEffectiveDuration(HistoryManager historyManager) {
         if (specialEffectManager != null) {
             specialEffectManager.updateEffectiveDuration(historyManager);
+        }
+    }
+
+    public void setEffectiveDuration(String specialEffectName, int effectiveDuration) {
+       if (specialEffectManager != null) {
+           specialEffectManager.setEffectiveDuration(specialEffectName, effectiveDuration);
+       }
+    }
+
+    @Override
+    public List<SpecialEffect> getAppliedSpecialEffects() {
+        if (specialEffectManager != null) {
+            return specialEffectManager.getAppliedSpecialEffects();
+        } else {
+            return new ArrayList<>();
         }
     }
 }

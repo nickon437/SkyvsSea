@@ -11,6 +11,7 @@ import skyvssea.model.specialeffect.TargetType;
 
 public abstract class AbstractPiece extends GameObject {
     private String name;
+    private Hierarchy level;
     private Hierarchy attackLevel;
 	private Hierarchy defenceLevel;
     private int moveRange;
@@ -23,10 +24,11 @@ public abstract class AbstractPiece extends GameObject {
 
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 
-    protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
+    protected AbstractPiece(String name, Hierarchy level, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, SpecialEffectCode specialEffectCode,
                             int specialEffectCooldown) {
     	this.name = name;
+    	this.level = level;
     	this.attackLevel = attackLevel;
     	this.defenceLevel = defenceLevel;
     	this.moveRange = moveRange;
@@ -39,6 +41,8 @@ public abstract class AbstractPiece extends GameObject {
     }
 
     public String getName() { return name; }
+
+    public Hierarchy getLevel() { return level; }
 
     public Hierarchy getAttackLevel() { return attackLevel; }
     public void setAttackLevel(Hierarchy attackLevel) { this.attackLevel = attackLevel; }
@@ -66,7 +70,7 @@ public abstract class AbstractPiece extends GameObject {
     }
 
     @Ensures("specialEffectManagerProxy != null")
-    public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
+    public SpecialEffectManagerInterface getSpecialEffectManager() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }
@@ -106,7 +110,7 @@ public abstract class AbstractPiece extends GameObject {
             Command updateCounterCommand = new UpdateCounterCommand(this, newSpecialEffectCounter);
             historyManager.storeAndExecute(updateCounterCommand);
         }
-        getSpecialEffectManagerProxy().updateEffectiveDuration(historyManager);
+        getSpecialEffectManager().updateEffectiveDuration(historyManager);
     }
 
 	public TargetType getSpecialEffectTargetType() {

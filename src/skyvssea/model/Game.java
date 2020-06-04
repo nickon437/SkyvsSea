@@ -16,19 +16,23 @@ public class Game {
 
     public void setCurrentGameState(GameState newState) {
         this.currentGameState = newState;
-        if (newState == GameState.READY_TO_MOVE) {
-            actionPane.setRegularActionPaneDisable(true);
-            actionPane.hideActionIndicator();
-
-            boolean isUndoEmpty = !controller.getPlayerManager().getCurrentPlayer().isUndoAvailabile();
-            boolean hasHistory = controller.getHistoryManager().isUndoAvailable();
-            boolean isUndoAvailable = !isUndoEmpty && hasHistory;
-            actionPane.setUndoBtnDisable(!isUndoAvailable);
-
-            controller.clearCache();
-        } else {
-            actionPane.setRegularActionPaneDisable(false);
-        }
+//        if (newState == GameState.READY_TO_MOVE) {
+//            actionPane.setRegularActionPaneDisable(true);
+//            actionPane.hideActionIndicator();
+//
+//            try {
+//                boolean isUndoEmpty = !controller.getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+//                boolean hasHistory = controller.getHistoryManager().isUndoAvailable();
+//                boolean isUndoAvailable = !isUndoEmpty && hasHistory;
+//                actionPane.setUndoBtnDisable(!isUndoAvailable);
+//            } catch (Exception e) {
+//                actionPane.setUndoBtnDisable(true);
+//            }
+//
+//            controller.clearCache();
+//        } else {
+//            actionPane.setRegularActionPaneDisable(false);
+//        }
     }
 
     public GameState getCurrentGameState() { return currentGameState; }

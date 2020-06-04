@@ -12,8 +12,8 @@ public class Tile implements Subject, AvatarCore {
 
     private List<Observer> observers = new ArrayList<>();
     private Avatar avatar;
-    public int x;
-	public int y;
+    private int x;
+	private int y;
     private GameObject gameObject;
     private boolean isHighlighted;
     private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
@@ -29,6 +29,10 @@ public class Tile implements Subject, AvatarCore {
 
     public boolean hasPiece() {
         return gameObject != null && gameObject instanceof AbstractPiece;
+    }
+
+    public boolean hasObstacle() {
+        return gameObject != null && gameObject instanceof Obstacle;
     }
 
     public GameObject getGameObject() { return gameObject; }

@@ -46,4 +46,19 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
             historyManager.storeAndExecute(updateEffectiveDurationCommand);
         }
     }
+
+    @Override
+    public void setEffectiveDuration(String specialEffectName, int effectiveDuration) {
+        for (SpecialEffect curSpecialEffect : appliedSpecialEffects) {
+            if (curSpecialEffect.getName().equals(specialEffectName)) {
+                curSpecialEffect.setEffectiveDuration(effectiveDuration);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public List<SpecialEffect> getAppliedSpecialEffects() {
+        return appliedSpecialEffects;
+    }
 }

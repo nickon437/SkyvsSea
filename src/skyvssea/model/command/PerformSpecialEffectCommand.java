@@ -21,7 +21,7 @@ public class PerformSpecialEffectCommand implements Command {
     @Override
     public void execute() {
         if (specialEffect != null && caster.getSpecialEffectCounter() <= 0) {
-            target.getSpecialEffectManagerProxy().add(specialEffect);
+            target.getSpecialEffectManager().add(specialEffect);
 
             Command updateCounterCommand = new UpdateCounterCommand(caster, caster.getDefaultSpecialEffectCooldown());
             historyManager.storeAndExecute(updateCounterCommand);
@@ -30,6 +30,6 @@ public class PerformSpecialEffectCommand implements Command {
 
     @Override
     public void undo() {
-        target.getSpecialEffectManagerProxy().remove(specialEffect);
+        target.getSpecialEffectManager().remove(specialEffect);
     }
 }

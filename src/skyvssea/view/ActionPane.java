@@ -2,6 +2,8 @@ package skyvssea.view;
 
 import javafx.animation.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
@@ -14,8 +16,9 @@ public class ActionPane extends VBox {
     private HBox buttonHolder = new HBox();
     private Pane actionIndicator = new Pane();
     private Button killBtn = new Button("Kill");
-    private Button specialEffectBtn = new Button("Special Effect");
-    private Button endBtn = new Button("End");
+    private Button activeEffectBtn = new Button("Active Effect");
+    private ToggleButton passiveEffectBtn = new ToggleButton("Passive Effect");
+	private Button endBtn = new Button("End");
 
     private AdvancedActionPane advancedActionPane;
 
@@ -24,12 +27,13 @@ public class ActionPane extends VBox {
         this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
         this.setSpacing(5);
 
-        buttonHolder.getChildren().addAll(killBtn, specialEffectBtn, endBtn);
+        buttonHolder.getChildren().addAll(killBtn, activeEffectBtn, passiveEffectBtn, endBtn);
         buttonHolder.setSpacing(ButtonUtil.BUTTON_SPACING);
 
         formatActionIndicator(actionIndicator);
         formatKillBtn(killBtn, controller);
-        formatSpecialEffectBtn(specialEffectBtn, controller);
+        formatActiveEffectBtn(activeEffectBtn, controller);
+        formatPassiveEffectBtn(passiveEffectBtn, controller);
         formatEndBtn(endBtn, controller);
     }
 
@@ -57,21 +61,63 @@ public class ActionPane extends VBox {
         });
     }
 
-    private void formatSpecialEffectBtn(Button button, Controller controller) {
+    private void formatPassiveEffectBtn(ToggleButton button, Controller controller) {
+    	ButtonUtil.maximizeHBoxControlSize(button);
+        ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+        button.setOnMouseEntered(e -> {
+            ButtonUtil.formatHoveringEffect(button, true);
+        });
+        button.setOnMouseExited(e -> {
+            ButtonUtil.formatHoveringEffect(button, false);
+        });
+        button.setOnAction(e -> {
+        	if (button.isSelected()) {
+        		ButtonUtil.formatStandardButton(button, ColorUtil.ACTIVATED_BUTTON_COLOR);
+        	} else {
+        		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
+        	}
+        	controller.handlePassiveEffectButton();        		
+        });
+    }
+    
+    public ToggleButton getPassiveEffectBtn() {
+		return passiveEffectBtn;
+	}
+    
+    public void setPassiveEffectBtnActivated(boolean isActivated) {
+    	passiveEffectBtn.setSelected(isActivated);
+    	
+    	if (isActivated) {
+    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.ACTIVATED_BUTTON_COLOR);
+    	} else {
+    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
+    	}
+    }
+    
+    public void setPassiveEffectBtnDisable(boolean isDisabled) {
+    	passiveEffectBtn.setDisable(isDisabled);
+    }
+    
+    public void disableAndDeactivatePassiveEffectBtn() {
+    	setPassiveEffectBtnActivated(false);
+    	passiveEffectBtn.setDisable(true);
+    }
+    
+    private void formatActiveEffectBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/special-effect.png");
         button.setOnMouseEntered(e -> {
             ButtonUtil.formatHoveringEffect(button, true);
-            controller.handleMouseEnteredSpecialEffectBtn();
+            controller.handleMouseEnteredActiveEffectBtn();
         });
         button.setOnMouseExited(e -> {
             ButtonUtil.formatHoveringEffect(button, false);
-            controller.handleMouseExitedSpecialEffectBtn();
+            controller.handleMouseExitedActiveEffectBtn();
         });
         button.setOnAction(e -> {
             shiftActionIndicator(button);
-            controller.handleSpecialEffectButton();
+            controller.handleActiveEffectButton();
         });
     }
 
@@ -91,9 +137,9 @@ public class ActionPane extends VBox {
         int buttonIndex = buttonHolder.getChildren().indexOf(button);
         double xCoord = 0;
         for (int i = 0; i < buttonIndex; i++) {
-            xCoord += ((Button) buttonHolder.getChildren().get(i)).getWidth() + ButtonUtil.BUTTON_SPACING;
+            xCoord += ((ButtonBase) buttonHolder.getChildren().get(i)).getWidth() + ButtonUtil.BUTTON_SPACING;
         }
-        double width = ((Button) buttonHolder.getChildren().get(buttonIndex)).getWidth();
+        double width = ((ButtonBase) buttonHolder.getChildren().get(buttonIndex)).getWidth();
         setActionIndicatorPosition(xCoord, width);
     }
 
@@ -108,14 +154,26 @@ public class ActionPane extends VBox {
         timeline.play();
     }
 
-    public void setRegularActionPaneDisable(boolean isDisabled) {
-        buttonHolder.setDisable(isDisabled);
+    public void disableRegularActionPane() {
+    	activeEffectBtn.setDisable(true);
+    	passiveEffectBtn.setDisable(true);
+        setPassiveEffectBtnActivated(false);
+        killBtn.setDisable(true);
+        endBtn.setDisable(true);
     }
 
-    public void setSpecialEffectBtnDisable(boolean isDisabled) {
-        specialEffectBtn.setDisable(isDisabled);
+    public void setActiveEffectBtnDisable(boolean isDisabled) {
+    	activeEffectBtn.setDisable(isDisabled);
     }
-
+    
+    public void setKillBtnDisable(boolean isDisabled) {
+    	killBtn.setDisable(isDisabled);
+    }
+    
+    public void setEndBtnDisable(boolean isDisabled) {
+    	endBtn.setDisable(isDisabled);
+    }
+    
     public void setUndoBtnDisable(boolean isDisabled) {
         advancedActionPane.setUndoBtnDisable(isDisabled);
     }

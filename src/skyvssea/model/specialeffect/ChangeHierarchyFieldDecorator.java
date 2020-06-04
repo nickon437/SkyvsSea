@@ -4,22 +4,21 @@ import com.google.java.contract.Requires;
 import skyvssea.model.Hierarchy;
 
 public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffectDecorator {
-	protected Hierarchy originalValue;
 	protected Integer change;
 	protected Hierarchy specificLevel;
 	
-	public ChangeHierarchyFieldDecorator(int change, SpecialEffect specialEffect) {
-		super(specialEffect);
+	public ChangeHierarchyFieldDecorator(int change, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(specialEffectWrappee);
 		this.change = change;
 	}
 	
-	public ChangeHierarchyFieldDecorator(Hierarchy level, SpecialEffect specialEffect) {
-		super(specialEffect);
+	public ChangeHierarchyFieldDecorator(Hierarchy level, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(specialEffectWrappee);
 		this.specificLevel = level;
 	}
 
 	@Requires("change != null || specificLevel != null")
-	public Hierarchy getNewLevel() {
+	public Hierarchy getNewLevel(Hierarchy originalValue) {
 		Hierarchy newLevel = null;
 
 		if (change != null) {
@@ -36,5 +35,10 @@ public abstract class ChangeHierarchyFieldDecorator extends AbstractSpecialEffec
 			newLevel = specificLevel;
 		}
 		return newLevel;
+	}
+	
+	protected boolean isNewValueValid(Hierarchy originalValue, Hierarchy currentValue, Hierarchy newValue) {
+		return (newValue.magnitude <= originalValue.magnitude && newValue.magnitude < currentValue.magnitude) || 
+				(newValue.magnitude >= originalValue.magnitude && newValue.magnitude > currentValue.magnitude);
 	}
 }

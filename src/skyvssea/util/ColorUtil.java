@@ -11,6 +11,7 @@ public class ColorUtil {
 
     public static final Color STANDARD_BUTTON_COLOR = Color.valueOf("#1E88E5");
     public static final Color SECONDARY_BUTTON_COLOR = Color.valueOf("#E0E0E0");
+    public static final Color ACTIVATED_BUTTON_COLOR = Color.valueOf("#f44336");
 
     private static final double DARKER_BRIGHTER_FACTOR = 0.9;
 

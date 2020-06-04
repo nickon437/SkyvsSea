@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
+import skyvssea.model.EventType;
 import skyvssea.model.observer.Observer;
 import skyvssea.model.observer.Subject;
 import skyvssea.util.ColorUtil;
@@ -80,22 +81,30 @@ public class TileView extends Avatar implements Observer {
 
     @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
-	public void update(Subject subject, Object arg) {
-        if (arg instanceof Boolean) {
-            Color baseColor;
-            if ((Boolean) arg == true) {
-                baseColor = ColorUtil.HIGHLIGHTED_COLOR;
-                this.setCursor(Cursor.HAND);
-            } else {
-                baseColor = hasLightBaseColor ? ColorUtil.DEFAULT_LIGHT_BASE_COLOR : ColorUtil.DEFAULT_DARK_BASE_COLOR;
-                this.setCursor(Cursor.DEFAULT);
-            }
-            updateBaseColor(baseColor);
-        } else if (arg instanceof Avatar) {
-            setGameObjAvatar((Avatar) arg);
-        } else if (arg == null) {
-        	removeGameObjAvatar();
-        }
+	public void update(Subject subject, EventType event, Object arg) {
+    	switch (event) {
+    		case HIGHLIGHT:
+    			Color baseColor;
+                if ((boolean) arg == true) {
+                    baseColor = ColorUtil.HIGHLIGHTED_COLOR;
+                    this.setCursor(Cursor.HAND);
+                } else {
+                    baseColor = hasLightBaseColor ? ColorUtil.DEFAULT_LIGHT_BASE_COLOR : ColorUtil.DEFAULT_DARK_BASE_COLOR;
+                    this.setCursor(Cursor.DEFAULT);
+                }
+                updateBaseColor(baseColor);
+    			break;
+    		case SET_GAME_OBJECT:
+    			if (arg != null) {
+    				setGameObjAvatar((Avatar) arg);
+    			} else {
+    				removeGameObjAvatar();
+    			}
+    			break;
+    		case DISABLE:
+    			setDisable((boolean) arg);
+    			break;
+    	}
     }
 
     @Requires("avatar != null")

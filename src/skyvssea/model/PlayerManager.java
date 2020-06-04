@@ -11,7 +11,7 @@ public class PlayerManager {
     private Player[] players = new Player[2];
     private Player currentPlayer;
 
-	public PlayerManager(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy,List<AbstractPiece>> sharkPieces) {
+	public PlayerManager(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
         initializePlayers(eaglePieces, sharkPieces);
     }
 

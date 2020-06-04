@@ -4,7 +4,6 @@ import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

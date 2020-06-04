@@ -4,7 +4,7 @@ import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface {
 
@@ -18,19 +18,18 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
     @Requires("specialEffect != null")
     @Ensures("specialEffectManager != null")
     @Override
-    public void add(SpecialEffect specialEffect) {
+    public void add(SpecialEffectObject specialEffect) {
         if (specialEffectManager == null) {
             specialEffectManager = new SpecialEffectManager(target);
         }
         specialEffectManager.add(specialEffect);
     }
 
-    @Requires("specialEffect != null")
     @Override
-    public void remove(SpecialEffect specialEffect) {
-        if (specialEffect != null) {
-            specialEffectManager.remove(specialEffect);
-        }
+    public void remove(SpecialEffectObject specialEffect) {
+    	if (specialEffectManager != null) {
+    		specialEffectManager.remove(specialEffect);
+    	}
     }
 
     @Requires("historyManager != null")
@@ -40,4 +39,28 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
             specialEffectManager.updateEffectiveDuration(historyManager);
         }
     }
+
+	@Override
+	public boolean isImmuneToEnemySpecialEffect() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		return specialEffectManager.isImmuneToEnemySpecialEffect();
+	}
+
+	@Override
+	public void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect) {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		specialEffectManager.setImmuneToEnemySpecialEffect(immuneToSpecialEffect);
+	}
+
+	@Override
+	public void removeEnemySpecialEffect() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		specialEffectManager.removeEnemySpecialEffect();
+	}
 }

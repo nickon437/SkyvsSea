@@ -33,5 +33,7 @@ public class BoardSetupController {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
+        
+        controller.setupNewTurn();
     }
 }

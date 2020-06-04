@@ -88,7 +88,7 @@ public class Controller {
                 Command killCommand = new KillCommand(target, selectedTile, board, playerManager, pieceManager);
         	    historyManager.storeAndExecute(killCommand);
         	    
-        	    //Check if there's a winner
+        	    // Check if there's a winner
         	    checkForWinner(target);
         	    
         		endTurn();
@@ -191,7 +191,7 @@ public class Controller {
     }
     
     private void checkForWinner(AbstractPiece killTarget) {
-        if (killTarget.getLevel() == Hierarchy.BABY && pieceManager.getNumberOfPieceInHierarchy(killTarget) == 0) {
+        if (killTarget.getLevel() == Hierarchy.BABY && pieceManager.countPiecesInHierarchy(killTarget) == 0) {
             declareWinner();
         }
     }
@@ -223,7 +223,7 @@ public class Controller {
 		actionPane.setUndoBtnDisable(!isUndoAvailable);
     }
     
-    @Requires("boardPane != null && actionPane != null && infoPane != null")
+    @Requires("mainView != null && boardSetup != null && boardPane != null && actionPane != null && infoPane != null")
     public void setController(MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];

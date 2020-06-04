@@ -109,7 +109,7 @@ public class InfoPane extends VBox {
             instructionPane.getChildren().clear();
             if (gameState == GameState.READY_TO_MOVE) {
                 instructionPane.getChildren().addAll(passiveEffectLabel, rightArrowImg1, moveLabel);
-            }  else if (gameState == GameState.READY_TO_ATTACK || gameState == GameState.KILLING || gameState == GameState.PERFORMING_SPECIAL_EFFECT) {
+            }  else if (gameState == GameState.READY_TO_ATTACK || gameState == GameState.KILLING || gameState == GameState.PERFORMING_ACTIVE_EFFECT) {
                 instructionPane.getChildren().add(attackLabel);
             }
         }
@@ -122,7 +122,7 @@ public class InfoPane extends VBox {
 
         if (gameState == GameState.READY_TO_MOVE) {
             ResourceManager.setFont(ResourceManager.NORMAL_BOLD_STYLE, passiveEffectLabel, moveLabel);
-        } else if (gameState == GameState.READY_TO_ATTACK || gameState == GameState.KILLING || gameState == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (gameState == GameState.READY_TO_ATTACK || gameState == GameState.KILLING || gameState == GameState.PERFORMING_ACTIVE_EFFECT) {
             ResourceManager.setFont(ResourceManager.NORMAL_BOLD_STYLE, attackLabel);
         }
 

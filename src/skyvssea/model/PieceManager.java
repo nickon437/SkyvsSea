@@ -1,5 +1,6 @@
 package skyvssea.model;
 
+import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractEagle;
@@ -58,6 +59,8 @@ public class PieceManager {
         registeredPiece = null;
     }
 
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) + 1 && getPiecesInHierarchy(piece).contains(piece)")
     public void addPiece(AbstractPiece piece) {
     	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
     	
@@ -66,6 +69,8 @@ public class PieceManager {
     	}
     }
 
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) - 1 && !getPiecesInHierarchy(piece).contains(piece)")
     public void removePiece(AbstractPiece piece) {
     	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
     	
@@ -74,14 +79,9 @@ public class PieceManager {
     	}
     }
     
-    public int getNumberOfPieceInHierarchy(AbstractPiece piece) {
+    public int countPiecesInHierarchy(AbstractPiece piece) {
     	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
-    	
-    	if (pieceList != null) {
-    		return pieceList.size(); 		
-    	} else {
-    		return -1;    		
-    	}
+    	return pieceList != null ? pieceList.size() : -1;
     }
 
 	private List<AbstractPiece> getPiecesInHierarchy(AbstractPiece piece) {

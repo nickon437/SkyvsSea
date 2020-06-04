@@ -59,11 +59,11 @@ public class PieceManager {
     }
 
     public void addPiece(AbstractPiece piece) {
-        if (piece instanceof AbstractEagle) {
-            sharkPieces.get(piece.getLevel()).add(piece);
-        } else if (piece instanceof AbstractShark) {
-            eaglePieces.get(piece.getLevel()).add(piece);
-        }
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.add(piece);    		
+    	}
     }
 
     public void removePiece(AbstractPiece piece) {

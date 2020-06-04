@@ -116,6 +116,7 @@ public class Controller {
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         board.clearHighlightedTiles();
+        infoPane.setCurrentGameState(game.getCurrentGameState());
         actionPane.setPassiveEffectBtnDisable(true);
         actionPane.setKillBtnDisable(false);
         actionPane.setEndBtnDisable(false);
@@ -215,6 +216,7 @@ public class Controller {
         actionPane.disableRegularActionPane();
         actionPane.hideActionIndicator();
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        infoPane.setCurrentGameState(game.getCurrentGameState());
         clearCache();
         
 		boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();

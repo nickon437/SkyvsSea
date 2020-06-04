@@ -88,7 +88,7 @@ public class InfoPane extends VBox {
 
         // Instruction pane's properties
         instructionPane.setAlignment(Pos.CENTER);
-        instructionPane.widthProperty().addListener(((observable, oldValue, newValue) -> displayInstruction(oldValue, newValue)));
+        instructionPane.widthProperty().addListener(((observable, oldValue, newValue) -> resizeInstructionPane(oldValue, newValue)));
         HBox.setHgrow(instructionPane, Priority.ALWAYS);
         VBox.setMargin(instructionPane, new Insets(0, 20, 10, 20));
     }
@@ -101,7 +101,7 @@ public class InfoPane extends VBox {
         return imageView;
     }
 
-    private void displayInstruction(Number oldWidth, Number newWidth) {
+    private void resizeInstructionPane(Number oldWidth, Number newWidth) {
         if (((double) oldWidth == 0 || (double) oldWidth < INSTRUCTION_PANE_THRESHOLD) && (double) newWidth >= INSTRUCTION_PANE_THRESHOLD) {
             instructionPane.getChildren().clear();
             instructionPane.getChildren().addAll(fullInstructionList);
@@ -126,7 +126,7 @@ public class InfoPane extends VBox {
             ResourceManager.setFont(ResourceManager.NORMAL_BOLD_STYLE, attackLabel);
         }
 
-        displayInstruction(0.0, instructionPane.getWidth());
+        resizeInstructionPane(0.0, instructionPane.getWidth());
     }
 
     private void formatTextArea(TextArea textArea) {

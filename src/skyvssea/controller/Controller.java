@@ -118,8 +118,7 @@ public class Controller {
         board.clearHighlightedTiles();
         infoPane.setCurrentGameState(game.getCurrentGameState());
         actionPane.setPassiveEffectBtnDisable(true);
-        actionPane.setKillBtnDisable(false);
-        actionPane.setEndBtnDisable(false);
+        actionPane.setPassiveEffectBtnFocus(false);
         
         boolean isActiveEffectAvailable = pieceManager.getRegisteredPiece().isActiveEffectAvailable();
         actionPane.setActiveEffectBtnDisable(!isActiveEffectAvailable);
@@ -213,8 +212,9 @@ public class Controller {
 
     public void setupNewTurn() {
     	game.setCurrentGameState(GameState.READY_TO_MOVE);
-        actionPane.disableRegularActionPane();
         actionPane.hideActionIndicator();
+        actionPane.setPassiveEffectBtnFocus(true);
+        actionPane.disableAndDeactivatePassiveEffectBtn();
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         infoPane.setCurrentGameState(game.getCurrentGameState());
         clearCache();

@@ -225,16 +225,27 @@ public class Controller {
 
     public void updateUI() {
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
-        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
-            setupNewTurn();
-        } else if (game.getCurrentGameState() == GameState.KILLING) {
-            switchToAttackMode();
-            board.highlightPossibleKillTiles(playerManager);
-            actionPane.fireKillBtn();
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
-            switchToAttackMode();
-            board.highlightPossibleActiveEffectTiles(playerManager);
-            actionPane.fireActiveEffectBtn();
+        actionPane.setPassiveEffectBtnActivated(pieceManager.getRegisteredPiece().isPassiveEffectActivated());
+        switch (game.getCurrentGameState()) {
+            case READY_TO_MOVE:
+                setupNewTurn();
+                break;
+            case KILLING:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                board.highlightPossibleKillTiles(playerManager);
+                actionPane.fireKillBtn();
+                break;
+            case PERFORMING_ACTIVE_EFFECT:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                board.highlightPossibleActiveEffectTiles(playerManager);
+                actionPane.fireActiveEffectBtn();
+                break;
+            case READY_TO_ATTACK:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                break;
         }
     }
 

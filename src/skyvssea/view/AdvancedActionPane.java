@@ -1,5 +1,6 @@
 package skyvssea.view;
 
+import com.google.java.contract.Requires;
 import javafx.animation.*;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -22,29 +23,29 @@ public class AdvancedActionPane extends SplitPane {
     private Button undoBtn = new Button("Undo");
     private Button saveBtn = new Button("Save");
     private Button loadBtn = new Button("Load");
-    private Button restartBtn = new Button("Restart");
 
     private ImageView arrowUpImage = new ImageView("file:resources/icons/arrow-up.png");
     private ImageView arrowDownImage = new ImageView("file:resources/icons/arrow-down.png");
 
     private boolean isCollapsed = true;
 
+    @Requires("controller != null")
     public AdvancedActionPane(Controller controller) {
         this.setOrientation(Orientation.VERTICAL);
         this.getItems().addAll(paneOpenerBtn, buttonHolder);
-        buttonHolder.getChildren().addAll(undoBtn, saveBtn, loadBtn, restartBtn);
+        buttonHolder.getChildren().addAll(undoBtn, saveBtn, loadBtn);
 
         formatPaneOpenerBtn(paneOpenerBtn);
         formatButtonHolder(buttonHolder);
         formatUndoButton(undoBtn, controller);
         formatSaveButton(saveBtn, controller);
         formatLoadButton(loadBtn, controller);
-        formatRestartButton(restartBtn, controller);
 
         formatGraphic(arrowUpImage);
         formatGraphic(arrowDownImage);
     }
 
+    @Requires("button != null")
     private void formatPaneOpenerBtn(Button button) {
         button.setMaxWidth(Double.MAX_VALUE);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
@@ -54,6 +55,7 @@ public class AdvancedActionPane extends SplitPane {
         button.setOnMouseClicked(e -> collapseButtonHolder());
     }
 
+    @Requires("holder != null")
     private void formatButtonHolder(HBox holder) {
         holder.setSpacing(ButtonUtil.BUTTON_SPACING);
         double buttonHeight = isCollapsed ? 0 : ButtonUtil.STANDARD_BUTTON_HEIGHT;
@@ -69,24 +71,22 @@ public class AdvancedActionPane extends SplitPane {
         }
     }
 
+    @Requires("button != null && controller != null")
     private void formatUndoButton(Button button, Controller controller) {
         ButtonUtil.formatGraphic(button, "file:resources/icons/undo.png");
         button.setOnMouseClicked(e -> controller.handleUndoButton());
     }
 
+    @Requires("button != null && controller != null")
     private void formatSaveButton(Button button, Controller controller) {
         ButtonUtil.formatGraphic(button, "file:resources/icons/save.png");
         button.setOnAction(e -> controller.handleSaveButton());
     }
 
+    @Requires("button != null && controller != null")
     private void formatLoadButton(Button button, Controller controller) {
         ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
         button.setOnAction(e -> controller.handleLoadButton());
-    }
-
-    private void formatRestartButton(Button button, Controller controller) {
-        ButtonUtil.formatGraphic(button, "file:resources/icons/restart.png");
-        // TODO: Add handle click
     }
 
     private void formatGraphic(ImageView imageView) {

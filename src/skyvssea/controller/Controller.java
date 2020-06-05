@@ -228,6 +228,7 @@ public class Controller {
         } catch (NullPointerException ignored) {}
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         actionPane.setUndoBtnDisable(!playerManager.getCurrentPlayer().isUndoAvailabile());
+        actionPane.startTimer(this);
 
         switch (game.getCurrentGameState()) {
             case READY_TO_MOVE:
@@ -270,6 +271,7 @@ public class Controller {
         actionPane.hideActionIndicator();
         actionPane.setPassiveEffectBtnFocus(true);
         actionPane.disableAndDeactivatePassiveEffectBtn();
+        actionPane.startTimer(this);
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         infoPane.setCurrentGameState(game.getCurrentGameState());
         clearCache();

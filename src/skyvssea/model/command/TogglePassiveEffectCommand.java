@@ -24,7 +24,7 @@ public class TogglePassiveEffectCommand implements Command {
 	/**
 	 * Handle applying/removing passive effect to/from itself if the passive effect is TargetType.SELF
 	 */
-	protected void handlePassiveEffectForSelf() {
+	private void handlePassiveEffectForSelf() {
 		SpecialEffectObject passiveEffect = piece.getPassiveEffect();
 		if (piece.isPassiveEffectActivated()) {
 			// No need to duplicate passiveEffect since it is only applied to the piece itself

@@ -11,6 +11,7 @@ public interface SpecialEffectManagerInterface {
     void updateEffectiveDuration(HistoryManager historyManager);
     void setEffectiveDuration(String specialEffectName, int effectiveDuration);
     List<SpecialEffectObject> getAppliedSpecialEffects();
+    String getAppliedSpecialEffectsNames();
 	boolean isImmuneToEnemySpecialEffect();
 	void setImmuneToEnemySpecialEffect(boolean immuneToSpecialEffect);
 	void removeEnemySpecialEffect();

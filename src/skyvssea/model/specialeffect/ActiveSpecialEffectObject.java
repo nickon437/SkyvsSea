@@ -13,17 +13,6 @@ public class ActiveSpecialEffectObject extends SpecialEffectObject {
 		super(caster, name, effectiveDuration, targetType, specialEffectDecorator);
 	}
 	
-//	@Override
-//	@Requires("effectiveDuration > 0")
-//	public boolean updateEffectiveDuration() {
-//		boolean isActive = true;
-//        effectiveDuration--;
-//        if (effectiveDuration == 0) {
-//            isActive = false;
-//        }
-//        return isActive;
-//	}
-	
 	@Override
 	public SpecialEffectObject copy() {
 		return new ActiveSpecialEffectObject(caster, name, effectiveDuration, targetType, specialEffectDecorator.copy());

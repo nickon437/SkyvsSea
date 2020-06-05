@@ -23,7 +23,6 @@ public class Controller {
 
     private MainView mainView;
     private ActionPane actionPane;
-    private BoardPane boardPane;
     private InfoPane infoPane;
     private boolean isPassiveEffectBtnClicked = false;
     
@@ -286,7 +285,6 @@ public class Controller {
         this.stage = stage;
         this.mainView = mainView;
 		this.actionPane = actionPane;
-		this.boardPane = boardPane;
 		this.infoPane = infoPane;
 
         this.board = new Board(boardCol, boardRow);

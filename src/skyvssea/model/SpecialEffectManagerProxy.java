@@ -81,4 +81,12 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
         }
 		specialEffectManager.removeEnemySpecialEffect();
 	}
+
+	@Override
+	public String getAppliedSpecialEffectsNames() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		return specialEffectManager.getAppliedSpecialEffectsNames();
+	}
 }

@@ -99,4 +99,18 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
     public List<SpecialEffectObject> getAppliedSpecialEffects() {
         return appliedSpecialEffects;
     }
+
+	@Override
+	public String getAppliedSpecialEffectsNames() {
+		String names = "";
+		for (SpecialEffectObject obj: appliedSpecialEffects) {
+			names += obj.getName();
+			names += ", \n";
+		}
+		if (names.equals("")) {
+			return "No special effect applied";
+		} else {
+			return names;			
+		}
+	}
 }

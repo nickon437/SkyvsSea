@@ -11,15 +11,15 @@ public class PlayerManager {
     private Player[] players = new Player[2];
     private Player currentPlayer;
 
-	public PlayerManager(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy,List<AbstractPiece>> sharkPieces) {
+	public PlayerManager(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
         initializePlayers(eaglePieces, sharkPieces);
     }
 
-    private void initializePlayers(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
-        players[0] = new Player("Eagle's turn", Color.valueOf("#E92707"), eaglePieces);
-        players[1] = new Player("Shark's turn", Color.valueOf("#390593"), sharkPieces);
-        currentPlayer = players[0];
-    }
+	 private void initializePlayers(Map<Hierarchy, List<AbstractPiece>> eaglePieces, Map<Hierarchy, List<AbstractPiece>> sharkPieces) {
+         players[0] = new Player("Eagle", Color.valueOf("#E92707"), eaglePieces);
+         players[1] = new Player("Shark", Color.valueOf("#390593"), sharkPieces);
+         currentPlayer = players[0];
+     }
 
     @Requires("piece != null")
     public Player getPlayer(AbstractPiece piece) {

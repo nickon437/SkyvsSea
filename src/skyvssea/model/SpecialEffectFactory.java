@@ -1,12 +1,7 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.ChangeAttackLevelDecorator;
-import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
-import skyvssea.model.specialeffect.ChangeDefenceLevelDecorator;
-import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectBase;
-import skyvssea.model.specialeffect.TargetType;
+import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.*;
 
 public class SpecialEffectFactory {
     private static SpecialEffectFactory specialEffectFactory;
@@ -20,50 +15,86 @@ public class SpecialEffectFactory {
         return specialEffectFactory;
     }
 
-    private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase(SpecialEffectCode.DOUBLE_ATTACK_RANGE.getText(), TargetType.SELF));
+    public SpecialEffectObject createDoubleAttackRange(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_ATTACK_RANGE.getText(), TargetType.SELF,
+    			new ChangeAttackRangeDecorator(2, null));
     }
-    private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase(SpecialEffectCode.DOUBLE_MOVE_RANGE.getText(), TargetType.SELF));
+    
+    public SpecialEffectObject createDoubleMoveRange(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_MOVE_RANGE.getText(), TargetType.SELF,
+    			new ChangeMoveRangeDecorator(2, null));
     }
-    private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase(SpecialEffectCode.RETARDING.getText(), TargetType.ENEMIES));
+    
+    public SpecialEffectObject createRetarding(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.RETARDING.getText(), TargetType.ENEMIES,
+    			new ChangeMoveRangeDecorator(0.5, null));
     }
-    private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase(SpecialEffectCode.FREEZING.getText(), TargetType.ENEMIES)));
+    public SpecialEffectObject createFreezing(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.FREEZING.getText(), TargetType.ENEMIES,
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
 	}
-    private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase(SpecialEffectCode.STRENGTHENING.getText(), TargetType.COMRADES)));
+    
+    public SpecialEffectObject createStrengthening(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.STRENGTHENING.getText(), TargetType.COMRADES,
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, null)));
     }
-    private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase(SpecialEffectCode.WEAKENING.getText(), TargetType.ENEMIES)));
+    
+    public SpecialEffectObject createWeakening(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.WEAKENING.getText(), TargetType.ENEMIES,
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, null)));
+    }
+    
+    public SpecialEffectObject createPassiveDefenceLevelPlus1(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Increasing Defence Level of Nearby Comrades", TargetType.COMRADES, 
+    			new ChangeDefenceLevelDecorator(1, null));
+    }
+    
+    public SpecialEffectObject createPassiveAttackLevelPlus1(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Increasing Attack Level of Nearby Comrades", TargetType.COMRADES, 
+    			new ChangeAttackLevelDecorator(1, null));
+    }
+    
+    public SpecialEffectObject createPassiveAntiSpecialEffect(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Shielding Nearby Comrades from Enemies' Special Effects", TargetType.COMRADES, 
+    			new ActivateImmunityToSpecialEffectDecorator(null));
+    }
+    
+    public SpecialEffectObject createPassiveFreezing(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Freezing Nearby Enemies", TargetType.ENEMIES, 
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
+    }
+    
+    public SpecialEffectObject createPassiveDefenceLevelUpAttackLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Self Defence Level Up, Self Attack Level Down", TargetType.SELF, 
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(1, null)));
+    }
+    
+    public SpecialEffectObject createPassiveAttackLevelUpDefenceLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, "Self Attack Level Up, Self Defence Level Down", TargetType.SELF, 
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(-1, null)));
     }
 
-    public SpecialEffect createSpecialEffect(SpecialEffectCode code) {
+    public SpecialEffectObject createSpecialEffect(SpecialEffectCode code, AbstractPiece caster) {
         switch (code) {
             case DOUBLE_ATTACK_RANGE:
-                return createDoubleAttackRange();
+                return createDoubleAttackRange(caster);
             case DOUBLE_MOVE_RANGE:
-                return createDoubleMoveRange();
-            case RETARDING:
-                return createRetarding();
+                return createDoubleMoveRange(caster);
             case FREEZING:
-                return createFreezing();
-            case STRENGTHENING:
-                return createStrengthening();
+                return createFreezing(caster);
+            case RETARDING:
+                return createRetarding(caster);
             case WEAKENING:
-            	return createWeakening();
+                return createWeakening(caster);
+            case STRENGTHENING:
+                return createStrengthening(caster);
             default:
                 return null;
         }
     }
 
-    public SpecialEffect createSpecialEffect(String name) {
+    public SpecialEffectObject createSpecialEffect(String name, AbstractPiece caster) {
         SpecialEffectCode specialEffectCode = SpecialEffectCode.valueOf(name);
-        return createSpecialEffect(specialEffectCode);
-    }
-    
-    public SpecialEffect copy(SpecialEffect specialEffect) {
-    	return specialEffect.copy();
+        return createSpecialEffect(specialEffectCode, caster);
     }
 }

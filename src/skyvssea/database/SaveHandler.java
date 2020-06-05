@@ -1,18 +1,21 @@
 package skyvssea.database;
 
+import javafx.util.Pair;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SaveHandler {
 
-    public static void saveGame(Board board, PieceManager pieceManager, PlayerManager playerManager, Game game) {
+    private List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
+
+    public void saveGame(Board board, PieceManager pieceManager, PlayerManager playerManager, Game game) {
         DatabaseSetup.rebuildDatabase();
 
         int registeredPieceID = -1;
@@ -36,7 +39,7 @@ public class SaveHandler {
         saveCoreData(game.getCurrentGameState(), playerManager.getPlayerIndex(playerManager.getCurrentPlayer()), registeredPieceID, board);
     }
 
-    private static int savePiece(AbstractPiece piece, int tileX, int tileY) {
+    private int savePiece(AbstractPiece piece, int tileX, int tileY) {
         int pieceID = -1;
 
         try {
@@ -47,7 +50,7 @@ public class SaveHandler {
             stmt.setString(1, piece.getName());
             stmt.setInt(2, tileX);
             stmt.setInt(3, tileY);
-            stmt.setInt(4, piece.getSpecialEffectCounter());
+            stmt.setInt(4, piece.getActiveEffectCounter());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -63,7 +66,7 @@ public class SaveHandler {
         return pieceID;
     }
 
-    private static void saveObstacle(Obstacle obstacle, int tileX, int tileY) {
+    private void saveObstacle(Obstacle obstacle, int tileX, int tileY) {
         try {
             String query = "INSERT INTO " + SVSDatabase.OBSTACLE_TABLE + " (TileX, TileY) "
                     + "VALUES (?, ?)";
@@ -82,22 +85,23 @@ public class SaveHandler {
         }
     }
 
-    private static void saveSpecialEffectManager(int pieceID, AbstractPiece piece) {
-        List<SpecialEffect> appliedSpecialEffects = piece.getSpecialEffectManager().getAppliedSpecialEffects();
-        for (SpecialEffect specialEffect : appliedSpecialEffects) {
+    private void saveSpecialEffectManager(int pieceID, AbstractPiece piece) {
+        List<SpecialEffectObject> appliedSpecialEffects = piece.getSpecialEffectManager().getAppliedSpecialEffects();
+        for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
             saveAppliedSpecialEffect(pieceID, specialEffect);
         }
     }
 
-    private static void saveAppliedSpecialEffect(int pieceID, SpecialEffect specialEffect) {
+    private void saveAppliedSpecialEffect(int pieceID, SpecialEffectObject specialEffect) {
         try {
-            String query = "INSERT INTO " + SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE + " (PieceID, SpecialEffect, EffectiveDuration) "
-                    + "VALUES (?, ?, ?)";
+            String query = "INSERT INTO " + SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE + " (PieceID, CasterID, SpecialEffect, EffectiveDuration) "
+                    + "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, pieceID);
-            stmt.setString(2, specialEffect.getName());
-            stmt.setInt(3, specialEffect.getEffectiveDuration());
+            stmt.setInt(2, getPieceID(specialEffect.getCaster()));
+            stmt.setString(3, specialEffect.getName());
+            stmt.setInt(4, specialEffect.getEffectiveDuration());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -109,7 +113,7 @@ public class SaveHandler {
         }
     }
 
-    private static void saveCoreData(GameState currentGameState, int currentPlayerIndex, int registeredPieceID, Board board) {
+    private void saveCoreData(GameState currentGameState, int currentPlayerIndex, int registeredPieceID, Board board) {
         Tile registeredTile = board.getRegisteredTile();
         int registeredTileX = registeredTile == null ? -1 : registeredTile.getX();
         int registeredTileY = registeredTile == null ? -1 : registeredTile.getY();
@@ -136,5 +140,14 @@ public class SaveHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getPieceID(AbstractPiece piece) {
+        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
+            if (pair.getValue() == piece) {
+                return pair.getKey();
+            }
+        }
+        return -1;
     }
 }

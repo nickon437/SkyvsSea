@@ -117,6 +117,7 @@ public class DatabaseSetup {
             if (!rs.next()) {
                 String query = "CREATE TABLE " + table_name + " (" +
                         "PieceID            INT NOT NULL REFERENCES " + SVSDatabase.PIECE_TABLE + "(PieceID), " +
+                        "CasterID           INT NOT NULL REFERENCES " + SVSDatabase.PIECE_TABLE + "(PieceID), " +
                         "SpecialEffect      VARCHAR(20) NOT NULL, " +
                         "EffectiveDuration  INT NOT NULL)";
                 Statement stmt = con.createStatement();

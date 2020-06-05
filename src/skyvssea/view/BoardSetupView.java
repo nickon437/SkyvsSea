@@ -7,12 +7,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import skyvssea.controller.BoardSetupController;
 import skyvssea.model.Hierarchy;
 import skyvssea.util.ButtonUtil;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.NodeCoordinateUtil;
+import skyvssea.util.ResourceManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +40,7 @@ public class BoardSetupView extends VBox {
 
 	public BoardSetupView(BoardSetupController controller) {
 		Label boardSetupLabel = new Label("Board Setup");
-		boardSetupLabel.setFont(Font.loadFont("file:resources/fonts/Roboto/Roboto-Medium.ttf", 23));
+		ResourceManager.setFont(ResourceManager.HEADING_STYLE, boardSetupLabel);
 
 		GridPane inputPane = new GridPane();
 		formatInputPane(inputPane);
@@ -103,8 +103,7 @@ public class BoardSetupView extends VBox {
 		ButtonUtil.formatGraphic(button, "file:resources/icons/check.png");
 		button.setMinSize(150, ButtonUtil.STANDARD_BUTTON_HEIGHT);
 		button.setOnAction(e -> controller.handleConfirmBtn(this));
-		button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-		button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+		ButtonUtil.formatHoveringEffect(button);
 	}
 
 	public int[] getBoardSize() {

@@ -20,10 +20,13 @@ public class Controller {
     private PieceManager pieceManager;
     private PlayerManager playerManager;
     private HistoryManager historyManager;
+
+    private MainView mainView;
     private ActionPane actionPane;
     private BoardPane boardPane;
     private InfoPane infoPane;
-
+    private boolean isPassiveEffectBtnClicked = false;
+    
     @Requires("tileView != null")
     public void handleTileClicked(TileView tileView) {
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
@@ -38,27 +41,47 @@ public class Controller {
             board.setRegisteredTile(selectedTile);
 
             if (selectedTile.isHighlighted()) {
-            	// Change piece location to a new tile. If selected tile is in the same position, remain everything the same.
-                Command moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile);
-                historyManager.storeAndExecute(moveCommand);
+            	// Switch on/off registeredPiece's passiveEffect if passiveEffectBtn is clicked
+            	if (actionPane.getPassiveEffectBtn().isSelected() != registeredPiece.isPassiveEffectActivated()) {
+            		TogglePassiveEffectCommand togglePassiveEffectCommand = new TogglePassiveEffectCommand(registeredPiece, 
+            				previousRegisteredTile, board, playerManager);		            				
+            		historyManager.storeAndExecute(togglePassiveEffectCommand);
+            	}
+            	
+            	// Change piece location to a new tile
+            	Command moveCommand = new MoveCommand(registeredPiece, previousRegisteredTile, selectedTile, playerManager, board);
+                historyManager.storeAndExecute(moveCommand);                     
 
+                // If the player undoes and then makes a move, undo will no longer be available 
+                if (!playerManager.getCurrentPlayer().validateUndoAvailability()) {
+                	actionPane.setUndoBtnDisable(true);
+                }
+                
                 switchToAttackMode();
-
             } else {
             	board.clearHighlightedTiles();
+            	actionPane.disableAndDeactivatePassiveEffectBtn();
                 if (selectedTile.hasPiece()) {
                     AbstractPiece newSelectedPiece = (AbstractPiece) selectedTile.getGameObject();
                     if (playerManager.isCurrentPlayerPiece(newSelectedPiece)) {
-                    	pieceManager.setRegisteredPiece(newSelectedPiece);
+                        pieceManager.setRegisteredPiece(newSelectedPiece);
                         board.highlightPossibleMoveTiles();
+                        
+                        // Configure the passive btn after clicking a piece
+                        // Enable and configure passive btn when the player clicks on its piece
+                        if (newSelectedPiece.getPassiveEffect() != null) {
+                        	boolean isPassiveEffectActivated = newSelectedPiece.isPassiveEffectActivated();
+                        	actionPane.setPassiveEffectBtnActivated(isPassiveEffectActivated);                     	
+                        	actionPane.setPassiveEffectBtnDisable(false);
+                        }
                     }
                 }
             }
             
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
             if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-                Command performSpecialEffectCommand = new PerformSpecialEffectCommand(registeredPiece, target, historyManager);
+                Command performSpecialEffectCommand = new PerformActiveEffectCommand(registeredPiece, target);
                 historyManager.storeAndExecute(performSpecialEffectCommand);
                 endTurn();
             }
@@ -66,8 +89,12 @@ public class Controller {
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-        	    Command killCommand = new KillCommand(target, selectedTile);
+                Command killCommand = new KillCommand(target, selectedTile, board, playerManager, pieceManager);
         	    historyManager.storeAndExecute(killCommand);
+        	    
+        	    // Check if there's a winner
+        	    checkForWinner(target);
+        	    
         		endTurn();
             }
         }   
@@ -76,15 +103,12 @@ public class Controller {
     @Requires("tileView != null")
     public void handleMouseEnteredTile(TileView tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
-        tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
             AbstractPiece hoveringPiece = (AbstractPiece) hoveringTile.getGameObject();
             infoPane.setPieceInfo(hoveringPiece);
         }
 
-        if (hoveringTile.isHighlighted()) {
-            tileView.setCursor(Cursor.HAND);
-        } else if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
             GameObject currentObject = hoveringTile.getGameObject();
             if (currentObject instanceof AbstractPiece &&
             		playerManager.isCurrentPlayerPiece((AbstractPiece) currentObject)) {
@@ -93,17 +117,20 @@ public class Controller {
         }
     }
 
-    @Requires("tileView != null")
-    public void handleMouseExitedTile(TileView tileView) {
-        tileView.updateBaseColorAsHovered(false);
-    }
-
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         board.clearHighlightedTiles();
-        AbstractPiece registeredPiece = pieceManager.getRegisteredPiece();
-        actionPane.setSpecialEffectBtnDisable(!registeredPiece.isSpecialEffectAvailable());
-        actionPane.setRegularActionPaneDisable(false);
+        infoPane.setCurrentGameState(game.getCurrentGameState());
+        actionPane.setPassiveEffectBtnDisable(true);
+        actionPane.setPassiveEffectBtnFocus(false);
+        
+        boolean isActiveEffectAvailable = pieceManager.getRegisteredPiece().isActiveEffectAvailable();
+        actionPane.setActiveEffectBtnDisable(!isActiveEffectAvailable);
+        
+        if (isPassiveEffectBtnClicked) {
+        	isPassiveEffectBtnClicked = false;
+        	board.setUnhighlightedTilesDisable(false);        	
+        }
     }
 
     public void handleKillButton() { 
@@ -113,7 +140,7 @@ public class Controller {
     public void handleMouseEnteredKillBtn() { 
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
     		board.highlightPossibleKillTiles(playerManager); 
-    	} else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+    	} else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
     		board.clearHighlightedTiles();
     		board.highlightPossibleKillTiles(playerManager);
     	}
@@ -122,26 +149,26 @@ public class Controller {
     public void handleMouseExitedKillBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
         	board.clearHighlightedTiles();
-        	board.highlightPossibleSpecialEffectTiles(playerManager);
+        	board.highlightPossibleActiveEffectTiles(playerManager);
         }
     }
 
-    public void handleSpecialEffectButton() { 
-    	game.setCurrentGameState(GameState.PERFORMING_SPECIAL_EFFECT); 
+    public void handleActiveEffectButton() { 
+    	game.setCurrentGameState(GameState.PERFORMING_ACTIVE_EFFECT); 
 	}
-
-	public void handleMouseEnteredSpecialEffectBtn() {
+    
+    public void handleMouseEnteredActiveEffectBtn() { 
     	if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
-    		board.highlightPossibleSpecialEffectTiles(playerManager);     		
+    		board.highlightPossibleActiveEffectTiles(playerManager);     		
     	} else if (game.getCurrentGameState() == GameState.KILLING) {
     		board.clearHighlightedTiles();
-    		board.highlightPossibleSpecialEffectTiles(playerManager);
+    		board.highlightPossibleActiveEffectTiles(playerManager);
     	}
 	}
 
-    public void handleMouseExitedSpecialEffectBtn() {
+    public void handleMouseExitedActiveEffectBtn() {
         if (game.getCurrentGameState() == GameState.READY_TO_ATTACK) {
             board.clearHighlightedTiles();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
@@ -149,17 +176,23 @@ public class Controller {
     		board.highlightPossibleKillTiles(playerManager);
     	}
     }
+     
+	public void handlePassiveEffectButton() {
+		isPassiveEffectBtnClicked = !isPassiveEffectBtnClicked;
+		board.setUnhighlightedTilesDisable(isPassiveEffectBtnClicked); // Prevent clicking passiveEffect for more than 1 pieces
+	}
 
     public void handleEndButton() { endTurn(); }
 
     public void handleUndoButton() {
         playerManager.getCurrentPlayer().reduceNumUndos();
         historyManager.undoToMyTurn();
-        startNewTurn();
+        setupNewTurn();
     }
 
     public void handleSaveButton() {
-        SaveHandler.saveGame(board, pieceManager, playerManager, game);
+        SaveHandler saveHandler = new SaveHandler();
+        saveHandler.saveGame(board, pieceManager, playerManager, game);
     }
 
     public void handleLoadButton() {
@@ -167,11 +200,16 @@ public class Controller {
         loadHandler.loadGame(stage);
     }
 
-    private void changeTurn() {
-        Player player = playerManager.changeTurn();
-        infoPane.setPlayerInfo(player);
+    private void declareWinner() {
+        mainView.setDeclarationLabel(playerManager.getCurrentPlayer().getName());
     }
-
+    
+    private void checkForWinner(AbstractPiece killTarget) {
+        if (killTarget.getLevel() == Hierarchy.BABY && pieceManager.countPiecesInHierarchy(killTarget) == 0) {
+            declareWinner();
+        }
+    }
+    
     public void clearCache() {
         board.clearHighlightedTiles();
         board.clearRegisteredTile();
@@ -179,38 +217,24 @@ public class Controller {
     }
 
     private void endTurn() {
-        playerManager.getCurrentPlayer().validateUndoAvailability();
         pieceManager.updatePieceStatus(historyManager);
-        changeTurn();
+        playerManager.changeTurn();
         historyManager.startNewTurnCommand();
-        startNewTurn();
-    }
-
-    public void startNewTurn() {
-        game.setCurrentGameState(GameState.READY_TO_MOVE);
-        actionPane.setRegularActionPaneDisable(true);
-        actionPane.hideActionIndicator();
-        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
-        clearCache();
-
-        boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();
-        boolean hasHistory = getHistoryManager().isUndoAvailable();
-        boolean isUndoAvailable = !isUndoEmpty && hasHistory;
-        actionPane.setUndoBtnDisable(!isUndoAvailable);
+        setupNewTurn();
     }
 
     public void updateUI() {
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
-            startNewTurn();
+            setupNewTurn();
         } else if (game.getCurrentGameState() == GameState.KILLING) {
             switchToAttackMode();
             board.highlightPossibleKillTiles(playerManager);
             actionPane.fireKillBtn();
-        } else if (game.getCurrentGameState() == GameState.PERFORMING_SPECIAL_EFFECT) {
+        } else if (game.getCurrentGameState() == GameState.PERFORMING_ACTIVE_EFFECT) {
             switchToAttackMode();
-            board.highlightPossibleSpecialEffectTiles(playerManager);
-            actionPane.fireSpecialEffectBtn();
+            board.highlightPossibleActiveEffectTiles(playerManager);
+            actionPane.fireActiveEffectBtn();
         }
     }
 
@@ -228,27 +252,43 @@ public class Controller {
         this.game = game;
     }
 
-    @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setController(Stage stage, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    public void setupNewTurn() {
+    	game.setCurrentGameState(GameState.READY_TO_MOVE);
+        actionPane.hideActionIndicator();
+        actionPane.setPassiveEffectBtnFocus(true);
+        actionPane.disableAndDeactivatePassiveEffectBtn();
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        infoPane.setCurrentGameState(game.getCurrentGameState());
+        clearCache();
+        
+		boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();
+		boolean hasHistory = getHistoryManager().isUndoAvailable();
+		boolean isUndoAvailable = !isUndoEmpty && hasHistory;
+		actionPane.setUndoBtnDisable(!isUndoAvailable);
+    }
+    
+    @Requires("mainView != null && boardSetup != null && boardPane != null && actionPane != null && infoPane != null")
+    public void setController(Stage stage, MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];
 
         this.stage = stage;
-		this.boardPane = boardPane;
+        this.mainView = mainView;
 		this.actionPane = actionPane;
+		this.boardPane = boardPane;
 		this.infoPane = infoPane;
 
         this.board = new Board(boardCol, boardRow);
         this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
         this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
         this.historyManager = new HistoryManager();
-        this.game = new Game(this, actionPane);
+        this.game = new Game();
 
         setTiles(boardPane, board);
         setPieces(boardPane, board, null, pieceManager, playerManager);
         setObstacles(boardPane, board,null);
 
-        startNewTurn();
+        setupNewTurn();
     }
 
     @Requires("boardPane != null")

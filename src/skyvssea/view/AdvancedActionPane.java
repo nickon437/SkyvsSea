@@ -50,8 +50,7 @@ public class AdvancedActionPane extends SplitPane {
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         button.setGraphic(arrowUpImage);
         button.setGraphicTextGap(4);
-        button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-        button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+        ButtonUtil.formatHoveringEffect(button);
         button.setOnMouseClicked(e -> collapseButtonHolder());
     }
 
@@ -66,8 +65,7 @@ public class AdvancedActionPane extends SplitPane {
             button.setMinHeight(0);
             button.setPrefHeight(buttonHeight);
 
-            button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-            button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+            ButtonUtil.formatHoveringEffect(button);
         }
     }
 

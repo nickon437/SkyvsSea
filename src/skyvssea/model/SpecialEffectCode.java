@@ -7,7 +7,13 @@ public enum SpecialEffectCode {
     RETARDING("Retarding"),
     FREEZING("Freezing"),
     WEAKENING("Weakening"),
-    STRENGTHENING("Strengthening");
+    STRENGTHENING("Strengthening"),
+    PASSIVE_DEFENCE_BOOST("Passive defence boost"),
+    PASSIVE_ATTACK_BOOST("Passive attack boost"),
+    PASSIVE_ANTI_SPECIAL_EFFECT("Passive anti special effect"),
+    PASSIVE_FREEZING("Passive freezing"),
+    PASSIVE_DEFENCE_BOOST_COST_ATTACK("Passive defence boost cost attack"),
+    PASSIVE_ATTACK_BOOST_COST_DEFENCE("Passive attack boost cost defence");
 
     private String text;
 

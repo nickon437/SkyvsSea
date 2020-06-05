@@ -7,12 +7,9 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+
 import skyvssea.controller.LandingPageController;
-import skyvssea.util.AnimationUtil;
-import skyvssea.util.ButtonUtil;
-import skyvssea.util.ColorUtil;
-import skyvssea.util.RegionUtil;
+import skyvssea.util.*;
 
 public class LandingPage extends AnchorPane {
 
@@ -47,8 +44,7 @@ public class LandingPage extends AnchorPane {
     }
 
     private void formatControlPane(VBox controlPane) {
-        AnchorPane.setTopAnchor(controlPane, 0.0);
-        AnchorPane.setLeftAnchor(controlPane, 60.0);
+        RegionUtil.setAnchor(controlPane, 0.0, 60.0, null, null);
 
         controlPane.setPadding(new Insets(30));
         controlPane.setSpacing(15);
@@ -57,7 +53,7 @@ public class LandingPage extends AnchorPane {
     }
 
     private void formatTitleLabel(Label label) {
-        label.setFont(Font.loadFont("file:resources/fonts/Roboto/Roboto-Bold.ttf", 50));
+        ResourceManager.setFont(ResourceManager.TITLE_STYLE, label);
     }
 
     private void formatButtons(Button... buttons) {
@@ -66,8 +62,7 @@ public class LandingPage extends AnchorPane {
             button.setPrefHeight(60);
             button.setMaxWidth(Double.MAX_VALUE);
             button.setStyle("-fx-font-size: 15; -fx-font-weight: bold;");
-            button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-            button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+            ButtonUtil.formatHoveringEffect(button);
         }
     }
 
@@ -93,10 +88,7 @@ public class LandingPage extends AnchorPane {
         RegionUtil.setBackground(boardSetupView, Color.WHITE, new CornerRadii(30), null);
         boardSetupView.setMaxSize(300, 340);
 
-        AnchorPane.setLeftAnchor(boardSetupPane, 0.0);
-        AnchorPane.setRightAnchor(boardSetupPane, 0.0);
-        AnchorPane.setTopAnchor(boardSetupPane, 0.0);
-        AnchorPane.setBottomAnchor(boardSetupPane, 0.0);
+        RegionUtil.setAnchor(boardSetupPane, 0.0, 0.0, 0.0, 0.0);
         boardSetupPane.getChildren().addAll(overlayPane, boardSetupView);
         boardSetupPane.setVisible(false);
     }

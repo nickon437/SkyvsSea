@@ -6,36 +6,45 @@ import skyvssea.model.Hierarchy;
 import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeAttackLevelDecorator extends ChangeHierarchyFieldDecorator {
-	public ChangeAttackLevelDecorator(int change, SpecialEffect specialEffect) {
-		super(change, specialEffect);
+	public ChangeAttackLevelDecorator(int change, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(change, specialEffectWrappee);
 	}
 	
-	public ChangeAttackLevelDecorator(Hierarchy level, SpecialEffect specialEffect) {
-		super(level, specialEffect);
+	public ChangeAttackLevelDecorator(Hierarchy level, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(level, specialEffectWrappee);
 	}
 	
 	@Override
 	public void apply(AbstractPiece target) {
-		originalValue = target.getAttackLevel();
-		target.setAttackLevel(getNewLevel());
+		Hierarchy originalValue = target.getInitialAttackLevel();
+		Hierarchy newValue = getNewLevel(originalValue);
+		if (isNewValueValid(originalValue, target.getAttackLevel(), newValue)) {
+			target.setAttackLevel(newValue);
+		}		
 		super.apply(target);
 	}
-	   
+
 	@Override
 	public void remove(AbstractPiece target) {
-		target.setAttackLevel(originalValue);
+		target.setAttackLevel(target.getInitialAttackLevel());
 		super.remove(target); 
 	}
 
 	@Ensures("result != null")
 	@Override
-	public SpecialEffect copy() {
-		SpecialEffect copy = null;
-		if (change != null) {
-			copy = new ChangeAttackLevelDecorator(change, specialEffect.copy());
-		} else if (specificLevel != null) {
-			copy = new ChangeAttackLevelDecorator(specificLevel, specialEffect.copy());
+	public AbstractSpecialEffectDecorator copy() {
+		AbstractSpecialEffectDecorator copiedDecorator = null;
+		AbstractSpecialEffectDecorator copiedWrappee = null;
+		if (specialEffectWrappee != null) {
+			copiedWrappee = specialEffectWrappee.copy();
 		}
-		return copy;
+		
+		if (change != null) {
+			copiedDecorator = new ChangeAttackLevelDecorator(change, copiedWrappee);
+		} else if (specificLevel != null) {
+			copiedDecorator = new ChangeAttackLevelDecorator(specificLevel, copiedWrappee);
+		}
+	
+		return copiedDecorator;
 	}
 }

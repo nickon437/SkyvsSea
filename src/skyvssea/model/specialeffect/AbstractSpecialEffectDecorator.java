@@ -1,38 +1,34 @@
 package skyvssea.model.specialeffect;
 
-import com.google.java.contract.Ensures;
-
 import skyvssea.model.piece.AbstractPiece;
 
 public abstract class AbstractSpecialEffectDecorator implements SpecialEffect {
-	protected SpecialEffect specialEffect;
+	protected AbstractSpecialEffectDecorator specialEffectWrappee;
 	
-	@Ensures("specialEffect != null")
-	public AbstractSpecialEffectDecorator(SpecialEffect specialEffect) {
-		this.specialEffect = specialEffect;
+	public AbstractSpecialEffectDecorator(AbstractSpecialEffectDecorator specialEffectWrappee) {
+		// If specialEffectWrappee is null, this decorator object is the last object in this chain
+		this.specialEffectWrappee = specialEffectWrappee;
 	}
 
 	@Override
-	public void apply(AbstractPiece target) { specialEffect.apply(target); }
-	   
+	public void apply(AbstractPiece target) { 
+		if (specialEffectWrappee != null) {
+			specialEffectWrappee.apply(target); 			
+		}
+	}
+	  
 	@Override
-	public void remove(AbstractPiece target) { specialEffect.remove(target); }
+	public void remove(AbstractPiece target) { 
+		if (specialEffectWrappee != null) {
+			specialEffectWrappee.remove(target); 			
+		}
+	}
 	
 	@Override
-	public boolean updateEffectiveDuration() { return specialEffect.updateEffectiveDuration(); }
-	
-	@Override
-	public int getEffectiveDuration() { return specialEffect.getEffectiveDuration(); }
-
-	// Nick - TODO: Double check to see if this is needed?
-	@Override
-	public void setEffectiveDuration(int effectiveDuration) { specialEffect.setEffectiveDuration(effectiveDuration); }
-
-	@Override
-	public String getName() { return specialEffect.getName(); }
-	
-	@Override
-	public TargetType getTargetType() { return specialEffect.getTargetType(); }
-
-	public SpecialEffect getSpecialEffect() { return specialEffect; }
+	public AbstractSpecialEffectDecorator copy() {
+		if (specialEffectWrappee == null) {
+			return null;			
+		}
+		return specialEffectWrappee.copy();
+	}
 }

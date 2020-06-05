@@ -17,17 +17,17 @@ public class HistoryManager {
     }
 
     public void undoToMyTurn() {
-        if (!history.isEmpty()) {
+        if (isUndoAvailable()) {
             if (turnCommands.isEmpty()) {
+            	// Player undoes before making any move in the current turn
+            	// Undo both players' latest moves
+                undoTurn(history.pop());
                 undoTurn(history.pop());
             } else {
+            	// Player undoes after it has made any kind of move
                 undoTurn(turnCommands);
             }
-        }
-
-        if (!history.isEmpty()) {
-            undoTurn(history.pop());
-        }
+        }  
     }
 
     private void undoTurn(Stack<Command> currentTurnCommands) {

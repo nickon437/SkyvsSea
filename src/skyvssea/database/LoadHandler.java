@@ -6,7 +6,7 @@ import javafx.util.Pair;
 import skyvssea.controller.Controller;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.SpecialEffect;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 import skyvssea.view.*;
 
 import java.sql.PreparedStatement;
@@ -46,7 +46,7 @@ public class LoadHandler {
         Board board = new Board(col, row);
         PieceManager pieceManager = loadPieceManager(board);
         PlayerManager playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-        Game game = new Game(controller, actionPane);
+        Game game = new Game();
         loadObstacleManager(board);
         loadSpecialEffectManager();
 
@@ -165,18 +165,16 @@ public class LoadHandler {
 
             while (rs.next()) {
                 // Piece
-                AbstractPiece piece = null;
                 int pieceID = rs.getInt("PieceID");
-                for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
-                    if (pair.getKey().intValue() == pieceID) {
-                        piece = pair.getValue();
-                    }
-                }
+                AbstractPiece piece = getPiece(pieceID);
+
+                int casterID = rs.getInt("CasterID");
+                AbstractPiece caster = getPiece(casterID);
 
                 // SpecialEffect
                 String specialEffectString = rs.getString("SpecialEffect");
                 SpecialEffectCode specialEffectCode = SpecialEffectCode.fromString(specialEffectString);
-                SpecialEffect specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode);
+                SpecialEffectObject specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode, caster);
 
                 piece.getSpecialEffectManager().add(specialEffect);
                 specialEffect.setEffectiveDuration(rs.getInt("EffectiveDuration"));
@@ -208,5 +206,15 @@ public class LoadHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private AbstractPiece getPiece(int pieceID) {
+        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
+            if (pair.getKey().intValue() == pieceID) {
+                return pair.getValue();
+            }
+        }
+        return null;
     }
 }

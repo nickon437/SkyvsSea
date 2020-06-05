@@ -79,7 +79,7 @@ public class TileView extends Avatar implements Observer {
         RegionUtil.setFill(base, color);
     }
 
-    @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
+    @Requires("arg instanceof Boolean || arg instanceof Avatar || arg == null")
 	@Override
 	public void update(EventType event, Object arg) {
     	switch (event) {

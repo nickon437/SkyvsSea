@@ -9,7 +9,6 @@ import skyvssea.controller.Controller;
 import skyvssea.model.Avatar;
 import skyvssea.model.EventType;
 import skyvssea.model.observer.Observer;
-import skyvssea.model.observer.Subject;
 import skyvssea.util.ColorUtil;
 import skyvssea.util.RegionUtil;
 

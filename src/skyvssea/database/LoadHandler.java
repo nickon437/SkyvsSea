@@ -87,7 +87,6 @@ public class LoadHandler {
 
             while (rs.next()) {
                 Hierarchy hierarchy;
-                AbstractPieceFactory abstractPieceFactory;
                 AbstractPiece piece = null;
 
                 String pieceName = rs.getString("PieceName");

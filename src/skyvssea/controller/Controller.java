@@ -316,7 +316,6 @@ public class Controller {
         board.setBaseColours();
     }
 
-    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
     public void setPieces(BoardPane boardPane, Board board, List<Tile> pieceTiles, PieceManager pieceManager,
                           PlayerManager playerManager) {
@@ -327,16 +326,11 @@ public class Controller {
         for (Tile tile : pieceTiles) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.getPlayer(piece);
-            if (boardPane == null) System.out.println("boardPane null");
-            if (tile == null) System.out.println("tile null");
-            if (piece == null) System.out.println("piece null");
-            if (player == null) System.out.println("player null");
             Avatar pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }
     }
 
-    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
     public void setObstacles(BoardPane boardPane, Board board, List<Tile> obstacleTiles) {
         if (obstacleTiles == null) {

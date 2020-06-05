@@ -20,7 +20,6 @@ public class Tile implements Subject, AvatarCore {
     private GameObject gameObject;
     private Set<SpecialEffectObject> specialEffects;
 	private boolean isHighlighted;
-    private boolean isScanned; // Nick - TODO: Will implement highlightScanTile later. But need to write our own Obs classes
 
     @Requires("x >= 0 && y >= 0")
 	public Tile(int x, int y) {

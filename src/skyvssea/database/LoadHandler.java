@@ -29,12 +29,11 @@ public class LoadHandler {
     private List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
 
     public void loadGame(Stage stage) {
+        if (!loadCoreGameData()) return;
+
         stage.close();
-
         Controller controller = new Controller();
-
-        loadCoreGameData();
-
+        
         // Views
         BoardPane boardPane = new BoardPane(controller, col, row);
         ActionPane actionPane = new ActionPane(controller);
@@ -183,7 +182,8 @@ public class LoadHandler {
         }
     }
 
-    private void loadCoreGameData() {
+    private boolean loadCoreGameData() {
+        boolean hasSave = false;
         try {
             String query = "SELECT * FROM " + SVSDatabase.CORE_GAME_TABLE;
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query);
@@ -197,12 +197,14 @@ public class LoadHandler {
                 registeredTileX = rs.getInt("RegisteredTileX");
                 registeredTileY = rs.getInt("RegisteredTileY");
                 currentPlayerID =  rs.getInt("CurrentPlayer");
+                hasSave = true;
             }
             rs.close();
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return hasSave;
     }
 
 

@@ -223,8 +223,11 @@ public class Controller {
     }
 
     public void updateUI() {
+        try {
+            actionPane.setPassiveEffectBtnActivated(pieceManager.getRegisteredPiece().isPassiveEffectActivated());
+        } catch (NullPointerException ignored) {}
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
-        actionPane.setPassiveEffectBtnActivated(pieceManager.getRegisteredPiece().isPassiveEffectActivated());
+
         switch (game.getCurrentGameState()) {
             case READY_TO_MOVE:
                 setupNewTurn();

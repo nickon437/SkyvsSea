@@ -48,7 +48,9 @@ public class DatabaseSetup {
                         "RegisteredTileX    INT, " +
                         "RegisteredTileY    INT, " +
                         "Col                INT NOT NULL, " +
-                        "Row                INT NOT NULL)";
+                        "Row                INT NOT NULL, " +
+                        "Player1NumUndo     INT NOT NULL, " +
+                        "Player2NumUndo     INT NOT NULL)";
                 Statement stmt = con.createStatement();
                 stmt.executeUpdate(query);
             }

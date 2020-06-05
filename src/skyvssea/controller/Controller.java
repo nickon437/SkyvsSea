@@ -227,6 +227,7 @@ public class Controller {
             actionPane.setPassiveEffectBtnActivated(pieceManager.getRegisteredPiece().isPassiveEffectActivated());
         } catch (NullPointerException ignored) {}
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        actionPane.setUndoBtnDisable(!playerManager.getCurrentPlayer().isUndoAvailabile());
 
         switch (game.getCurrentGameState()) {
             case READY_TO_MOVE:

@@ -4,9 +4,8 @@ import com.google.java.contract.Requires;
 import javafx.scene.paint.Color;
 import skyvssea.model.piece.AbstractPiece;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class Player {
     private String name;
@@ -42,6 +41,14 @@ public class Player {
 
     public void reduceNumUndos() {
         numUndos--;
+    }
+
+    public int getNumUndos() {
+        return numUndos;
+    }
+
+    public void setNumUndos(int numUndos) {
+        this.numUndos = numUndos;
     }
 
     /**

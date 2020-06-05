@@ -44,6 +44,10 @@ public class PlayerManager {
         return player.equals(players[0]) ? 0 : 1;
     }
 
+    public Player getPlayer(int playerIndex) {
+	    return players[playerIndex];
+    }
+
     public void setCurrentPlayer(int playerIndex) {
 	    currentPlayer = players[playerIndex];
     }

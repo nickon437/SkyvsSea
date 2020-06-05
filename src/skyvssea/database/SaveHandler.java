@@ -40,7 +40,7 @@ public class SaveHandler {
             saveSpecialEffectManager(entry.getValue(), entry.getKey());
         }
 
-        saveCoreData(game.getCurrentGameState(), playerManager.getPlayerIndex(playerManager.getCurrentPlayer()), registeredPieceID, board);
+        saveCoreData(game.getCurrentGameState(), playerManager.getPlayerIndex(playerManager.getCurrentPlayer()), registeredPieceID, board, playerManager);
     }
 
     private int savePiece(AbstractPiece piece, int tileX, int tileY) {
@@ -119,15 +119,15 @@ public class SaveHandler {
         }
     }
 
-    private void saveCoreData(GameState currentGameState, int currentPlayerIndex, int registeredPieceID, Board board) {
+    private void saveCoreData(GameState currentGameState, int currentPlayerIndex, int registeredPieceID, Board board, PlayerManager playerManager) {
         Tile registeredTile = board.getRegisteredTile();
         int registeredTileX = registeredTile == null ? -1 : registeredTile.getX();
         int registeredTileY = registeredTile == null ? -1 : registeredTile.getY();
 
         try {
             String query = "INSERT INTO " + SVSDatabase.CORE_GAME_TABLE
-                    + " (CurrentState, CurrentPlayer, RegisteredPiece, RegisteredTileX, RegisteredTileY, Col, Row) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    + " (CurrentState, CurrentPlayer, RegisteredPiece, RegisteredTileX, RegisteredTileY, Col, Row, Player1NumUndo, Player2NumUndo) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, currentGameState.toString());
@@ -137,6 +137,8 @@ public class SaveHandler {
             stmt.setInt(5, registeredTileY);
             stmt.setInt(6, board.getCol());
             stmt.setInt(7, board.getRow());
+            stmt.setInt(8, playerManager.getPlayer(0).getNumUndos());
+            stmt.setInt(9, playerManager.getPlayer(1).getNumUndos());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();

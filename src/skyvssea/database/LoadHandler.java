@@ -24,6 +24,8 @@ public class LoadHandler {
     private int registeredTileX;
     private int registeredTileY;
     private int currentPlayerID;
+    private int player1NumUndos;
+    private int player2NumUndos;
 
     private List<Tile> tilesWithPiece = new ArrayList<>();
     private List<Tile> tilesWithObstacle = new ArrayList<>();
@@ -52,8 +54,9 @@ public class LoadHandler {
 
         board.setRegisteredTile(board.getTile(registeredTileX, registeredTileY));
         game.setCurrentGameState(GameState.valueOf(currentGameStateString));
-        // Nick - May be startNewTurn? if READYTOMOVE
         playerManager.setCurrentPlayer(currentPlayerID);
+        playerManager.getPlayer(0).setNumUndos(player1NumUndos);
+        playerManager.getPlayer(1).setNumUndos(player2NumUndos);
 
         // Link GameObject with their Avatar
         controller.setTiles(boardPane, board);
@@ -197,6 +200,8 @@ public class LoadHandler {
                 registeredTileX = rs.getInt("RegisteredTileX");
                 registeredTileY = rs.getInt("RegisteredTileY");
                 currentPlayerID =  rs.getInt("CurrentPlayer");
+                player1NumUndos = rs.getInt("Player1NumUndo");
+                player2NumUndos = rs.getInt("Player2NumUndo");
                 hasSave = true;
             }
             rs.close();

@@ -16,6 +16,8 @@ public class Controller {
     private PieceManager pieceManager;
     private PlayerManager playerManager;
     private HistoryManager historyManager;
+
+    private MainView mainView;
     private ActionPane actionPane;
     private BoardPane boardPane;
     private InfoPane infoPane;
@@ -83,8 +85,12 @@ public class Controller {
         } else if (game.getCurrentGameState() == GameState.KILLING) {
         	if (selectedTile.isHighlighted()) {
                 AbstractPiece target = (AbstractPiece) selectedTile.getGameObject();
-                Command killCommand = new KillCommand(target, selectedTile, board, playerManager);  
+                Command killCommand = new KillCommand(target, selectedTile, board, playerManager, pieceManager);
         	    historyManager.storeAndExecute(killCommand);
+        	    
+        	    // Check if there's a winner
+        	    checkForWinner(target);
+        	    
         		endTurn();
             }
         }   
@@ -93,15 +99,12 @@ public class Controller {
     @Requires("tileView != null")
     public void handleMouseEnteredTile(TileView tileView) {
         Tile hoveringTile = board.getTile(tileView.getX(), tileView.getY());
-        tileView.updateBaseColorAsHovered(true);
         if (hoveringTile.hasPiece()) {
             AbstractPiece hoveringPiece = (AbstractPiece) hoveringTile.getGameObject();
             infoPane.setPieceInfo(hoveringPiece);
         }
 
-        if (hoveringTile.isHighlighted()) {
-            tileView.setCursor(Cursor.HAND);
-        } else if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
+        if (game.getCurrentGameState() == GameState.READY_TO_MOVE) {
             GameObject currentObject = hoveringTile.getGameObject();
             if (currentObject instanceof AbstractPiece &&
             		playerManager.isCurrentPlayerPiece((AbstractPiece) currentObject)) {
@@ -110,17 +113,12 @@ public class Controller {
         }
     }
 
-    @Requires("tileView != null")
-    public void handleMouseExitedTile(TileView tileView) {
-        tileView.updateBaseColorAsHovered(false);
-    }
-
     private void switchToAttackMode() {
         game.setCurrentGameState(GameState.READY_TO_ATTACK);
         board.clearHighlightedTiles();
+        infoPane.setCurrentGameState(game.getCurrentGameState());
         actionPane.setPassiveEffectBtnDisable(true);
-        actionPane.setKillBtnDisable(false);
-        actionPane.setEndBtnDisable(false);
+        actionPane.setPassiveEffectBtnFocus(false);
         
         boolean isActiveEffectAvailable = pieceManager.getRegisteredPiece().isActiveEffectAvailable();
         actionPane.setActiveEffectBtnDisable(!isActiveEffectAvailable);
@@ -185,7 +183,17 @@ public class Controller {
     public void handleUndoButton() {
         playerManager.getCurrentPlayer().reduceNumUndos();
         historyManager.undoToMyTurn();
-        startNewTurn();
+        setupNewTurn();
+    }
+
+    private void declareWinner() {
+        mainView.setDeclarationLabel(playerManager.getCurrentPlayer().getName());
+    }
+    
+    private void checkForWinner(AbstractPiece killTarget) {
+        if (killTarget.getLevel() == Hierarchy.BABY && pieceManager.countPiecesInHierarchy(killTarget) == 0) {
+            declareWinner();
+        }
     }
     
     public void clearCache() {
@@ -199,14 +207,16 @@ public class Controller {
         playerManager.changeTurn();
         historyManager.startNewTurnCommand();
         
-        startNewTurn();
+        setupNewTurn();
     }
 
-    public void startNewTurn() {
+    public void setupNewTurn() {
     	game.setCurrentGameState(GameState.READY_TO_MOVE);
-        actionPane.disableRegularActionPane();
         actionPane.hideActionIndicator();
+        actionPane.setPassiveEffectBtnFocus(true);
+        actionPane.disableAndDeactivatePassiveEffectBtn();
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        infoPane.setCurrentGameState(game.getCurrentGameState());
         clearCache();
         
 		boolean isUndoEmpty = !getPlayerManager().getCurrentPlayer().isUndoAvailabile();
@@ -215,11 +225,12 @@ public class Controller {
 		actionPane.setUndoBtnDisable(!isUndoAvailable);
     }
     
-    @Requires("boardPane != null && actionPane != null && infoPane != null")
-    public void setController(BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    @Requires("mainView != null && boardSetup != null && boardPane != null && actionPane != null && infoPane != null")
+    public void setController(MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];
 
+        this.mainView = mainView;
 		this.actionPane = actionPane;
 		this.boardPane = boardPane;
 		this.infoPane = infoPane;

@@ -22,14 +22,6 @@ public class ButtonUtil extends RegionUtil {
         button.setCursor(Cursor.HAND);
     }
 
-    @Requires("button != null")
-    @Ensures("button.getBackground().getFills().get(0).getFill() != old(button.getBackground().getFills().get(0).getFill())")
-    public static void formatHoveringEffect(ButtonBase button, boolean isHovered) {
-        Color curColor = (Color) button.getBackground().getFills().get(0).getFill();
-        Color modifiedColor = ColorUtil.getHoveringColor(isHovered, curColor);
-        RegionUtil.setBackground(button, modifiedColor, getCornerRadii(button), null);
-    }
-
     @Requires("button != null && url.length() > 0 && url.contains(\".\")")
     @Ensures("button.getGraphic() != null")
     public static void formatGraphic(ButtonBase button, String url) {

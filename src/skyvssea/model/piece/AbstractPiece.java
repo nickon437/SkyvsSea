@@ -12,6 +12,7 @@ import skyvssea.model.specialeffect.TargetType;
 
 public abstract class AbstractPiece extends GameObject {
     private String name;
+    private Hierarchy level;
     private Hierarchy attackLevel;
     private final Hierarchy initialAttackLevel;
 	private Hierarchy defenceLevel;
@@ -29,9 +30,10 @@ public abstract class AbstractPiece extends GameObject {
 	private SpecialEffectManagerInterface specialEffectManagerProxy;
 	private boolean passiveEffectActivated;
 
-	protected AbstractPiece(String name, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
+	protected AbstractPiece(String name, Hierarchy level, Hierarchy attackLevel, Hierarchy defenceLevel, int moveRange,
                             Direction[] moveDirection, int attackRange, int activeEffectCoolDown) {
     	this.name = name;
+    	this.level = level;
     	this.attackLevel = initialAttackLevel = attackLevel;
     	this.defenceLevel = initialDefenceLevel = defenceLevel;
     	this.moveRange = initialMoveRange = moveRange;
@@ -44,6 +46,8 @@ public abstract class AbstractPiece extends GameObject {
     }
 
     public String getName() { return name; }
+
+    public Hierarchy getLevel() { return level; }
 
     public Hierarchy getAttackLevel() { return attackLevel; }
     public void setAttackLevel(Hierarchy attackLevel) { this.attackLevel = attackLevel; }
@@ -63,7 +67,6 @@ public abstract class AbstractPiece extends GameObject {
 	public Direction[] getAttackDirections() { return attackDirections; }
     public int getAttackRange() { return attackRange; }
     public void setAttackRange(int attackRange) { this.attackRange = attackRange; }
-    
 
     @Requires("activeEffectCounter <= 0 && !passiveEffectActivated")
 	public void performActiveEffect(AbstractPiece target) {

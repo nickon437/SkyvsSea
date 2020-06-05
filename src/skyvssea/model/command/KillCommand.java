@@ -1,38 +1,42 @@
 package skyvssea.model.command;
 
-import java.util.List;
-
 import skyvssea.model.Board;
+import skyvssea.model.PieceManager;
 import skyvssea.model.PlayerManager;
 import skyvssea.model.Tile;
 import skyvssea.model.piece.AbstractPiece;
+
+import java.util.List;
 
 public class KillCommand implements Command {
 	private AbstractPiece target;
     private Tile targetTile;
     private Board board; 
     private PlayerManager playerManager;
-    private boolean isTargetPassiveEffectActivatedAndTransmittable;
+    private PieceManager pieceManager;
+    private boolean hasTransmittablePassiveEffectActivated;
 
-    public KillCommand(AbstractPiece target, Tile targetTile, Board board, PlayerManager playerManager) {
+    public KillCommand(AbstractPiece target, Tile targetTile, Board board, PlayerManager playerManager, PieceManager pieceManager) {
         this.target = target;
         this.targetTile = targetTile;
         this.board = board;
 		this.playerManager = playerManager;
+		this.pieceManager = pieceManager;
 		
 		if (target.isPassiveEffectActivated() && target.isPassiveEffectTransmittable()) {
-			isTargetPassiveEffectActivatedAndTransmittable = true;
+			hasTransmittablePassiveEffectActivated = true;
         } else {
-        	isTargetPassiveEffectActivatedAndTransmittable = false;
+        	hasTransmittablePassiveEffectActivated = false;
         }
     }
 
     @Override
     public void execute() {
         targetTile.removeGameObject();
+        pieceManager.removePiece(target);
         
-        if (isTargetPassiveEffectActivatedAndTransmittable) {
-        	List<Tile> surroundingTiles = board.getSurroundingTiles(targetTile);       
+        if (hasTransmittablePassiveEffectActivated) {
+        	List<Tile> surroundingTiles = board.getSurroundingTiles(targetTile);
         	surroundingTiles.forEach(tile -> tile.removeSpecialEffect(target.getPassiveEffect()));
         }
     }
@@ -40,8 +44,9 @@ public class KillCommand implements Command {
     @Override
     public void undo() {
         targetTile.setGameObject(target);
+        pieceManager.addPiece(target);
         
-        if (isTargetPassiveEffectActivatedAndTransmittable) {
+        if (hasTransmittablePassiveEffectActivated) {
         	List<Tile> surroundingTiles = board.getSurroundingTiles(targetTile);       
         	surroundingTiles.forEach(tile -> tile.addSpecialEffect(target.getPassiveEffect(), playerManager));	        	
         }

@@ -3,6 +3,7 @@ package skyvssea.model.piece;
 import skyvssea.model.Hierarchy;
 
 public interface SmallCharacter {
+	Hierarchy DEFAULT_LEVEL = Hierarchy.SMALL;
 	Hierarchy DEFAULT_ATTACK_LEVEL = Hierarchy.SMALL;
 	Hierarchy DEFAULT_DEFENCE_LEVEL = Hierarchy.BABY;
 	int DEFAULT_MOVE_RANGE = 6;

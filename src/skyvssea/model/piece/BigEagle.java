@@ -5,7 +5,7 @@ import skyvssea.model.specialeffect.SpecialEffectObject;
 
 public class BigEagle extends AbstractEagle implements BigCharacter {	
 	public BigEagle() {
-		super("Big Eagle", DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_COOLDOWN);
+		super("Big Eagle", DEFAULT_LEVEL, DEFAULT_ATTACK_LEVEL, DEFAULT_DEFENCE_LEVEL, DEFAULT_MOVE_RANGE, DEFAULT_ATTACK_RANGE, SPECIAL_EFFECT_COOLDOWN);
 	}
 	
 	@Override

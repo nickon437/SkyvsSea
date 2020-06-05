@@ -27,13 +27,13 @@ public class BoardSetupController {
         InfoPane infoPane = new InfoPane();
         MainView root = new MainView(primaryPane, infoPane);
 
-        controller.setController(boardSetup, boardPane, actionPane, infoPane);
+        controller.setController(root, boardSetup, boardPane, actionPane, infoPane);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
         
-        controller.startNewTurn();
+        controller.setupNewTurn();
     }
 }

@@ -1,10 +1,16 @@
 package skyvssea.model;
 
+import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.command.HistoryManager;
+import skyvssea.model.piece.AbstractEagle;
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.piece.AbstractShark;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PieceManager {
 
@@ -53,6 +59,41 @@ public class PieceManager {
         registeredPiece = null;
     }
 
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) + 1 && getPiecesInHierarchy(piece).contains(piece)")
+    public void addPiece(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.add(piece);    		
+    	}
+    }
+
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) - 1 && !getPiecesInHierarchy(piece).contains(piece)")
+    public void removePiece(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.remove(piece);    		
+    	}
+    }
+    
+    public int countPiecesInHierarchy(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	return pieceList != null ? pieceList.size() : -1;
+    }
+
+	private List<AbstractPiece> getPiecesInHierarchy(AbstractPiece piece) {
+		List<AbstractPiece> pieceList = null;
+    	if (piece instanceof AbstractEagle) {
+    		pieceList = eaglePieces.get(piece.getLevel());
+    	} else if (piece instanceof AbstractShark) {
+    		pieceList = sharkPieces.get(piece.getLevel());
+    	}
+		return pieceList;
+	}
+
     public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }
 
     public Map<Hierarchy, List<AbstractPiece>> getEaglePieces() { return eaglePieces; }
@@ -63,7 +104,7 @@ public class PieceManager {
         piecesList.add(sharkPieces);
         return piecesList;
     }
-
+    
     @Requires("board != null")
     public List<Tile> setPiecesOnBoard(Board board) {
         List<Tile> startingPositions = new ArrayList<>();

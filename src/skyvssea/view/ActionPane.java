@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import skyvssea.controller.Controller;
 import skyvssea.util.AnimationUtil;
@@ -13,6 +14,7 @@ import skyvssea.util.ColorUtil;
 import skyvssea.util.RegionUtil;
 
 public class ActionPane extends VBox {
+    private StackPane buttonHolderStack = new StackPane();
     private HBox buttonHolder = new HBox();
     private Pane actionIndicator = new Pane();
     private Button killBtn = new Button("Kill");
@@ -20,14 +22,17 @@ public class ActionPane extends VBox {
     private ToggleButton passiveEffectBtn = new ToggleButton("Passive Effect");
 	private Button endBtn = new Button("End");
 
+	private Button selectedActionBtn;
+
     private AdvancedActionPane advancedActionPane;
 
     public ActionPane(Controller controller) {
         advancedActionPane = new AdvancedActionPane(controller);
-        this.getChildren().addAll(actionIndicator, buttonHolder, advancedActionPane);
+        this.getChildren().addAll(actionIndicator, buttonHolderStack, advancedActionPane);
         this.setSpacing(5);
 
-        buttonHolder.getChildren().addAll(killBtn, activeEffectBtn, passiveEffectBtn, endBtn);
+        buttonHolderStack.getChildren().addAll(buttonHolder, passiveEffectBtn);
+        buttonHolder.getChildren().addAll(killBtn, activeEffectBtn, endBtn);
         buttonHolder.setSpacing(ButtonUtil.BUTTON_SPACING);
 
         formatActionIndicator(actionIndicator);
@@ -41,6 +46,9 @@ public class ActionPane extends VBox {
         indicator.setPrefHeight(3);
         indicator.setMaxWidth(0);
         RegionUtil.setBackground(indicator, ColorUtil.STANDARD_BUTTON_COLOR, new CornerRadii(5), null);
+        this.widthProperty().addListener(((observable, oldValue, newValue) -> {
+            if (selectedActionBtn != null) { shiftActionIndicator(selectedActionBtn); }
+        }));
     }
 
     private void formatKillBtn(Button button, Controller controller) {
@@ -48,6 +56,7 @@ public class ActionPane extends VBox {
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/kill.png");
         button.setOnMouseEntered(e -> {
+            selectedActionBtn = button;
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredKillBtn();
         });
@@ -64,50 +73,23 @@ public class ActionPane extends VBox {
     private void formatPassiveEffectBtn(ToggleButton button, Controller controller) {
     	ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        button.setOnMouseEntered(e -> {
-            ButtonUtil.formatHoveringEffect(button, true);
-        });
-        button.setOnMouseExited(e -> {
-            ButtonUtil.formatHoveringEffect(button, false);
-        });
+        ButtonUtil.formatHoveringEffect(button);
         button.setOnAction(e -> {
-        	if (button.isSelected()) {
-        		ButtonUtil.formatStandardButton(button, ColorUtil.ACTIVATED_BUTTON_COLOR);
-        	} else {
-        		ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
-        	}
+            Color buttonColor = button.isSelected() ? ColorUtil.ACTIVATED_BUTTON_COLOR : ColorUtil.STANDARD_BUTTON_COLOR;
+            ButtonUtil.setFill(button, buttonColor);
         	controller.handlePassiveEffectButton();        		
         });
-    }
-    
-    public ToggleButton getPassiveEffectBtn() {
-		return passiveEffectBtn;
-	}
-    
-    public void setPassiveEffectBtnActivated(boolean isActivated) {
-    	passiveEffectBtn.setSelected(isActivated);
-    	
-    	if (isActivated) {
-    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.ACTIVATED_BUTTON_COLOR);
-    	} else {
-    		ButtonUtil.formatStandardButton(passiveEffectBtn, ColorUtil.STANDARD_BUTTON_COLOR);
-    	}
-    }
-    
-    public void setPassiveEffectBtnDisable(boolean isDisabled) {
-    	passiveEffectBtn.setDisable(isDisabled);
-    }
-    
-    public void disableAndDeactivatePassiveEffectBtn() {
-    	setPassiveEffectBtnActivated(false);
-    	passiveEffectBtn.setDisable(true);
     }
     
     private void formatActiveEffectBtn(Button button, Controller controller) {
         ButtonUtil.maximizeHBoxControlSize(button);
         ButtonUtil.formatStandardButton(button, ColorUtil.STANDARD_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/special-effect.png");
+        activeEffectBtn.widthProperty().addListener(((observable, oldValue, newValue) -> {
+            if (buttonHolder.isVisible()) { shiftPassiveEffectBtn((double) newValue); }
+        }));
         button.setOnMouseEntered(e -> {
+            selectedActionBtn = button;
             ButtonUtil.formatHoveringEffect(button, true);
             controller.handleMouseEnteredActiveEffectBtn();
         });
@@ -126,8 +108,7 @@ public class ActionPane extends VBox {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/end-turn.png");
         button.setCancelButton(true);
-        button.setOnMouseEntered(e -> ButtonUtil.formatHoveringEffect(button, true));
-        button.setOnMouseExited(e -> ButtonUtil.formatHoveringEffect(button, false));
+        ButtonUtil.formatHoveringEffect(button);
         button.setOnAction(e -> {
             shiftActionIndicator(button);
             controller.handleEndButton();
@@ -146,34 +127,63 @@ public class ActionPane extends VBox {
 
     public void hideActionIndicator() {
         setActionIndicatorPosition(this.getWidth(), 0);
+        selectedActionBtn = null;
     }
 
     private void setActionIndicatorPosition(double xTranslate, double width) {
-        Timeline timeline = new Timeline();
         KeyFrame kfXCoord = AnimationUtil.formatKeyFrame(actionIndicator.translateXProperty(), xTranslate, Duration.seconds(0.5));
         KeyFrame kfWidth = AnimationUtil.formatKeyFrame(actionIndicator.maxWidthProperty(), width, Duration.seconds(0.5));
-        timeline.getKeyFrames().addAll(kfXCoord, kfWidth);
+        Timeline timeline = new Timeline(kfXCoord, kfWidth);
         timeline.play();
     }
 
-    public void disableRegularActionPane() {
-    	activeEffectBtn.setDisable(true);
-    	passiveEffectBtn.setDisable(true);
-        setPassiveEffectBtnActivated(false);
-        killBtn.setDisable(true);
-        endBtn.setDisable(true);
+    public void setPassiveEffectBtnFocus(boolean isFocused) {
+        if (isFocused) {
+            buttonHolder.setVisible(false);
+            passiveEffectBtn.setVisible(true);
+            passiveEffectBtn.setMaxWidth(Double.MAX_VALUE);
+        } else {
+            buttonHolder.setVisible(true);
+            if (passiveEffectBtn.isSelected()) {
+                double newWidth = activeEffectBtn.getWidth();
+                shiftPassiveEffectBtn(newWidth);
+            } else {
+                passiveEffectBtn.setVisible(false);
+            }
+        }
+    }
+
+    private void shiftPassiveEffectBtn(double width) {
+        passiveEffectBtn.setMaxWidth(width + 3); // 3 for the offset
+    }
+
+    public ToggleButton getPassiveEffectBtn() {
+        return passiveEffectBtn;
     }
 
     public void setActiveEffectBtnDisable(boolean isDisabled) {
     	activeEffectBtn.setDisable(isDisabled);
     }
-    
-    public void setKillBtnDisable(boolean isDisabled) {
-    	killBtn.setDisable(isDisabled);
+
+    public void setPassiveEffectBtnActivated(boolean isActivated) {
+        passiveEffectBtn.setSelected(isActivated);
+        Color buttonColor = isActivated ? ColorUtil.ACTIVATED_BUTTON_COLOR : ColorUtil.STANDARD_BUTTON_COLOR;
+        ButtonUtil.setFill(passiveEffectBtn, buttonColor);
     }
-    
-    public void setEndBtnDisable(boolean isDisabled) {
-    	endBtn.setDisable(isDisabled);
+
+    public void setPassiveEffectBtnDisable(boolean isDisabled) {
+        passiveEffectBtn.setDisable(isDisabled);
+        passiveEffectBtn.setOpacity(1);
+
+        if (!passiveEffectBtn.isSelected()) {
+            Color buttonColor = isDisabled ? ColorUtil.STANDARD_DISABLED_COLOR : ColorUtil.STANDARD_BUTTON_COLOR;
+            RegionUtil.setFill(passiveEffectBtn, buttonColor);
+        }
+    }
+
+    public void disableAndDeactivatePassiveEffectBtn() {
+        setPassiveEffectBtnActivated(false);
+        setPassiveEffectBtnDisable(true);
     }
     
     public void setUndoBtnDisable(boolean isDisabled) {

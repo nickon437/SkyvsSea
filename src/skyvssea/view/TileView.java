@@ -1,6 +1,7 @@
 package skyvssea.view;
 
 import com.google.java.contract.Requires;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -13,11 +14,6 @@ import skyvssea.util.ColorUtil;
 import skyvssea.util.RegionUtil;
 
 public class TileView extends Avatar implements Observer {
-
-    public static final Color DEFAULT_LIGHT_BASE_COLOR = Color.WHITE;//Color.valueOf("#FCF5EF");
-    public static final Color DEFAULT_DARK_BASE_COLOR = Color.valueOf("#c8c8c8");
-    public static final Color HIGHLIGHTED_COLOR = Color.valueOf("#FCC42C");
-    public static final Color SCANNED_COLOR = Color.valueOf("#fde7aa");
 
     private Region base;
     private int x;
@@ -32,9 +28,17 @@ public class TileView extends Avatar implements Observer {
         this.base = createBase(x, y, tileSize);
         this.getChildren().add(base);
 
+        this.setOnMouseEntered(e -> {
+            RegionUtil.formatHoveringEffect(base, true);
+            controller.handleMouseEnteredTile(this);
+        });
+
+        this.setOnMouseExited(e -> {
+            RegionUtil.formatHoveringEffect(base, false);
+            this.setCursor(Cursor.DEFAULT);
+        });
+
         this.setOnMouseClicked(e -> controller.handleTileClicked(this));
-        this.setOnMouseEntered(e -> controller.handleMouseEnteredTile(this));
-        this.setOnMouseExited(e -> controller.handleMouseExitedTile(this));
     }
 
 	private boolean setDefaultBaseColor(int x, int y) {
@@ -75,12 +79,6 @@ public class TileView extends Avatar implements Observer {
         RegionUtil.setFill(base, color);
     }
 
-    public void updateBaseColorAsHovered(boolean isHovered) {
-        Color baseColor = (Color) RegionUtil.getFill(base);
-        Color modifiedColor = ColorUtil.getHoveringColor(isHovered, baseColor);
-        updateBaseColor(modifiedColor);
-    }
-
     @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
 	public void update(Subject subject, EventType event, Object arg) {
@@ -88,9 +86,11 @@ public class TileView extends Avatar implements Observer {
     		case HIGHLIGHT:
     			Color baseColor;
                 if ((boolean) arg == true) {
-                    baseColor = HIGHLIGHTED_COLOR;
+                    baseColor = ColorUtil.HIGHLIGHTED_COLOR;
+                    this.setCursor(Cursor.HAND);
                 } else {
-                    baseColor = hasLightBaseColor ? DEFAULT_LIGHT_BASE_COLOR : DEFAULT_DARK_BASE_COLOR;
+                    baseColor = hasLightBaseColor ? ColorUtil.DEFAULT_LIGHT_BASE_COLOR : ColorUtil.DEFAULT_DARK_BASE_COLOR;
+                    this.setCursor(Cursor.DEFAULT);
                 }
                 updateBaseColor(baseColor);
     			break;

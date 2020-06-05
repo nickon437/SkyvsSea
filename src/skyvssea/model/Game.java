@@ -1,8 +1,5 @@
 package skyvssea.model;
 
-import skyvssea.controller.Controller;
-import skyvssea.view.ActionPane;
-
 public class Game {
     private GameState currentGameState;
 
@@ -10,5 +7,7 @@ public class Game {
         this.currentGameState = newState;
     }
 
-    public GameState getCurrentGameState() { return currentGameState; }
+    public GameState getCurrentGameState() {
+        return currentGameState;
+    }
 }

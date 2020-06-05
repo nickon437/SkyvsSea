@@ -145,7 +145,7 @@ public class Tile implements Subject, AvatarCore {
     @Override
     public void notifyObservers(EventType event, Object arg) {
         for (Observer observer : observers) {
-            observer.update(this, event, arg);
+            observer.update(event, arg);
         }
     }
 }

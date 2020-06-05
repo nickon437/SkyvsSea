@@ -2,7 +2,6 @@ package skyvssea.database;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import skyvssea.controller.Controller;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
@@ -12,7 +11,9 @@ import skyvssea.view.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LoadHandler {
 
@@ -26,7 +27,7 @@ public class LoadHandler {
 
     private List<Tile> tilesWithPiece = new ArrayList<>();
     private List<Tile> tilesWithObstacle = new ArrayList<>();
-    private List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
+    private Map<Integer, AbstractPiece> pieceMap = new HashMap<>();
 
     public void loadGame(Stage stage) {
         if (!loadCoreGameData()) return;
@@ -110,8 +111,7 @@ public class LoadHandler {
                 piece.setPassiveEffectActivated(rs.getBoolean("IsPassiveEffectActivated"));
 
                 // Create a link between PieceID of database and the piece for ease of identification
-                Pair<Integer, AbstractPiece> pieceIDPair = new Pair<>(rs.getInt("PieceID"), piece);
-                pieceIDPairs.add(pieceIDPair);
+                pieceMap.put(rs.getInt("PieceID"), piece);
 
                 // Set piece on tile
                 Tile tile = board.getTile(rs.getInt("TileX"), rs.getInt("TileY"));
@@ -119,7 +119,7 @@ public class LoadHandler {
                 tilesWithPiece.add(tile);
 
                 // Identify registeredPiece
-                if (registeredPieceID == pieceIDPair.getKey()) {
+                if (registeredPieceID == rs.getInt("PieceID")) {
                     registeredPiece = piece;
                 }
             }
@@ -162,16 +162,16 @@ public class LoadHandler {
             while (rs.next()) {
                 // Piece
                 int pieceID = rs.getInt("PieceID");
-                AbstractPiece piece = getPiece(pieceID);
+                AbstractPiece piece = pieceMap.get(pieceID);
 
                 int casterID = rs.getInt("CasterID");
-                AbstractPiece caster = getPiece(casterID);
+                AbstractPiece caster = pieceMap.get(casterID);
 
                 // SpecialEffect
                 String specialEffectString = rs.getString("SpecialEffect");
                 SpecialEffectCode specialEffectCode = SpecialEffectCode.fromString(specialEffectString);
                 SpecialEffectObject specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode, caster);
-                
+
                 piece.getSpecialEffectManager().add(specialEffect);
                 specialEffect.setEffectiveDuration(rs.getInt("EffectiveDuration"));
             }
@@ -205,15 +205,5 @@ public class LoadHandler {
             e.printStackTrace();
         }
         return hasSave;
-    }
-
-
-    private AbstractPiece getPiece(int pieceID) {
-        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
-            if (pair.getKey().intValue() == pieceID) {
-                return pair.getValue();
-            }
-        }
-        return null;
     }
 }

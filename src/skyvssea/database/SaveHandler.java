@@ -1,6 +1,5 @@
 package skyvssea.database;
 
-import javafx.util.Pair;
 import skyvssea.model.*;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
@@ -8,12 +7,13 @@ import skyvssea.model.specialeffect.SpecialEffectObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SaveHandler {
 
-    private List<Pair<Integer, AbstractPiece>> pieceIDPairs = new ArrayList<>();
+    private Map<AbstractPiece, Integer> pieceMap = new HashMap<>();
 
     public void saveGame(Board board, PieceManager pieceManager, PlayerManager playerManager, Game game) {
         DatabaseSetup.rebuildDatabase();
@@ -36,8 +36,8 @@ public class SaveHandler {
             }
         }
 
-        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
-            saveSpecialEffectManager(pair.getKey(), pair.getValue());
+        for (Map.Entry<AbstractPiece, Integer> entry : pieceMap.entrySet()) {
+            saveSpecialEffectManager(entry.getValue(), entry.getKey());
         }
 
         saveCoreData(game.getCurrentGameState(), playerManager.getPlayerIndex(playerManager.getCurrentPlayer()), registeredPieceID, board);
@@ -68,7 +68,7 @@ public class SaveHandler {
             e.printStackTrace();
         }
 
-        pieceIDPairs.add(new Pair<>(pieceID, piece));
+        pieceMap.put(piece, pieceID);
         return pieceID;
     }
 
@@ -93,7 +93,6 @@ public class SaveHandler {
 
     private void saveSpecialEffectManager(int pieceID, AbstractPiece piece) {
         List<SpecialEffectObject> appliedSpecialEffects = piece.getSpecialEffectManager().getAppliedSpecialEffects();
-        System.out.println("AppliedSpecialEffect size for " + piece.getName() + " " + appliedSpecialEffects.size());
         for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
             saveAppliedSpecialEffect(pieceID, specialEffect);
         }
@@ -101,14 +100,12 @@ public class SaveHandler {
 
     private void saveAppliedSpecialEffect(int pieceID, SpecialEffectObject specialEffect) {
         try {
-            System.out.println("run save applied SE");
             String query = "INSERT INTO " + SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE + " (PieceID, CasterID, SpecialEffect, EffectiveDuration) "
                     + "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            System.out.println("pieceID: " + pieceID + " | casterID: " + getPieceID(specialEffect.getCaster()) + " | caster: " + specialEffect.getCaster() + " " + specialEffect.getCaster().getName());
             stmt.setInt(1, pieceID);
-            stmt.setInt(2, getPieceID(specialEffect.getCaster()));
+            stmt.setInt(2, pieceMap.get(specialEffect.getCaster()));
             stmt.setString(3, specialEffect.getName());
             stmt.setInt(4, specialEffect.getEffectiveDuration());
             stmt.executeUpdate();
@@ -149,14 +146,5 @@ public class SaveHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private int getPieceID(AbstractPiece piece) {
-        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
-            if (pair.getValue().equals(piece)) {
-                return pair.getKey();
-            }
-        }
-        return -1;
     }
 }

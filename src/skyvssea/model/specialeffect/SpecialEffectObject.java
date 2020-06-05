@@ -33,6 +33,10 @@ public abstract class SpecialEffectObject implements SpecialEffect {
 	public TargetType getTargetType() {
 		return targetType;
 	}
+
+	public AbstractPiece getCaster() {
+		return caster;
+	}
 	
 	public boolean usableOnPiece(AbstractPiece target, PlayerManager playerManager) {
 		// Satisfied when a piece with activated passive effect for comrades before the current round moves to an adjacent tile
@@ -48,7 +52,7 @@ public abstract class SpecialEffectObject implements SpecialEffect {
 			boolean areComrades = playerManager.isCurrentPlayerPiece(target) == playerManager.isCurrentPlayerPiece(caster);
 			boolean forComrades = targetType == TargetType.COMRADES;
 			boolean applicable = areComrades == forComrades;
-			if (applicable && !forComrades && target.getSpecialEffectManagerProxy().isImmuneToEnemySpecialEffect()) {
+			if (applicable && !forComrades && target.getSpecialEffectManager().isImmuneToEnemySpecialEffect()) {
 				return false;
 			} else {
 				return applicable;

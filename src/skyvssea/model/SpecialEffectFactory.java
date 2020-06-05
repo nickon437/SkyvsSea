@@ -3,7 +3,6 @@ package skyvssea.model;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.*;
 
-
 public class SpecialEffectFactory {
     private static SpecialEffectFactory specialEffectFactory;
 
@@ -17,61 +16,92 @@ public class SpecialEffectFactory {
     }
 
     public SpecialEffectObject createDoubleAttackRange(AbstractPiece caster) {
-    	return new ActiveSpecialEffectObject(caster, "Attack range x2", TargetType.SELF, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_ATTACK_RANGE.getText(), TargetType.SELF,
     			new ChangeAttackRangeDecorator(2, null));
     }
     
     public SpecialEffectObject createDoubleMoveRange(AbstractPiece caster) {
-    	return new ActiveSpecialEffectObject(caster, "Move range x2", TargetType.SELF, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_MOVE_RANGE.getText(), TargetType.SELF,
     			new ChangeMoveRangeDecorator(2, null));
     }
     
     public SpecialEffectObject createRetarding(AbstractPiece caster) {
-    	return new ActiveSpecialEffectObject(caster, "Retarding", TargetType.ENEMIES, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.RETARDING.getText(), TargetType.ENEMIES,
     			new ChangeMoveRangeDecorator(0.5, null));
     }
     public SpecialEffectObject createFreezing(AbstractPiece caster) { 
-    	return new ActiveSpecialEffectObject(caster, "Freezing", TargetType.ENEMIES, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.FREEZING.getText(), TargetType.ENEMIES,
     			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
 	}
     
     public SpecialEffectObject createStrengthening(AbstractPiece caster) { 
-    	return new ActiveSpecialEffectObject(caster, "Strengthening", TargetType.COMRADES, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.STRENGTHENING.getText(), TargetType.COMRADES,
     			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, null)));
     }
     
     public SpecialEffectObject createWeakening(AbstractPiece caster) { 
-    	return new ActiveSpecialEffectObject(caster, "Weakening", TargetType.ENEMIES, 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.WEAKENING.getText(), TargetType.ENEMIES,
     			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, null)));
     }
     
     public SpecialEffectObject createPassiveDefenceLevelPlus1(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Increasing Defence Level of Nearby Comrades", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST.getText(), TargetType.COMRADES,
     			new ChangeDefenceLevelDecorator(1, null));
     }
     
     public SpecialEffectObject createPassiveAttackLevelPlus1(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Increasing Attack Level of Nearby Comrades", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST.getText(), TargetType.COMRADES,
     			new ChangeAttackLevelDecorator(1, null));
     }
     
     public SpecialEffectObject createPassiveAntiSpecialEffect(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Shielding Nearby Comrades from Enemies' Special Effects", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ANTI_SPECIAL_EFFECT.getText(), TargetType.COMRADES,
     			new ActivateImmunityToSpecialEffectDecorator(null));
     }
     
     public SpecialEffectObject createPassiveFreezing(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Freezing Nearby Enemies", TargetType.ENEMIES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_FREEZING.getText(), TargetType.ENEMIES,
     			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
     }
     
     public SpecialEffectObject createPassiveDefenceLevelUpAttackLevelDown(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Self Defence Level Up, Self Attack Level Down", TargetType.SELF, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST_COST_ATTACK.getText(), TargetType.SELF,
     			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(1, null)));
     }
     
     public SpecialEffectObject createPassiveAttackLevelUpDefenceLevelDown(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Self Attack Level Up, Self Defence Level Down", TargetType.SELF, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST_COST_DEFENCE.getText(), TargetType.SELF,
     			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(-1, null)));
+    }
+
+    public SpecialEffectObject createSpecialEffect(SpecialEffectCode code, AbstractPiece caster) {
+        switch (code) {
+            case DOUBLE_ATTACK_RANGE:
+                return createDoubleAttackRange(caster);
+            case DOUBLE_MOVE_RANGE:
+                return createDoubleMoveRange(caster);
+            case FREEZING:
+                return createFreezing(caster);
+            case RETARDING:
+                return createRetarding(caster);
+            case WEAKENING:
+                return createWeakening(caster);
+            case STRENGTHENING:
+                return createStrengthening(caster);
+            case PASSIVE_ANTI_SPECIAL_EFFECT:
+                return createPassiveAntiSpecialEffect(caster);
+            case PASSIVE_ATTACK_BOOST:
+                return createPassiveAttackLevelPlus1(caster);
+            case PASSIVE_FREEZING:
+                return createPassiveFreezing(caster);
+            case PASSIVE_DEFENCE_BOOST:
+                return createPassiveDefenceLevelPlus1(caster);
+            case PASSIVE_ATTACK_BOOST_COST_DEFENCE:
+                return createPassiveAttackLevelUpDefenceLevelDown(caster);
+            case PASSIVE_DEFENCE_BOOST_COST_ATTACK:
+                return createPassiveDefenceLevelUpAttackLevelDown(caster);
+            default:
+                return null;
+        }
     }
 }

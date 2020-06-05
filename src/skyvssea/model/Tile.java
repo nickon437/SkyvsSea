@@ -6,7 +6,6 @@ import skyvssea.model.observer.Observer;
 import skyvssea.model.observer.Subject;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
-import skyvssea.model.EventType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,6 +33,10 @@ public class Tile implements Subject, AvatarCore {
 
     public boolean hasPiece() {
         return gameObject != null && gameObject instanceof AbstractPiece;
+    }
+
+    public boolean hasObstacle() {
+        return gameObject != null && gameObject instanceof Obstacle;
     }
 
     public GameObject getGameObject() { return gameObject; }
@@ -94,7 +97,7 @@ public class Tile implements Subject, AvatarCore {
 			specialEffects.remove(specialEffect);		
 			if (hasPiece()) {
 				AbstractPiece castedPiece = (AbstractPiece) gameObject;
-				castedPiece.getSpecialEffectManagerProxy().remove(specialEffect);
+				castedPiece.getSpecialEffectManager().remove(specialEffect);
 			}
 		}	
 	}
@@ -110,7 +113,7 @@ public class Tile implements Subject, AvatarCore {
 			for (SpecialEffectObject specialEffect : specialEffects) {
 				if (specialEffect.usableOnPiece(piece, playerManager)) {
 					SpecialEffectObject copy = (SpecialEffectObject) specialEffect.copy();
-					piece.getSpecialEffectManagerProxy().add(copy);
+					piece.getSpecialEffectManager().add(copy);
 				}
 			}
 		}
@@ -124,7 +127,7 @@ public class Tile implements Subject, AvatarCore {
 		if (specialEffects != null) {
 			AbstractPiece piece = (AbstractPiece) gameObject;
 			for (SpecialEffectObject specialEffect : specialEffects) {
-				piece.getSpecialEffectManagerProxy().remove(specialEffect);
+				piece.getSpecialEffectManager().remove(specialEffect);
 			}
 		}
 	}
@@ -145,7 +148,7 @@ public class Tile implements Subject, AvatarCore {
     @Override
     public void notifyObservers(EventType event, Object arg) {
         for (Observer observer : observers) {
-            observer.update(this, event, arg);
+            observer.update(event, arg);
         }
     }
 }

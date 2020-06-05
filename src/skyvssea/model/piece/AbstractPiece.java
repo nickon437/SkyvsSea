@@ -72,7 +72,7 @@ public abstract class AbstractPiece extends GameObject {
 	public void performActiveEffect(AbstractPiece target) {
 		SpecialEffectObject copiedActiveEffect = (SpecialEffectObject) activeEffect.copy();
 	    if (copiedActiveEffect != null) {
-			target.getSpecialEffectManagerProxy().add(copiedActiveEffect);
+			target.getSpecialEffectManager().add(copiedActiveEffect);
     		resetActiveEffectCounter();    		
     	}
 	}
@@ -100,7 +100,7 @@ public abstract class AbstractPiece extends GameObject {
 	public void performPassiveEffect(AbstractPiece target) {
 		SpecialEffectObject copiedPassiveEffect = (SpecialEffectObject) getPassiveEffect().copy();
 		if (copiedPassiveEffect != null) {
-			target.getSpecialEffectManagerProxy().add(copiedPassiveEffect);   		
+			target.getSpecialEffectManager().add(copiedPassiveEffect);
 		}
 	}
 	
@@ -118,11 +118,11 @@ public abstract class AbstractPiece extends GameObject {
 	
 	public void receiveSpecialEffect(SpecialEffectObject specialEffect) {
 		SpecialEffectObject copiedSpecialEffect = (SpecialEffectObject) specialEffect.copy();
-		getSpecialEffectManagerProxy().add(copiedSpecialEffect);
+		getSpecialEffectManager().add(copiedSpecialEffect);
 	}
 	
     @Ensures("specialEffectManagerProxy != null")
-    public SpecialEffectManagerInterface getSpecialEffectManagerProxy() {
+    public SpecialEffectManagerInterface getSpecialEffectManager() {
         if (specialEffectManagerProxy == null) {
             specialEffectManagerProxy = new SpecialEffectManagerProxy(this);
         }
@@ -150,8 +150,10 @@ public abstract class AbstractPiece extends GameObject {
                 "AE effective duration: " + getActiveEffect().getEffectiveDuration() + "\n" +
                 "AE cooldown duration: " + activeEffectCoolDown + "\n" +
                 "AE remaining cooldown duration: " + activeEffectCounter + "\n" +
-                "AE description: " + getActiveEffect().toString() + "\n" +
-                "Passive effect: " + getPassiveEffect().getName();
+                "AE description: " + SpecialEffectCode.fromString(getActiveEffect().getName()).getDescription() + "\n" +
+                "Passive effect's name: " + getPassiveEffect().getName() + "\n" +
+                "Passive effect's description: " + SpecialEffectCode.fromString(getPassiveEffect().getName()).getDescription() + "\n" +
+                "Applied effect: " + getSpecialEffectManager().getAppliedSpecialEffectsNames();
         return summary;
     }
 
@@ -163,6 +165,6 @@ public abstract class AbstractPiece extends GameObject {
             Command updateCounterCommand = new UpdateCounterCommand(this, newActiveEffectCounter);
             historyManager.storeAndExecute(updateCounterCommand);
         }
-        getSpecialEffectManagerProxy().updateEffectiveDuration(historyManager);
+        getSpecialEffectManager().updateEffectiveDuration(historyManager);
     }
 }

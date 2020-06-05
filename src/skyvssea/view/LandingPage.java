@@ -7,6 +7,8 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import skyvssea.controller.LandingPageController;
 import skyvssea.util.*;
 
 public class LandingPage extends AnchorPane {
@@ -16,7 +18,7 @@ public class LandingPage extends AnchorPane {
 
     private StackPane boardSetupPane = new StackPane();
 
-    public LandingPage(BoardSetupView boardSetupView) {
+    public LandingPage(LandingPageController controller, BoardSetupView boardSetupView) {
         ImageView backgroundImage = new ImageView("file:resources/images/landing-page-background.jpg");
 
         Label titleLable = new Label("Sky vs. Sea");
@@ -31,7 +33,7 @@ public class LandingPage extends AnchorPane {
         formatControlPane(controlPane);
         formatTitleLabel(titleLable);
         formatStartBtn(startBtn);
-        formatLoadBtn(loadBtn);
+        formatLoadBtn(loadBtn, controller);
         formatButtons(startBtn, loadBtn);
         formatBoardSetupPane(boardSetupPane, boardSetupView);
     }
@@ -71,9 +73,10 @@ public class LandingPage extends AnchorPane {
         button.setOnAction(e -> setBoardSetupPaneVisible(true));
     }
 
-    private void formatLoadBtn(Button button) {
+    private void formatLoadBtn(Button button, LandingPageController controller) {
         ButtonUtil.formatStandardButton(button, ColorUtil.SECONDARY_BUTTON_COLOR);
         ButtonUtil.formatGraphic(button, "file:resources/icons/load.png");
+        button.setOnAction(e -> controller.handleLoadBtn());
     }
 
     private void formatBoardSetupPane(StackPane boardSetupPane, BoardSetupView boardSetupView) {

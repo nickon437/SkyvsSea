@@ -6,6 +6,9 @@ import skyvssea.model.command.HistoryManager;
 import skyvssea.model.piece.AbstractPiece;
 import skyvssea.model.specialeffect.SpecialEffectObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface {
 
     private SpecialEffectManagerInterface specialEffectManager;
@@ -40,6 +43,21 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
         }
     }
 
+    public void setEffectiveDuration(String specialEffectName, int effectiveDuration) {
+       if (specialEffectManager != null) {
+           specialEffectManager.setEffectiveDuration(specialEffectName, effectiveDuration);
+       }
+    }
+
+    @Override
+    public List<SpecialEffectObject> getAppliedSpecialEffects() {
+        if (specialEffectManager != null) {
+            return specialEffectManager.getAppliedSpecialEffects();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 	@Override
 	public boolean isImmuneToEnemySpecialEffect() {
 		if (specialEffectManager == null) {
@@ -62,5 +80,13 @@ public class SpecialEffectManagerProxy implements SpecialEffectManagerInterface 
             specialEffectManager = new SpecialEffectManager(target);
         }
 		specialEffectManager.removeEnemySpecialEffect();
+	}
+
+	@Override
+	public String getAppliedSpecialEffectsNames() {
+		if (specialEffectManager == null) {
+            specialEffectManager = new SpecialEffectManager(target);
+        }
+		return specialEffectManager.getAppliedSpecialEffectsNames();
 	}
 }

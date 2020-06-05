@@ -40,6 +40,18 @@ public class PlayerManager {
         return currentPlayer;
     }
 
+    public int getPlayerIndex(Player player) {
+        return player.equals(players[0]) ? 0 : 1;
+    }
+
+    public Player getPlayer(int playerIndex) {
+	    return players[playerIndex];
+    }
+
+    public void setCurrentPlayer(int playerIndex) {
+	    currentPlayer = players[playerIndex];
+    }
+
 	public boolean isCurrentPlayerPiece(AbstractPiece piece) {
 		return currentPlayer.equals(getPlayer(piece));
 	}

@@ -81,7 +81,7 @@ public class TileView extends Avatar implements Observer {
 
     @Requires("subject != null && (arg instanceof Boolean || arg instanceof Avatar || arg == null)")
 	@Override
-	public void update(Subject subject, EventType event, Object arg) {
+	public void update(EventType event, Object arg) {
     	switch (event) {
     		case HIGHLIGHT:
     			Color baseColor;

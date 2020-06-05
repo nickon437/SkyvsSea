@@ -10,14 +10,14 @@ public class ActivateImmunityToSpecialEffectDecorator extends AbstractSpecialEff
 
 	@Override
 	public void apply(AbstractPiece target) { 
-		target.getSpecialEffectManagerProxy().setImmuneToEnemySpecialEffect(true);
-		target.getSpecialEffectManagerProxy().removeEnemySpecialEffect();
+		target.getSpecialEffectManager().setImmuneToEnemySpecialEffect(true);
+		target.getSpecialEffectManager().removeEnemySpecialEffect();
 		super.apply(target);
 	}
 	  
 	@Override
 	public void remove(AbstractPiece target) { 
-		target.getSpecialEffectManagerProxy().setImmuneToEnemySpecialEffect(false);
+		target.getSpecialEffectManager().setImmuneToEnemySpecialEffect(false);
 		//TODO: would like to reapply any enemy's passive effect that is within range (ie still exists in the current tile)
 		super.remove(target);
 	}

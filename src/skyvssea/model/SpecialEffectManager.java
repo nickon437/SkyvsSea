@@ -84,4 +84,33 @@ public class SpecialEffectManager implements SpecialEffectManagerInterface {
 			specialEffect.apply(target);
 		}
     }
+
+    @Override
+    public void setEffectiveDuration(String specialEffectName, int effectiveDuration) {
+        for (SpecialEffectObject curSpecialEffect : appliedSpecialEffects) {
+            if (curSpecialEffect.getName().equals(specialEffectName)) {
+                curSpecialEffect.setEffectiveDuration(effectiveDuration);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public List<SpecialEffectObject> getAppliedSpecialEffects() {
+        return appliedSpecialEffects;
+    }
+
+	@Override
+	public String getAppliedSpecialEffectsNames() {
+		String names = "";
+		for (SpecialEffectObject obj: appliedSpecialEffects) {
+			names += obj.getName();
+			names += ", \n";
+		}
+		if (names.equals("")) {
+			return "No special effect applied";
+		} else {
+			return names;			
+		}
+	}
 }

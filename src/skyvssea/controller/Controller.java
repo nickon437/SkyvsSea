@@ -2,6 +2,9 @@ package skyvssea.controller;
 
 import com.google.java.contract.Requires;
 import javafx.scene.Cursor;
+import javafx.stage.Stage;
+import skyvssea.database.LoadHandler;
+import skyvssea.database.SaveHandler;
 import skyvssea.model.*;
 import skyvssea.model.command.*;
 import skyvssea.model.piece.AbstractPiece;
@@ -11,6 +14,7 @@ import java.util.List;
 
 public class Controller {
 
+    private Stage stage;
     private Game game;
     private Board board;
     private PieceManager pieceManager;
@@ -19,7 +23,6 @@ public class Controller {
 
     private MainView mainView;
     private ActionPane actionPane;
-    private BoardPane boardPane;
     private InfoPane infoPane;
     private boolean isPassiveEffectBtnClicked = false;
     
@@ -186,6 +189,16 @@ public class Controller {
         setupNewTurn();
     }
 
+    public void handleSaveButton() {
+        SaveHandler saveHandler = new SaveHandler();
+        saveHandler.saveGame(board, pieceManager, playerManager, game);
+    }
+
+    public void handleLoadButton() {
+        LoadHandler loadHandler = new LoadHandler();
+        loadHandler.loadGame(stage);
+    }
+
     private void declareWinner() {
         mainView.setDeclarationLabel(playerManager.getCurrentPlayer().getName());
     }
@@ -203,11 +216,53 @@ public class Controller {
     }
 
     private void endTurn() {
-    	pieceManager.updatePieceStatus(historyManager);
+        pieceManager.updatePieceStatus(historyManager);
         playerManager.changeTurn();
         historyManager.startNewTurnCommand();
-        
         setupNewTurn();
+    }
+
+    public void updateUI() {
+        try {
+            actionPane.setPassiveEffectBtnActivated(pieceManager.getRegisteredPiece().isPassiveEffectActivated());
+        } catch (NullPointerException ignored) {}
+        infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
+        actionPane.setUndoBtnDisable(!playerManager.getCurrentPlayer().isUndoAvailabile());
+
+        switch (game.getCurrentGameState()) {
+            case READY_TO_MOVE:
+                setupNewTurn();
+                break;
+            case KILLING:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                board.highlightPossibleKillTiles(playerManager);
+                actionPane.fireKillBtn();
+                break;
+            case PERFORMING_ACTIVE_EFFECT:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                board.highlightPossibleActiveEffectTiles(playerManager);
+                actionPane.fireActiveEffectBtn();
+                break;
+            case READY_TO_ATTACK:
+                switchToAttackMode();
+                actionPane.setPassiveEffectBtnFocus(false);
+                break;
+        }
+    }
+
+    public void loadController(Stage stage, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Board board,
+                               PieceManager pieceManager, PlayerManager playerManager, Game game) {
+        this.stage = stage;
+        this.actionPane = actionPane;
+        this.infoPane = infoPane;
+
+        this.board = board;
+        this.pieceManager = pieceManager;
+        this.playerManager = playerManager;
+        this.historyManager = new HistoryManager();
+        this.game = game;
     }
 
     public void setupNewTurn() {
@@ -226,28 +281,30 @@ public class Controller {
     }
     
     @Requires("mainView != null && boardSetup != null && boardPane != null && actionPane != null && infoPane != null")
-    public void setController(MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
+    public void setController(Stage stage, MainView mainView, BoardSetupView boardSetup, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane) {
         int boardCol = boardSetup.getBoardSize()[0];
         int boardRow = boardSetup.getBoardSize()[1];
 
+        this.stage = stage;
         this.mainView = mainView;
 		this.actionPane = actionPane;
-		this.boardPane = boardPane;
 		this.infoPane = infoPane;
 
-        board = new Board(boardCol, boardRow);
-        pieceManager = new PieceManager(boardSetup.getPieceLineup());
-        playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
-        historyManager = new HistoryManager();
-        game = new Game();
+        this.board = new Board(boardCol, boardRow);
+        this.pieceManager = new PieceManager(boardSetup.getPieceLineup());
+        this.playerManager = new PlayerManager(pieceManager.getEaglePieces(), pieceManager.getSharkPieces());
+        this.historyManager = new HistoryManager();
+        this.game = new Game();
 
-        setTiles(boardPane);
-        setPieces(boardPane);
-        setObstacles(boardPane);
+        setTiles(boardPane, board);
+        setPieces(boardPane, board, null, pieceManager, playerManager);
+        setObstacles(boardPane, board,null);
+
+        setupNewTurn();
     }
 
     @Requires("boardPane != null")
-    private void setTiles(BoardPane boardPane) {
+    public void setTiles(BoardPane boardPane, Board board) {
         Tile[][] tiles = board.getTiles();
         List<TileView> tileViews = boardPane.getTileViewGroup();
         for (TileView tileView : tileViews) {
@@ -259,21 +316,34 @@ public class Controller {
         board.setBaseColours();
     }
 
+    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    private void setPieces(BoardPane boardPane) {
-        List<Tile> startingPositions = pieceManager.setPiecesOnBoard(board);
-        for (Tile tile : startingPositions) {
+    public void setPieces(BoardPane boardPane, Board board, List<Tile> pieceTiles, PieceManager pieceManager,
+                          PlayerManager playerManager) {
+        if (pieceTiles == null) {
+            pieceTiles = pieceManager.setPiecesOnBoard(board);
+        }
+
+        for (Tile tile : pieceTiles) {
             AbstractPiece piece = (AbstractPiece) tile.getGameObject();
             Player player = playerManager.getPlayer(piece);
-            PieceView pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
+            if (boardPane == null) System.out.println("boardPane null");
+            if (tile == null) System.out.println("tile null");
+            if (piece == null) System.out.println("piece null");
+            if (player == null) System.out.println("player null");
+            Avatar pieceView = boardPane.instantiatePieceView(tile.getX(), tile.getY(), piece.getName(), player.getColor());
             piece.addAvatar(pieceView);
         }
     }
 
+    // Nick - Should consider putting pieceManager and board in the argument as well
     @Requires("boardPane != null")
-    private void setObstacles(BoardPane boardPane) {
-        ObstacleManager obstacleManager = new ObstacleManager();
-        List<Tile> obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+    public void setObstacles(BoardPane boardPane, Board board, List<Tile> obstacleTiles) {
+        if (obstacleTiles == null) {
+            ObstacleManager obstacleManager = new ObstacleManager();
+            obstacleTiles = obstacleManager.setObstacleOnBoard(board);
+        }
+
         for (Tile tile : obstacleTiles) {
             Obstacle obstacle = (Obstacle) tile.getGameObject();
             ObstacleView obstacleView = boardPane.instantiateObstacleView(tile.getX(), tile.getY());

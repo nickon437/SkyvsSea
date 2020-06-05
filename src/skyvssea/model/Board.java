@@ -90,7 +90,6 @@ public class Board {
 
 	public Tile getRegisteredTile() { return registeredTile; }
 
-	@Requires("tile != null")
 	public void setRegisteredTile(Tile tile) {
 		this.registeredTile = tile;
 	}

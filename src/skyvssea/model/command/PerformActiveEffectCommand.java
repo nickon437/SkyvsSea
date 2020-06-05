@@ -19,7 +19,7 @@ public class PerformActiveEffectCommand implements Command {
     @Override
     public void execute() {
         if (activeEffect != null && caster.getActiveEffectCounter() <= 0) {
-            target.getSpecialEffectManagerProxy().add(activeEffect);
+            target.getSpecialEffectManager().add(activeEffect);
             updateCounterCommand = new UpdateCounterCommand(caster, caster.getActiveEffectCoolDown());
             updateCounterCommand.execute();
         }
@@ -27,7 +27,7 @@ public class PerformActiveEffectCommand implements Command {
 
     @Override
     public void undo() {
-        target.getSpecialEffectManagerProxy().remove(activeEffect);
+        target.getSpecialEffectManager().remove(activeEffect);
         updateCounterCommand.undo();
     }
 }

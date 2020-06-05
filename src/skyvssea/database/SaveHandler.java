@@ -43,14 +43,16 @@ public class SaveHandler {
         int pieceID = -1;
 
         try {
-            String query = "INSERT INTO " + SVSDatabase.PIECE_TABLE + " (PieceName, TileX, TileY, SpecialEffectCounter) "
-                    + "VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO " + SVSDatabase.PIECE_TABLE
+                    + " (PieceName, TileX, TileY, IsPassiveEffectActivated, SpecialEffectCounter) "
+                    + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, piece.getName());
             stmt.setInt(2, tileX);
             stmt.setInt(3, tileY);
-            stmt.setInt(4, piece.getActiveEffectCounter());
+            stmt.setBoolean(4, piece.isPassiveEffectActivated());
+            stmt.setInt(5, piece.getActiveEffectCounter());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();

@@ -107,11 +107,8 @@ public class LoadHandler {
                     sharkPieces.add(piece);
                 }
 
-//                piece = abstractPieceFactory.createPiece(hierarchy);
-//                if (piece == null) System.out.println("After created | piece is null");
-//                if (eaglePieces.size() > 0 && eaglePieces.get(eaglePieces.size() - 1) == null) System.out.println("Added null");
-//                if (sharkPieces.size() > 0 && eaglePieces.get(eaglePieces.size() - 1) == null) System.out.println("Added null");
                 piece.setSpecialEffectCounter(rs.getInt("SpecialEffectCounter"));
+                piece.setPassiveEffectActivated(rs.getBoolean("IsPassiveEffectActivated"));
 
                 // Create a link between PieceID of database and the piece for ease of identification
                 Pair<Integer, AbstractPiece> pieceIDPair = new Pair<>(rs.getInt("PieceID"), piece);

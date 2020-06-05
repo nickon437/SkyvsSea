@@ -45,32 +45,32 @@ public class SpecialEffectFactory {
     }
     
     public SpecialEffectObject createPassiveDefenceLevelPlus1(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Increasing Defence Level of Nearby Comrades", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST.getText(), TargetType.COMRADES,
     			new ChangeDefenceLevelDecorator(1, null));
     }
     
     public SpecialEffectObject createPassiveAttackLevelPlus1(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Increasing Attack Level of Nearby Comrades", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST.getText(), TargetType.COMRADES,
     			new ChangeAttackLevelDecorator(1, null));
     }
     
     public SpecialEffectObject createPassiveAntiSpecialEffect(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Shielding Nearby Comrades from Enemies' Special Effects", TargetType.COMRADES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ANTI_SPECIAL_EFFECT.getText(), TargetType.COMRADES,
     			new ActivateImmunityToSpecialEffectDecorator(null));
     }
     
     public SpecialEffectObject createPassiveFreezing(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Freezing Nearby Enemies", TargetType.ENEMIES, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_FREEZING.getText(), TargetType.ENEMIES,
     			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
     }
     
     public SpecialEffectObject createPassiveDefenceLevelUpAttackLevelDown(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Self Defence Level Up, Self Attack Level Down", TargetType.SELF, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST_COST_ATTACK.getText(), TargetType.SELF,
     			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(1, null)));
     }
     
     public SpecialEffectObject createPassiveAttackLevelUpDefenceLevelDown(AbstractPiece caster) { 
-    	return new PassiveSpecialEffectObject(caster, "Self Attack Level Up, Self Defence Level Down", TargetType.SELF, 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST_COST_DEFENCE.getText(), TargetType.SELF,
     			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(-1, null)));
     }
 

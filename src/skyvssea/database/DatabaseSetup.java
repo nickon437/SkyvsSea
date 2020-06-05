@@ -96,6 +96,7 @@ public class DatabaseSetup {
                         "PieceName          VARCHAR(20) NOT NULL, " +
                         "TileX    INT NOT NULL, " +
                         "TileY    INT NOT NULL, " +
+                        "IsPassiveEffectActivated BOOLEAN NOT NULL, " +
                         "SpecialEffectCounter INT NOT NULL)";
                 Statement stmt = con.createStatement();
                 stmt.executeUpdate(query);
@@ -118,7 +119,7 @@ public class DatabaseSetup {
                 String query = "CREATE TABLE " + table_name + " (" +
                         "PieceID            INT NOT NULL REFERENCES " + SVSDatabase.PIECE_TABLE + "(PieceID), " +
                         "CasterID           INT NOT NULL REFERENCES " + SVSDatabase.PIECE_TABLE + "(PieceID), " +
-                        "SpecialEffect      VARCHAR(20) NOT NULL, " +
+                        "SpecialEffect      VARCHAR(50) NOT NULL, " +
                         "EffectiveDuration  INT NOT NULL)";
                 Statement stmt = con.createStatement();
                 stmt.executeUpdate(query);

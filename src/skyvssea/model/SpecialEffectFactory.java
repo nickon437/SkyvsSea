@@ -15,7 +15,7 @@ public class SpecialEffectFactory {
             "can increase own attack level from Medium to Big",
             "can decrease own attack level from Small to Middle"};
     final  String[] SpecialEffectEagleDescription = {
-            "can move this piece again ",
+            "can move and attack this piece again ",
             "can make one piece unable to move and attack others",
             "can halve the attack and move range of one piece "};
 
@@ -37,8 +37,8 @@ public class SpecialEffectFactory {
     private SpecialEffect createRetarding() {
     	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding",SpecialEffectEagleDescription[2], TargetType.ENEMIES));
     }
-    private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0,new SpecialEffectBase("Freezing", SpecialEffectEagleDescription[1], TargetType.ENEMIES)));
+    private SpecialEffect createFreezing() {
+    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0,new SpecialEffectBase("Freezing", SpecialEffectEagleDescription[0], TargetType.ENEMIES)));
 	}
     private SpecialEffect createStrengthening() { 
         return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening",SpecialEffectSharkDescription[1], TargetType.COMRADES)));

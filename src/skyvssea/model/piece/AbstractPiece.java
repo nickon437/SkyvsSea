@@ -88,47 +88,7 @@ public abstract class AbstractPiece extends GameObject {
         summary += "\nAttack range: " + getAttackRange();
         return summary;
     }
-    /*
-        Phil-show different description in the info panel
-     */
-	public String showDescription(Hierarchy h1, String name){
-        final  String[] SpecialEffectSharkDescription = {
-                "can make itself attack range double",
-                "can increase own attack level from Medium to Big",
-                "can increase own attack level from Small to Middle"};
-        final  String[] SpecialEffectEagleDescription = {
-                "can move this piece again ",
-                "can make one piece unable to move and attack others",
-                "can halve the attack and move range of one piece "};
-        String des = "";
-        h1 = getAttackLevel();
-        name = getName();
-        if(name.contains("Shark")){
-            if(h1 == Hierarchy.BIG){
-                des = SpecialEffectSharkDescription[0];
-            }
-            else  if(h1 == Hierarchy.MEDIUM){
-                des = SpecialEffectSharkDescription[1];
-            }
-            else if(h1 == Hierarchy.SMALL){
-                des = SpecialEffectSharkDescription[2];
-            }
 
-        }
-        else  if(name.contains("Eagle")){
-            if(h1 == Hierarchy.BIG){
-                des = SpecialEffectEagleDescription[0];
-            }
-            else  if(h1 == Hierarchy.MEDIUM){
-                des =  SpecialEffectEagleDescription[1];
-            }
-            else if(h1 == Hierarchy.SMALL){
-                return SpecialEffectEagleDescription[2];
-            }
-            return des;
-        }
-        return des;
-    }
     // Nick - Feel free to change the wording so that it sounds more cohesive
     public String getSpecialEffectSummary() {
         if (specialEffect == null) { return "Not applicable"; }

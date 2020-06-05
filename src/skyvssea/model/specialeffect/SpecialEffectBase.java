@@ -67,6 +67,4 @@ public class SpecialEffectBase implements SpecialEffect {
 	public String getDescrption() {
 		return this.description;
 	}
-
-
 }

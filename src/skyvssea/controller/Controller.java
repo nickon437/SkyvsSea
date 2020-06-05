@@ -251,7 +251,6 @@ public class Controller {
     public void loadController(Stage stage, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Board board,
                                PieceManager pieceManager, PlayerManager playerManager, Game game) {
         this.stage = stage;
-        this.boardPane = boardPane;
         this.actionPane = actionPane;
         this.infoPane = infoPane;
 

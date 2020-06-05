@@ -10,7 +10,7 @@ public class UpdateCounterCommand implements Command {
 
     public UpdateCounterCommand(AbstractPiece piece, int newCounter) {
         this.piece = piece;
-        this.currentCounter = piece.getSpecialEffectCounter();
+        this.currentCounter = piece.getActiveEffectCounter();
         this.newCounter = newCounter;
     }
 

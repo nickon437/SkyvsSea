@@ -4,27 +4,37 @@ import skyvssea.model.piece.AbstractPiece;
 
 public class ChangeMoveRangeDecorator extends ChangeIntFieldDecorator {
 	
-	public ChangeMoveRangeDecorator(double factor, SpecialEffect specialEffect) {
-		super(factor, specialEffect);
+	public ChangeMoveRangeDecorator(double factor, AbstractSpecialEffectDecorator specialEffectWrappee) {
+		super(factor, specialEffectWrappee);
 	}
 	
 	@Override
 	public void apply(AbstractPiece target) {
 		changeMoveRange(target);
 		super.apply(target);
+		
 	}
 	   
 	@Override
 	public void remove(AbstractPiece target) {
-		target.setMoveRange(originalValue);
+		target.setMoveRange(target.getInitialMoveRange());
 		super.remove(target); 
 	}
 	
 	private void changeMoveRange(AbstractPiece target) {
-		originalValue = target.getMoveRange();
-    	target.setMoveRange((int) (originalValue * factor));
+		int originalValue = target.getInitialMoveRange();
+		int newValue = (int) (originalValue * factor);
+		if (isNewValueValid(originalValue, target.getMoveRange(), newValue)) {
+			target.setMoveRange(newValue);			
+		}
 	}
 
 	@Override
-	public SpecialEffect copy() { return new ChangeMoveRangeDecorator(factor, specialEffect.copy()); }
+	public AbstractSpecialEffectDecorator copy() { 
+		if (specialEffectWrappee != null) {
+			return new ChangeMoveRangeDecorator(factor, specialEffectWrappee.copy());			
+		} else {
+			return new ChangeMoveRangeDecorator(factor, null);			
+		}
+	}
 }

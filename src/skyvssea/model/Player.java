@@ -4,8 +4,8 @@ import com.google.java.contract.Requires;
 import javafx.scene.paint.Color;
 import skyvssea.model.piece.AbstractPiece;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class Player {
     private String name;
@@ -43,9 +43,24 @@ public class Player {
         numUndos--;
     }
 
-    public void validateUndoAvailability() {
+    public int getNumUndos() {
+        return numUndos;
+    }
+
+    public void setNumUndos(int numUndos) {
+        this.numUndos = numUndos;
+    }
+
+    /**
+     * Disable the undo function if a player selected undo and then made any kind of move
+     * @return boolean
+     */
+    public boolean validateUndoAvailability() {
         if (numUndos < STANDARD_NUM_UNDOS) {
             numUndos = 0;
+            return false;
+        } else {
+        	return true;
         }
     }
 

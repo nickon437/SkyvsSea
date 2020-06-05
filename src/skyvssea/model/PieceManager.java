@@ -1,16 +1,27 @@
 package skyvssea.model;
 
+import com.google.java.contract.Ensures;
 import com.google.java.contract.Requires;
 import skyvssea.model.command.HistoryManager;
+import skyvssea.model.piece.AbstractEagle;
 import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.piece.AbstractShark;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PieceManager {
 
 	private Map<Hierarchy, List<AbstractPiece>> sharkPieces = new TreeMap<>();
     private Map<Hierarchy, List<AbstractPiece>> eaglePieces = new TreeMap<>();
     private AbstractPiece registeredPiece;
+
+    public PieceManager(List<AbstractPiece> eaglePieceList, List<AbstractPiece> sharkPieceList) {
+        convertPieceListToMap(eaglePieceList, eaglePieces);
+        convertPieceListToMap(sharkPieceList, sharkPieces);
+    }
 
     public PieceManager(Map<Hierarchy, Integer> lineup) {
         initializePieces(lineup);
@@ -40,11 +51,23 @@ public class PieceManager {
         }
     }
 
+    private void convertPieceListToMap(List<AbstractPiece> pieceList, Map<Hierarchy, List<AbstractPiece>> pieceMap) {
+        // Create empty arraylist value
+        for (Hierarchy hierarchy : Hierarchy.values()) {
+            pieceMap.put(hierarchy, new ArrayList<>());
+        }
+        // Input piece
+        for (AbstractPiece piece : pieceList) {
+            if (pieceMap == null) System.out.println("pieceMap == null");
+            if (piece == null) System.out.println("piece == null");
+            pieceMap.get(piece.getLevel()).add(piece);
+        }
+    }
+
     public AbstractPiece getRegisteredPiece() {
         return registeredPiece;
     }
 
-    @Requires("registeredPiece != null")
     public void setRegisteredPiece(AbstractPiece registeredPiece) {
         this.registeredPiece = registeredPiece;
     }
@@ -52,6 +75,41 @@ public class PieceManager {
     public void clearRegisteredPiece() {
         registeredPiece = null;
     }
+
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) + 1 && getPiecesInHierarchy(piece).contains(piece)")
+    public void addPiece(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.add(piece);    		
+    	}
+    }
+
+    @Requires("piece != null")
+    @Ensures("getPiecesInHierarchy(piece).size() == old(getPiecesInHierarchy(piece).size()) - 1 && !getPiecesInHierarchy(piece).contains(piece)")
+    public void removePiece(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	
+    	if (pieceList != null) {
+    		pieceList.remove(piece);    		
+    	}
+    }
+    
+    public int countPiecesInHierarchy(AbstractPiece piece) {
+    	List<AbstractPiece> pieceList = getPiecesInHierarchy(piece);
+    	return pieceList != null ? pieceList.size() : -1;
+    }
+
+	private List<AbstractPiece> getPiecesInHierarchy(AbstractPiece piece) {
+		List<AbstractPiece> pieceList = null;
+    	if (piece instanceof AbstractEagle) {
+    		pieceList = eaglePieces.get(piece.getLevel());
+    	} else if (piece instanceof AbstractShark) {
+    		pieceList = sharkPieces.get(piece.getLevel());
+    	}
+		return pieceList;
+	}
 
     public Map<Hierarchy, List<AbstractPiece>> getSharkPieces() { return sharkPieces; }
 
@@ -63,7 +121,7 @@ public class PieceManager {
         piecesList.add(sharkPieces);
         return piecesList;
     }
-
+    
     @Requires("board != null")
     public List<Tile> setPiecesOnBoard(Board board) {
         List<Tile> startingPositions = new ArrayList<>();

@@ -2,7 +2,7 @@ package skyvssea.model;
 
 import com.google.java.contract.Requires;
 import skyvssea.model.piece.AbstractPiece;
-import skyvssea.model.specialeffect.TargetType;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +90,6 @@ public class Board {
 
 	public Tile getRegisteredTile() { return registeredTile; }
 
-	@Requires("tile != null")
 	public void setRegisteredTile(Tile tile) {
 		this.registeredTile = tile;
 	}
@@ -166,21 +165,13 @@ public class Board {
 	}
 
 	@Requires("playerManager != null && registeredTile != null")
-	public void highlightPossibleSpecialEffectTiles(PlayerManager playerManager) {
+	public void highlightPossibleActiveEffectTiles(PlayerManager playerManager) {
 		AbstractPiece selectedPiece = (AbstractPiece) registeredTile.getGameObject();
-	    TargetType targetType = selectedPiece.getSpecialEffectTargetType();
-	    
-	    if (targetType == TargetType.SELF) {
-	    	highlightTile(registeredTile);
-	    	return;
-	    }
-
-	    boolean isComrades = targetType != TargetType.ENEMIES;
-
+		SpecialEffectObject activeEffect = selectedPiece.getActiveEffect();
+		
 	    for (Tile currentTile : getDetectablePieceLocation(registeredTile)) {
 			AbstractPiece currentPiece = (AbstractPiece) currentTile.getGameObject();
-			boolean currentPlayerHasPiece = playerManager.isCurrentPlayerPiece(currentPiece);
-			if (isComrades == currentPlayerHasPiece) {
+			if (activeEffect.usableOnPiece(currentPiece, playerManager)) {
 				highlightTile(currentTile);
 			}
 		}
@@ -190,6 +181,7 @@ public class Board {
 	private List<Tile> getDetectablePieceLocation(Tile tile) {
 		AbstractPiece selectedPiece = (AbstractPiece) tile.getGameObject();
 		List<Tile> detectableTilesWithPiece = new ArrayList<>();
+		detectableTilesWithPiece.add(tile);
 
 		int attackRange = selectedPiece.getAttackRange();
 		List<Direction> tempDirections = new ArrayList<>(Arrays.asList(selectedPiece.getAttackDirections()));
@@ -214,5 +206,28 @@ public class Board {
 			tempDirections.removeAll(blockedDirections);
 		}
 		return detectableTilesWithPiece;
+	}
+
+	public List<Tile> getSurroundingTiles(Tile tile) {
+		List<Tile> surroundingTiles = new ArrayList<>();
+		List<Direction> directions = Direction.getEightDirections();
+		int count = 1;
+		for (Direction direction : directions) {
+			Tile currentTile = getTile(tile, direction, count);
+			if (currentTile != null) {
+				surroundingTiles.add(currentTile);				
+			}
+		}
+		return surroundingTiles;
+	}
+	
+	public void setUnhighlightedTilesDisable(boolean disable) {
+		for (Tile[] row : getTiles()) {
+			for (Tile tile : row) {
+				if (!tile.isHighlighted()) {
+					tile.notifyObservers(EventType.DISABLE, disable);
+				}
+			}
+		}
 	}
 }

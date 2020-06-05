@@ -1,12 +1,7 @@
 package skyvssea.model;
 
-import skyvssea.model.specialeffect.ChangeAttackLevelDecorator;
-import skyvssea.model.specialeffect.ChangeAttackRangeDecorator;
-import skyvssea.model.specialeffect.ChangeDefenceLevelDecorator;
-import skyvssea.model.specialeffect.ChangeMoveRangeDecorator;
-import skyvssea.model.specialeffect.SpecialEffect;
-import skyvssea.model.specialeffect.SpecialEffectBase;
-import skyvssea.model.specialeffect.TargetType;
+import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.*;
 
 public class SpecialEffectFactory {
     private static SpecialEffectFactory specialEffectFactory;
@@ -20,45 +15,93 @@ public class SpecialEffectFactory {
         return specialEffectFactory;
     }
 
-    private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2", TargetType.SELF));
+    public SpecialEffectObject createDoubleAttackRange(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_ATTACK_RANGE.getText(), TargetType.SELF,
+    			new ChangeAttackRangeDecorator(2, null));
     }
-    private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", TargetType.SELF));
+    
+    public SpecialEffectObject createDoubleMoveRange(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.DOUBLE_MOVE_RANGE.getText(), TargetType.SELF,
+    			new ChangeMoveRangeDecorator(2, null));
     }
-    private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding", TargetType.ENEMIES));
+    
+    public SpecialEffectObject createRetarding(AbstractPiece caster) {
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.RETARDING.getText(), TargetType.ENEMIES,
+    			new ChangeMoveRangeDecorator(0.5, null));
     }
-    private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase("Freezing", TargetType.ENEMIES)));
+    public SpecialEffectObject createFreezing(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.FREEZING.getText(), TargetType.ENEMIES,
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
 	}
-    private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening", TargetType.COMRADES)));
+    
+    public SpecialEffectObject createStrengthening(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.STRENGTHENING.getText(), TargetType.COMRADES,
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, null)));
     }
-    private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", TargetType.ENEMIES)));
+    
+    public SpecialEffectObject createWeakening(AbstractPiece caster) { 
+    	return new ActiveSpecialEffectObject(caster, SpecialEffectCode.WEAKENING.getText(), TargetType.ENEMIES,
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, null)));
+    }
+    
+    public SpecialEffectObject createPassiveDefenceLevelPlus1(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST.getText(), TargetType.COMRADES,
+    			new ChangeDefenceLevelDecorator(1, null));
+    }
+    
+    public SpecialEffectObject createPassiveAttackLevelPlus1(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST.getText(), TargetType.COMRADES,
+    			new ChangeAttackLevelDecorator(1, null));
+    }
+    
+    public SpecialEffectObject createPassiveAntiSpecialEffect(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ANTI_SPECIAL_EFFECT.getText(), TargetType.COMRADES,
+    			new ActivateImmunityToSpecialEffectDecorator(null));
+    }
+    
+    public SpecialEffectObject createPassiveFreezing(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_FREEZING.getText(), TargetType.ENEMIES,
+    			new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, null)));
+    }
+    
+    public SpecialEffectObject createPassiveDefenceLevelUpAttackLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_DEFENCE_BOOST_COST_ATTACK.getText(), TargetType.SELF,
+    			new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(1, null)));
+    }
+    
+    public SpecialEffectObject createPassiveAttackLevelUpDefenceLevelDown(AbstractPiece caster) { 
+    	return new PassiveSpecialEffectObject(caster, SpecialEffectCode.PASSIVE_ATTACK_BOOST_COST_DEFENCE.getText(), TargetType.SELF,
+    			new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(-1, null)));
     }
 
-    public SpecialEffect createSpecialEffect(SpecialEffectCode code) {
+    public SpecialEffectObject createSpecialEffect(SpecialEffectCode code, AbstractPiece caster) {
         switch (code) {
             case DOUBLE_ATTACK_RANGE:
-                return createDoubleAttackRange();
+                return createDoubleAttackRange(caster);
             case DOUBLE_MOVE_RANGE:
-                return createDoubleMoveRange();
-            case RETARDING:
-                return createRetarding();
+                return createDoubleMoveRange(caster);
             case FREEZING:
-                return createFreezing();
-            case STRENGTHENING:
-                return createStrengthening();
+                return createFreezing(caster);
+            case RETARDING:
+                return createRetarding(caster);
             case WEAKENING:
-            	return createWeakening();
+                return createWeakening(caster);
+            case STRENGTHENING:
+                return createStrengthening(caster);
+            case PASSIVE_ANTI_SPECIAL_EFFECT:
+                return createPassiveAntiSpecialEffect(caster);
+            case PASSIVE_ATTACK_BOOST:
+                return createPassiveAttackLevelPlus1(caster);
+            case PASSIVE_FREEZING:
+                return createPassiveFreezing(caster);
+            case PASSIVE_DEFENCE_BOOST:
+                return createPassiveDefenceLevelPlus1(caster);
+            case PASSIVE_ATTACK_BOOST_COST_DEFENCE:
+                return createPassiveAttackLevelUpDefenceLevelDown(caster);
+            case PASSIVE_DEFENCE_BOOST_COST_ATTACK:
+                return createPassiveDefenceLevelUpAttackLevelDown(caster);
             default:
                 return null;
         }
-    }
-    
-    public SpecialEffect copy(SpecialEffect specialEffect) {
-    	return specialEffect.copy();
     }
 }

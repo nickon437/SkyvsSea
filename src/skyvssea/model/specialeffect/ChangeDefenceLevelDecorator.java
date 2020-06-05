@@ -38,4 +38,9 @@ public class ChangeDefenceLevelDecorator extends ChangeHierarchyFieldDecorator {
 		}
 		return copy;
 	}
+
+    @Override
+    public String getDescrption() {
+        return specialEffect.getDescrption();
+    }
 }

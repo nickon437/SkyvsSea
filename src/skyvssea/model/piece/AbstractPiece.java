@@ -92,8 +92,14 @@ public abstract class AbstractPiece extends GameObject {
         Phil-show different description in the info panel
      */
 	public String showDescription(Hierarchy h1, String name){
-        final  String[] SpecialEffectSharkDescription = {"Itself attack range double","Increasing own attack level from Medium to Big ","Increasing own attack level from Smallto Middle "};
-        final  String[] SpecialEffectEagleDescription = {"Move twice in one round","One piece cannot move itself and attack others","The attack and move range of one piece becomes half"};
+        final  String[] SpecialEffectSharkDescription = {
+                "can make itself attack range double",
+                "can increase own attack level from Medium to Big",
+                "can increase own attack level from Small to Middle"};
+        final  String[] SpecialEffectEagleDescription = {
+                "can move this piece again ",
+                "can make one piece unable to move and attack others",
+                "can halve the attack and move range of one piece "};
         String des = "";
         h1 = getAttackLevel();
         name = getName();
@@ -130,7 +136,7 @@ public abstract class AbstractPiece extends GameObject {
                 "SE effective duration: " + specialEffect.getEffectiveDuration() + "\n" +
                 "SE cooldown duration: " + DEFAULT_SPECIAL_EFFECT_COOLDOWN + "\n" +
                 "SE remaining cooldown duration: " + specialEffectCounter + "\n" +
-                "SE description: " + showDescription(getAttackLevel(),getName());
+                "SE description: " + specialEffect.getDescrption();
         return summary;
     }
     

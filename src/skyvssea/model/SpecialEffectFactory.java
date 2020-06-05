@@ -10,6 +10,14 @@ import skyvssea.model.specialeffect.TargetType;
 
 public class SpecialEffectFactory {
     private static SpecialEffectFactory specialEffectFactory;
+    final  String[] SpecialEffectSharkDescription = {
+            "can make itself attack range double",
+            "can increase own attack level from Medium to Big",
+            "can decrease own attack level from Small to Middle"};
+    final  String[] SpecialEffectEagleDescription = {
+            "can move this piece again ",
+            "can make one piece unable to move and attack others",
+            "can halve the attack and move range of one piece "};
 
     private SpecialEffectFactory() {}
 
@@ -21,22 +29,22 @@ public class SpecialEffectFactory {
     }
 
     private SpecialEffect createDoubleAttackRange() {
-        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2", TargetType.SELF));
+        return new ChangeAttackRangeDecorator(2, new SpecialEffectBase("Attack range x2",SpecialEffectSharkDescription[0], TargetType.SELF));
     }
     private SpecialEffect createDoubleMoveRange() {
-    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", TargetType.SELF));
+    	return new ChangeMoveRangeDecorator(2, new SpecialEffectBase("Move range x2", SpecialEffectSharkDescription[1],TargetType.SELF));
     }
     private SpecialEffect createRetarding() {
-    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding", TargetType.ENEMIES));
+    	return new ChangeMoveRangeDecorator(0.5, new SpecialEffectBase("Retarding",SpecialEffectEagleDescription[2], TargetType.ENEMIES));
     }
     private SpecialEffect createFreezing() { 
-    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0, new SpecialEffectBase("Freezing", TargetType.ENEMIES)));
+    	return new ChangeMoveRangeDecorator(0, new ChangeAttackRangeDecorator(0,new SpecialEffectBase("Freezing", SpecialEffectEagleDescription[1], TargetType.ENEMIES)));
 	}
     private SpecialEffect createStrengthening() { 
-        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening", TargetType.COMRADES)));
+        return new ChangeAttackLevelDecorator(1, new ChangeDefenceLevelDecorator(1, new SpecialEffectBase("Strengthening",SpecialEffectSharkDescription[1], TargetType.COMRADES)));
     }
     private SpecialEffect createWeakening() { 
-        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", TargetType.ENEMIES)));
+        return new ChangeAttackLevelDecorator(-1, new ChangeDefenceLevelDecorator(-1, new SpecialEffectBase("Weakening", SpecialEffectSharkDescription[2],TargetType.ENEMIES)));
     }
 
     public SpecialEffect createSpecialEffect(SpecialEffectCode code) {

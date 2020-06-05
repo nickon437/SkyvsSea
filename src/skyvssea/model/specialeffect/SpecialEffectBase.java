@@ -6,9 +6,11 @@ public class SpecialEffectBase implements SpecialEffect {
 	private int effectiveDuration;
 	private String name;
 	private TargetType targetType;
+	private String description;
 
-	public SpecialEffectBase(String name, TargetType targetType) {
+	public SpecialEffectBase(String name, String description,TargetType targetType) {
 		this.name = name;
+		this.description = description;
 		this.targetType = targetType;
 		this.effectiveDuration = SpecialEffect.DEFAULT_CASTER_TURN;
 
@@ -60,5 +62,11 @@ public class SpecialEffectBase implements SpecialEffect {
 	public TargetType getTargetType() {
 		return targetType;
 	}
+
+	@Override
+	public String getDescrption() {
+		return this.description;
+	}
+
 
 }

@@ -36,6 +36,10 @@ public class SaveHandler {
             }
         }
 
+        for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
+            saveSpecialEffectManager(pair.getKey(), pair.getValue());
+        }
+
         saveCoreData(game.getCurrentGameState(), playerManager.getPlayerIndex(playerManager.getCurrentPlayer()), registeredPieceID, board);
     }
 
@@ -64,7 +68,7 @@ public class SaveHandler {
             e.printStackTrace();
         }
 
-        saveSpecialEffectManager(pieceID, piece);
+        pieceIDPairs.add(new Pair<>(pieceID, piece));
         return pieceID;
     }
 
@@ -89,6 +93,7 @@ public class SaveHandler {
 
     private void saveSpecialEffectManager(int pieceID, AbstractPiece piece) {
         List<SpecialEffectObject> appliedSpecialEffects = piece.getSpecialEffectManager().getAppliedSpecialEffects();
+        System.out.println("AppliedSpecialEffect size for " + piece.getName() + " " + appliedSpecialEffects.size());
         for (SpecialEffectObject specialEffect : appliedSpecialEffects) {
             saveAppliedSpecialEffect(pieceID, specialEffect);
         }
@@ -96,10 +101,12 @@ public class SaveHandler {
 
     private void saveAppliedSpecialEffect(int pieceID, SpecialEffectObject specialEffect) {
         try {
+            System.out.println("run save applied SE");
             String query = "INSERT INTO " + SVSDatabase.SPECIAL_EFFECT_MANAGER_TABLE + " (PieceID, CasterID, SpecialEffect, EffectiveDuration) "
                     + "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = SVSDatabase.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
+            System.out.println("pieceID: " + pieceID + " | casterID: " + getPieceID(specialEffect.getCaster()) + " | caster: " + specialEffect.getCaster() + " " + specialEffect.getCaster().getName());
             stmt.setInt(1, pieceID);
             stmt.setInt(2, getPieceID(specialEffect.getCaster()));
             stmt.setString(3, specialEffect.getName());
@@ -146,7 +153,7 @@ public class SaveHandler {
 
     private int getPieceID(AbstractPiece piece) {
         for (Pair<Integer, AbstractPiece> pair : pieceIDPairs) {
-            if (pair.getValue() == piece) {
+            if (pair.getValue().equals(piece)) {
                 return pair.getKey();
             }
         }

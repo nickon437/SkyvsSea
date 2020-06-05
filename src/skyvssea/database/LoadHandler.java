@@ -33,7 +33,7 @@ public class LoadHandler {
 
         stage.close();
         Controller controller = new Controller();
-        
+
         // Views
         BoardPane boardPane = new BoardPane(controller, col, row);
         ActionPane actionPane = new ActionPane(controller);
@@ -171,7 +171,7 @@ public class LoadHandler {
                 String specialEffectString = rs.getString("SpecialEffect");
                 SpecialEffectCode specialEffectCode = SpecialEffectCode.fromString(specialEffectString);
                 SpecialEffectObject specialEffect = SpecialEffectFactory.getInstance().createSpecialEffect(specialEffectCode, caster);
-
+                
                 piece.getSpecialEffectManager().add(specialEffect);
                 specialEffect.setEffectiveDuration(rs.getInt("EffectiveDuration"));
             }

@@ -88,13 +88,20 @@ public class SpecialEffectFactory {
                 return createWeakening(caster);
             case STRENGTHENING:
                 return createStrengthening(caster);
+            case PASSIVE_ANTI_SPECIAL_EFFECT:
+                return createPassiveAntiSpecialEffect(caster);
+            case PASSIVE_ATTACK_BOOST:
+                return createPassiveAttackLevelPlus1(caster);
+            case PASSIVE_FREEZING:
+                return createPassiveFreezing(caster);
+            case PASSIVE_DEFENCE_BOOST:
+                return createPassiveDefenceLevelPlus1(caster);
+            case PASSIVE_ATTACK_BOOST_COST_DEFENCE:
+                return createPassiveAttackLevelUpDefenceLevelDown(caster);
+            case PASSIVE_DEFENCE_BOOST_COST_ATTACK:
+                return createPassiveDefenceLevelUpAttackLevelDown(caster);
             default:
                 return null;
         }
-    }
-
-    public SpecialEffectObject createSpecialEffect(String name, AbstractPiece caster) {
-        SpecialEffectCode specialEffectCode = SpecialEffectCode.valueOf(name);
-        return createSpecialEffect(specialEffectCode, caster);
     }
 }

@@ -63,7 +63,7 @@ public class LoadHandler {
         controller.setPieces(boardPane, board, tilesWithPiece, pieceManager, playerManager);
         controller.setObstacles(boardPane, board, tilesWithObstacle);
 
-        controller.loadController(stage, boardPane, actionPane, infoPane, board, pieceManager, playerManager, game);
+        controller.loadController(stage, root, actionPane, infoPane, board, pieceManager, playerManager, game);
 
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);

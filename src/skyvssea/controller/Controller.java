@@ -228,7 +228,7 @@ public class Controller {
         } catch (NullPointerException ignored) {}
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         actionPane.setUndoBtnDisable(!playerManager.getCurrentPlayer().isUndoAvailabile());
-        actionPane.startTimer(this);
+//        actionPane.startTimer(this);
 
         switch (game.getCurrentGameState()) {
             case READY_TO_MOVE:
@@ -253,9 +253,10 @@ public class Controller {
         }
     }
 
-    public void loadController(Stage stage, BoardPane boardPane, ActionPane actionPane, InfoPane infoPane, Board board,
+    public void loadController(Stage stage, MainView mainView, ActionPane actionPane, InfoPane infoPane, Board board,
                                PieceManager pieceManager, PlayerManager playerManager, Game game) {
         this.stage = stage;
+        this.mainView = mainView;
         this.actionPane = actionPane;
         this.infoPane = infoPane;
 
@@ -271,7 +272,7 @@ public class Controller {
         actionPane.hideActionIndicator();
         actionPane.setPassiveEffectBtnFocus(true);
         actionPane.disableAndDeactivatePassiveEffectBtn();
-        actionPane.startTimer(this);
+//        actionPane.startTimer(this);
         infoPane.setPlayerInfo(playerManager.getCurrentPlayer());
         infoPane.setCurrentGameState(game.getCurrentGameState());
         clearCache();

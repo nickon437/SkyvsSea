@@ -39,7 +39,7 @@ public class ActionPane extends VBox {
     @Requires("controller != null")
     public ActionPane(Controller controller) {
         advancedActionPane = new AdvancedActionPane(controller);
-        this.getChildren().addAll(actionIndicator, buttonHolderStack, advancedActionPane, new HBox(timerProgressBar));
+        this.getChildren().addAll(actionIndicator, buttonHolderStack, advancedActionPane/*, new HBox(timerProgressBar)*/);
         this.setSpacing(5);
 
         buttonHolderStack.getChildren().addAll(buttonHolder, passiveEffectBtn);
@@ -51,7 +51,7 @@ public class ActionPane extends VBox {
         formatActiveEffectBtn(activeEffectBtn, controller);
         formatPassiveEffectBtn(passiveEffectBtn, controller);
         formatEndBtn(endBtn, controller);
-        formatTimerProgressBar(timerProgressBar);
+//        formatTimerProgressBar(timerProgressBar);
     }
 
     @Requires("indicator != null")

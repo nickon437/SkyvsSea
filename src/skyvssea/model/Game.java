@@ -1,9 +1,13 @@
 package skyvssea.model;
 
 public class Game {
-    private GameState currentGameState = GameState.READY_TO_MOVE;
+    private GameState currentGameState;
 
-    public void setCurrentGameState(GameState newState) { this.currentGameState = newState; }
+    public void setCurrentGameState(GameState newState) {
+        this.currentGameState = newState;
+    }
 
-    public GameState getCurrentGameState() { return currentGameState; }
+    public GameState getCurrentGameState() {
+        return currentGameState;
+    }
 }

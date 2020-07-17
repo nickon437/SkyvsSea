@@ -1,0 +1,10 @@
+out/
+.idea/
+SkyvsSea.iml
+lib/
+.apt_generated/
+.settings/
+.classpath
+.factorypath
+.project
+bin/

@@ -12,5 +12,7 @@ public class MainControlPane extends VBox {
         this.setSpacing(20d);
         this.setPadding(new Insets(20d));
         MainControlPane.setVgrow(boardPane, Priority.ALWAYS);
+
+        this.setStyle("-fx-background-color: white");
     }
 }

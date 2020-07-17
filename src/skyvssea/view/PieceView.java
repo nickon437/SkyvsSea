@@ -1,14 +1,13 @@
 package skyvssea.view;
 
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import skyvssea.model.Avatar;
 import skyvssea.util.ColorUtil;
 
-
-public class PieceView extends StackPane {
+public class PieceView extends Avatar {
     private Circle border;
     private Circle circle;
     private Text text;
@@ -32,7 +31,7 @@ public class PieceView extends StackPane {
         return text;
     }
 
-    public void updatePieceViewSize(double tileSize) {
+    public void updateSize(double tileSize) {
         final double CIRCLE_CONTENT_PERCENTAGE = 0.8;
         final double LABEL_CONTENT_PERCENTAGE = 0.9;
         final double OFFSET = 0.05;
@@ -40,6 +39,7 @@ public class PieceView extends StackPane {
         border.setRadius((tileSize * CIRCLE_CONTENT_PERCENTAGE) / 2);
         circle.setRadius((tileSize * CIRCLE_CONTENT_PERCENTAGE) / 2);
         text.setWrappingWidth(tileSize * CIRCLE_CONTENT_PERCENTAGE * LABEL_CONTENT_PERCENTAGE);
+        text.setStyle("-fx-font-size: " + tileSize/6 + "; -fx-font-weight: bold;");
 
         border.setTranslateY(circle.getTranslateY() + (tileSize * OFFSET));
         border.setStrokeWidth(tileSize * 0.03);

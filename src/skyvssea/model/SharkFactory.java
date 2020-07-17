@@ -1,12 +1,14 @@
 package skyvssea.model;
 
-public class SharkFactory extends PieceFactory {
+import skyvssea.model.piece.*;
+
+public class SharkFactory extends AbstractPieceFactory {
 
 	private static SharkFactory sharkFactory;
 
 	private SharkFactory() {}
 
-	public static PieceFactory getInstance() {
+	public static AbstractPieceFactory getInstance() {
 		if (sharkFactory == null) {
 			sharkFactory = new SharkFactory();
 		}

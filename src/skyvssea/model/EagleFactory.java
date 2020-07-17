@@ -1,12 +1,14 @@
 package skyvssea.model;
 
-public class EagleFactory extends PieceFactory {
+import skyvssea.model.piece.*;
+
+public class EagleFactory extends AbstractPieceFactory {
 
 	private static EagleFactory eagleFactory;
 
 	private EagleFactory() {}
 
-	public static PieceFactory getInstance() {
+	public static AbstractPieceFactory getInstance() {
 		if (eagleFactory == null) {
 			eagleFactory = new EagleFactory();
 		}

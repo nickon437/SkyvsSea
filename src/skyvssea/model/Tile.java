@@ -1,43 +1,153 @@
 package skyvssea.model;
 
 import com.google.java.contract.Requires;
-import javafx.scene.paint.Color;
-import skyvssea.view.TilePane;
 
-import java.util.Observable;
+import skyvssea.model.observer.Observer;
+import skyvssea.model.observer.Subject;
+import skyvssea.model.piece.AbstractPiece;
+import skyvssea.model.specialeffect.SpecialEffectObject;
 
-public class Tile extends Observable {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class Tile implements Subject, AvatarCore {
+	private List<Observer> observers = new ArrayList<>();
+    private Avatar avatar;
     private int x;
 	private int y;
-    private Piece piece;
-    private boolean isHighlighted;
+    private GameObject gameObject;
+    private Set<SpecialEffectObject> specialEffects;
+	private boolean isHighlighted;
 
-    @Requires("x >= 0 && y >= 0 && x < skyvssea.view.BoardPane.NUM_SIDE_CELL && y < skyvssea.view.BoardPane.NUM_SIDE_CELL")
+    @Requires("x >= 0 && y >= 0")
 	public Tile(int x, int y) {
-		this.x = x;
+        this.x = x;
 		this.y = y;
-        this.piece = null;
+        this.gameObject = null;
     }
+
+    public boolean hasGameObject() { return gameObject != null; }
 
     public boolean hasPiece() {
-        return piece != null;
+        return gameObject != null && gameObject instanceof AbstractPiece;
     }
 
-    public Piece getPiece() { return piece; }
+    public boolean hasObstacle() {
+        return gameObject != null && gameObject instanceof Obstacle;
+    }
 
-    public void setPiece(Piece piece) { this.piece = piece; }
+    public GameObject getGameObject() { return gameObject; }
 
-    public void removePiece() { this.piece = null; }
+    public void setGameObject(GameObject gameObject) {
+        this.gameObject = gameObject;
+        if (gameObject.getAvatar() != null) {
+            notifyObservers(EventType.SET_GAME_OBJECT, gameObject.getAvatar());
+        }
+    }
+
+    public void removeGameObject() { 
+    	this.gameObject = null;
+        notifyObservers(EventType.SET_GAME_OBJECT, null);
+    }
 
     public boolean isHighlighted() { return isHighlighted; }
 
     public void setHighlighted(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
-        setChanged();
-        notifyObservers(isHighlighted);
+        notifyObservers(EventType.HIGHLIGHT, isHighlighted);
     }
 
 	public int getX() { return x; }
-
 	public int getY() { return y; }
+
+	@Requires("avatar != null")
+    @Override
+    public void addAvatar(Avatar avatar) { this.avatar = avatar; }
+
+    @Override
+    public Avatar getAvatar() { return avatar; }
+
+    /**
+     * Invoked when a piece with activated passiveEffect makes a move
+     * @param specialEffect to be added to this tile
+     * @param playerManager used to determine if specialEffect is applicable to the piece on this tile
+     */
+	public void addSpecialEffect(SpecialEffectObject specialEffect, PlayerManager playerManager) {
+		if (specialEffects == null) {
+			specialEffects = new HashSet<>();
+		}
+		
+		if (specialEffects.add(specialEffect) && hasPiece()) {
+			AbstractPiece currentPiece = (AbstractPiece) gameObject;
+			if (specialEffect.usableOnPiece(currentPiece, playerManager)) {
+				currentPiece.receiveSpecialEffect(specialEffect);		
+			}
+		}
+	}
+	
+	/**
+	 * Invoked when the piece with activated passiveEffect moves away or turns off its passiveEffect
+	 * @param specialEffect to be removed from this tile
+	 */
+	public void removeSpecialEffect(SpecialEffectObject specialEffect) {
+		if (specialEffects != null) {
+			specialEffects.remove(specialEffect);		
+			if (hasPiece()) {
+				AbstractPiece castedPiece = (AbstractPiece) gameObject;
+				castedPiece.getSpecialEffectManager().remove(specialEffect);
+			}
+		}	
+	}
+
+	/**
+	 * Invoked when a piece moves to another tile
+	 * The piece will receive all applicable specialEffects stored in this tile
+	 * @param playerManager used to determine if a specialEffect is applicable to the piece
+	 */
+	public void applySpecialEffects(PlayerManager playerManager) {
+		if (specialEffects != null && gameObject instanceof AbstractPiece) {
+			AbstractPiece piece = (AbstractPiece) gameObject;
+			for (SpecialEffectObject specialEffect : specialEffects) {
+				if (specialEffect.usableOnPiece(piece, playerManager)) {
+					SpecialEffectObject copy = (SpecialEffectObject) specialEffect.copy();
+					piece.getSpecialEffectManager().add(copy);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Invoked when a piece moves to another tile
+	 * Removes all specialEffects applied to the piece when it landed on this tile
+	 */
+	public void removeSpecialEffects() {
+		if (specialEffects != null) {
+			AbstractPiece piece = (AbstractPiece) gameObject;
+			for (SpecialEffectObject specialEffect : specialEffects) {
+				piece.getSpecialEffectManager().remove(specialEffect);
+			}
+		}
+	}
+	
+	public Set<SpecialEffectObject> getSpecialEffects() {
+		if (specialEffects == null) {
+			specialEffects = new HashSet<>();
+		}
+		return specialEffects;
+	}
+
+    @Requires("observer != null")
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers(EventType event, Object arg) {
+        for (Observer observer : observers) {
+            observer.update(event, arg);
+        }
+    }
 }
